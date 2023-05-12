@@ -9,7 +9,7 @@ The Clever Ads Solutions Flutter plugin enables Flutter developers to easily ser
 To get started, here is the link to [Flutter plugin integration documentation](https://github.com/cleveradssolutions/CAS-Flutter/wiki).  
 
 ## GitHub issue tracker
-To file bugs, make feature requests, or suggest improvements for the Unity Plugin SDK, please use [GitHub's issue tracker]https://github.com/cleveradssolutions/CAS-Flutter/issues).
+To file bugs, make feature requests, or suggest improvements for the Unity Plugin SDK, please use [GitHub's issue tracker](https://github.com/cleveradssolutions/CAS-Flutter/issues).
 
 ## Support
 mailto:support@cleveradssolutions.com
