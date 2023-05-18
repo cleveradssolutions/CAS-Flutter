@@ -28,7 +28,7 @@ packages:
       name: clever_ads_solutions
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4"
   clock:
     dependency: transitive
     description:

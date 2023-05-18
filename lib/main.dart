@@ -98,11 +98,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> showInterstitial() async {
-    manager.showInterstitial(InterstitialListenerWrapper());
+    manager?.showInterstitial(InterstitialListenerWrapper());
   }
 
   Future<void> showRewarded() async {
-    manager.showRewarded(InterstitialListenerWrapper());
+    manager?.showRewarded(InterstitialListenerWrapper());
   }
 
   CASBannerView? view;
