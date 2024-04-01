@@ -6,7 +6,7 @@ import 'package:clever_ads_solutions/public/AdSize.dart';
 import 'package:clever_ads_solutions/public/AdType.dart';
 import 'package:clever_ads_solutions/public/AdViewListener.dart';
 import 'package:clever_ads_solutions/public/CASBannerView.dart';
-import 'package:clever_ads_solutions/public/ConsentFlow.dart';
+import 'package:clever_ads_solutions/public/InitConfig.dart';
 import 'package:clever_ads_solutions/public/InitializationListener.dart';
 import 'package:clever_ads_solutions/public/ManagerBuilder.dart';
 import 'package:clever_ads_solutions/public/MediationManager.dart';
@@ -82,8 +82,7 @@ class _MyAppState extends State<MyApp> {
 
     CAS.setFlutterVersion("1.20.0");
 
-    CAS.setAnalyticsCollectionEnabled(true);
-    //CAS.validateIntegration();
+    CAS.validateIntegration();
 
     ManagerBuilder builder = CAS
         .buildManager()
@@ -130,7 +129,12 @@ class _MyAppState extends State<MyApp> {
 
 class InitializationListenerWrapper extends InitializationListener {
   @override
-  void onCASInitialized(bool success, String error) {}
+  void onCASInitialized(InitConfig initialConfig) {
+    String error = initialConfig.error;
+    String countryCode = initialConfig.countryCode;
+    bool isTestMode = initialConfig.isTestMode;
+    bool isConsentRequired = initialConfig.isConsentRequired;
+  }
 }
 
 class InterstitialListenerWrapper extends AdCallback {
