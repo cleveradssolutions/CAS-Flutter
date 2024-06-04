@@ -1,0 +1,35 @@
+PODS:
+  - clever_ads_solutions (0.3.1):
+    - CleverAdsSolutions-Base (~> 3.7.3)
+    - Flutter
+  - CleverAdsSolutions-Base (3.7.3)
+  - Flutter (1.0.0)
+  - package_info_plus (0.4.5):
+    - Flutter
+
+DEPENDENCIES:
+  - clever_ads_solutions (from `.symlinks/plugins/clever_ads_solutions/ios`)
+  - Flutter (from `Flutter`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+
+SPEC REPOS:
+  https://github.com/cleveradssolutions/CAS-Specs.git:
+    - CleverAdsSolutions-Base
+
+EXTERNAL SOURCES:
+  clever_ads_solutions:
+    :path: ".symlinks/plugins/clever_ads_solutions/ios"
+  Flutter:
+    :path: Flutter
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
+
+SPEC CHECKSUMS:
+  clever_ads_solutions: 7b30c86095432263973a91c9243ac08c835efdc7
+  CleverAdsSolutions-Base: a2a864d8fc976443de1fb0d19ce2262a494a20e7
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
+
+PODFILE CHECKSUM: ce2b872ab5314afa73d93b7087e38cb079b2303d
+
+COCOAPODS: 1.15.2
