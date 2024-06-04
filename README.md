@@ -16,7 +16,7 @@ This repository contains open source example for Flutter implementation of the C
 To file bugs, make feature requests, or suggest improvements for the Unity Plugin SDK, please use [GitHub's issue tracker](https://github.com/cleveradssolutions/CAS-Flutter/issues).
 
 ## Support
-mailto:support@cleveradssolutions.com
+mailto:support@cas.ai
 
 ## License
 The CAS Flutter plugin is available under a commercial license. See the LICENSE file for more info.
