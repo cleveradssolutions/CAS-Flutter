@@ -63,6 +63,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace = "com.cleveradssolutions.ads.flutter"
     compileSdk 33
 
     compileOptions {
