@@ -67,23 +67,28 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation("com.cleveradssolutions:cas-sdk:3.6.0")
-    implementation("com.cleveradssolutions:ironsource:7.8.1.0")   // IronSource
-    implementation("com.cleveradssolutions:google:22.6.0.2")      // Google Ads | Admob
-    implementation("com.cleveradssolutions:unity:4.9.3.0")        // Unity Ads
-    implementation("com.cleveradssolutions:kidoz:9.1.0.0")        // Kidoz
+    implementation("com.cleveradssolutions:cas-sdk:3.8.1")
+    implementation("com.cleveradssolutions:ironsource:8.1.0.0")   // IronSource
+    implementation("com.cleveradssolutions:google:23.0.0.0")      // Google Ads | Admob
+    implementation("com.cleveradssolutions:unity:4.12.0.0")       // Unity Ads
+    implementation("com.cleveradssolutions:kidoz:9.1.2.0")        // Kidoz
     implementation("com.cleveradssolutions:superawesome:9.3.2.0") // SuperAwesome
-    implementation("com.cleveradssolutions:vungle:7.1.0.0")       // LiftoffMonetize
-    implementation("com.cleveradssolutions:inmobi:10.6.6.0")      // InMobi
-    implementation("com.cleveradssolutions:chartboost:9.6.1.0")   // Chartboost
-    implementation("com.cleveradssolutions:fyber:8.2.6.0")        // DT Exchange
+    implementation("com.cleveradssolutions:vungle:7.3.2.1")       // LiftoffMonetize
+    implementation("com.cleveradssolutions:inmobi:10.7.4.0")      // InMobi
+    implementation("com.cleveradssolutions:chartboost:9.7.0.0")   // Chartboost
+    implementation("com.cleveradssolutions:fyber:8.2.7.1")        // DT Exchange
+    implementation("com.cleveradssolutions:mintegral:16.7.71.0")  // Mintegral
+    implementation("com.cleveradssolutions:applovin:12.5.0.0")    // AppLovin
+    implementation("com.cleveradssolutions:facebook:6.17.0.1")    // Meta Audience Network
+    implementation("com.cleveradssolutions:pangle:5.9.0.6")       // Pangle
+    implementation("com.cleveradssolutions:yandex:27.1.0.0")      // Yandex Ads
+    implementation("com.cleveradssolutions:bigo:4.8.1.0")         // Bigo
 
-    implementation("com.cleveradssolutions:mintegral:16.6.41.0")  // Mintegral
-    implementation("com.cleveradssolutions:applovin:12.2.0.0")    // AppLovin
-    implementation("com.cleveradssolutions:facebook:6.16.0.1")    // Meta Audience Network
-    implementation("com.cleveradssolutions:pangle:5.7.0.6")       // Pangle
-    implementation("com.cleveradssolutions:bigo:4.5.1.1")         // Bigo
-    implementation("com.cleveradssolutions:mytarget:5.20.0.1")    // MyTarget
-    implementation("com.cleveradssolutions:yandex:26.4.0.0")
+    implementation("com.cleveradssolutions:cas-exchange:3.8.0")   // CASExchange
+    implementation("com.cleveradssolutions:ogury:5.8.0.0")        // Ogury
+    implementation("com.cleveradssolutions:loopme:9.0.4.0")       // LoopMe
+    implementation("com.cleveradssolutions:startio:5.0.1.0")      // StartIO
+    implementation("com.cleveradssolutions:madex:1.4.4.0")        // Madex
+    implementation("com.cleveradssolutions:hyprmx:6.4.1.0")       // HyprMX
+    implementation("com.cleveradssolutions:smaato:22.0.2.1")      // Smaato
 }

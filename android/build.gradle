@@ -1,15 +1,15 @@
 group 'com.cleveradssolutions.ads.flutter'
-version '1.0-SNAPSHOT'
+version '3.8.1'
 
 buildscript {
     ext.kotlin_version = '1.8.22'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:8.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -17,11 +17,14 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven {
             name = "IronSourceAdsRepo"
             url = "https://android-sdk.is.com/"
-            content { it.includeGroup("com.ironsource.sdk") }
+            content {
+                it.includeGroup("com.ironsource.sdk")
+                it.includeGroup("com.ironsource.adapters")
+            }
         }
         maven {
             name = "MintegralAdsRepo"
@@ -44,17 +47,40 @@ rootProject.allprojects {
             content { it.includeGroup("com.chartboost") }
         }
         maven {
+            name = "SmaatoAdsRepo"
+            url = "https://s3.amazonaws.com/smaato-sdk-releases/"
+            content { it.includeGroup("com.smaato.android.sdk") }
+        }
+        maven {
             name = "MadexAdsRepo"
             url = "https://sdkpkg.sspnet.tech"
             content {
                 it.includeGroup("sspnet.tech")
                 it.includeGroup("sspnet.tech.adapters")
+                it.includeGroup("sspnet.tech.madex.networks")
             }
         }
         maven {
-            name = "SmaatoAdsRepo"
-            url = "https://s3.amazonaws.com/smaato-sdk-releases/"
-            content { it.includeGroup("com.smaato.android.sdk") }
+            name = "OguryAdsRepo"
+            url = "https://maven.ogury.co"
+            content {
+                it.includeGroup("co.ogury")
+                it.includeGroup("co.ogury.module")
+            }
+        }
+        maven {
+            name = "LoopMeAdsRepo"
+            url = "https://jitpack.io"
+            content { it.includeGroup("com.github.loopme.android-united-sdk") }
+        }
+        maven {
+            name = "BidMachineRepo"
+            url = "https://artifactory.bidmachine.io/bidmachine"
+            content {
+                it.includeGroup("io.bidmachine")
+                it.includeGroup("io.bidmachine.libs")
+                it.includeGroup("com.explorestack")
+            }
         }
     }
 }
@@ -63,24 +89,27 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 33
+    namespace 'com.cleveradssolutions.ads.flutter'
+    compileSdk 34
+
+    defaultConfig {
+        minSdkVersion 21
+        multiDexEnabled true
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-    defaultConfig {
-        minSdkVersion 21
-        multiDexEnabled true
-    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.cleveradssolutions:cas-sdk:3.7.3'
+    implementation 'com.cleveradssolutions:cas-sdk:3.8.1'
 }
