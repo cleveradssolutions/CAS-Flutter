@@ -1,8 +1,8 @@
 PODS:
   - clever_ads_solutions (0.3.1):
-    - CleverAdsSolutions-Base (~> 3.7.3)
+    - CleverAdsSolutions-Base (~> 3.8.1)
     - Flutter
-  - CleverAdsSolutions-Base (3.7.3)
+  - CleverAdsSolutions-Base (3.8.1)
   - Flutter (1.0.0)
   - package_info_plus (0.4.5):
     - Flutter
@@ -25,8 +25,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
 
 SPEC CHECKSUMS:
-  clever_ads_solutions: 7b30c86095432263973a91c9243ac08c835efdc7
-  CleverAdsSolutions-Base: a2a864d8fc976443de1fb0d19ce2262a494a20e7
+  clever_ads_solutions: 8811cfcb4ff58a38bc92516b8b4c7f9be1a90770
+  CleverAdsSolutions-Base: 45f7ab8535cf72a04738742f879d42885094caac
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
 
