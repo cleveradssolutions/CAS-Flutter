@@ -1,7 +1,7 @@
 name: clever_ads_solutions
-description: Clever Ads Solutions Flutter plugin
+description: The CAS.AI Flutter plugin allows you to easily monetize your apps for iOS and Android using lot of Ads SDKs in mediation.
 version: 0.3.2
-homepage: https://cas.ai
+homepage: https://github.com/cleveradssolutions/CAS-Flutter
 
 environment:
   sdk: ">=2.17.0 <4.0.0"

@@ -13,7 +13,7 @@ A new flutter plugin project.
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'CAS.ai' => 'email@example.com' }
-  s.source           = { :git => 'https://github.com/cleveradssolutions/CAS-Specs.git' }
+  s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
   s.dependency 'Flutter'
   s.dependency 'CleverAdsSolutions-Base', '~> 3.8.1'

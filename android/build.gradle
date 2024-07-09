@@ -21,10 +21,7 @@ rootProject.allprojects {
         maven {
             name = "IronSourceAdsRepo"
             url = "https://android-sdk.is.com/"
-            content {
-                it.includeGroup("com.ironsource.sdk")
-                it.includeGroup("com.ironsource.adapters")
-            }
+            content { it.includeGroup("com.ironsource.sdk") }
         }
         maven {
             name = "MintegralAdsRepo"
@@ -47,20 +44,6 @@ rootProject.allprojects {
             content { it.includeGroup("com.chartboost") }
         }
         maven {
-            name = "SmaatoAdsRepo"
-            url = "https://s3.amazonaws.com/smaato-sdk-releases/"
-            content { it.includeGroup("com.smaato.android.sdk") }
-        }
-        maven {
-            name = "MadexAdsRepo"
-            url = "https://sdkpkg.sspnet.tech"
-            content {
-                it.includeGroup("sspnet.tech")
-                it.includeGroup("sspnet.tech.adapters")
-                it.includeGroup("sspnet.tech.madex.networks")
-            }
-        }
-        maven {
             name = "OguryAdsRepo"
             url = "https://maven.ogury.co"
             content {
@@ -74,13 +57,17 @@ rootProject.allprojects {
             content { it.includeGroup("com.github.loopme.android-united-sdk") }
         }
         maven {
-            name = "BidMachineRepo"
-            url = "https://artifactory.bidmachine.io/bidmachine"
+            name = "MadexAdsRepo"
+            url = "https://sdkpkg.sspnet.tech"
             content {
-                it.includeGroup("io.bidmachine")
-                it.includeGroup("io.bidmachine.libs")
-                it.includeGroup("com.explorestack")
+                it.includeGroup("sspnet.tech")
+                it.includeGroup("sspnet.tech.adapters")
             }
+        }
+        maven {
+            name = "SmaatoAdsRepo"
+            url = "https://s3.amazonaws.com/smaato-sdk-releases/"
+            content { it.includeGroup("com.smaato.android.sdk") }
         }
     }
 }
