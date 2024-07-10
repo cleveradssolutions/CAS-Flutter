@@ -1,4 +1,5 @@
 import 'package:clever_ads_solutions/public/AdType.dart';
+import 'package:clever_ads_solutions/public/PriceAccuracy.dart';
 
 class AdImpression {
   AdType adType;
@@ -31,5 +32,3 @@ class AdImpression {
         this.impressionDepth = impressionDepth,
         this.lifeTimeRevenue = lifeTimeRevenue;
 }
-
-enum PriceAccuracy { FLOOR, BID, UNDISCLOSED }
