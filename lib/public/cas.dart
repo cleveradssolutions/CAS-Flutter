@@ -1,27 +1,23 @@
-import 'package:clever_ads_solutions/internal/InternalListenerContainer.dart';
-import 'package:clever_ads_solutions/public/Audience.dart';
-import 'package:clever_ads_solutions/public/CCPAStatus.dart';
-import 'package:clever_ads_solutions/public/ConsentFlow.dart';
-import 'package:clever_ads_solutions/public/LoadingMode.dart';
-import 'package:clever_ads_solutions/public/ManagerBuilder.dart';
-import 'package:clever_ads_solutions/internal/InternalManagerBuilder.dart';
-import 'package:clever_ads_solutions/public/TargetingOptions.dart';
-import 'package:clever_ads_solutions/public/UserConsent.dart';
+import 'package:clever_ads_solutions/internal/internal_cas_consent_flow.dart';
+import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
+import 'package:clever_ads_solutions/internal/internal_manager_builder.dart';
+import 'package:clever_ads_solutions/public/audience.dart';
+import 'package:clever_ads_solutions/public/ccpa_status.dart';
+import 'package:clever_ads_solutions/public/consent_flow.dart';
+import 'package:clever_ads_solutions/public/loading_mode.dart';
+import 'package:clever_ads_solutions/public/manager_builder.dart';
+import 'package:clever_ads_solutions/public/targeting_options.dart';
+import 'package:clever_ads_solutions/public/user_consent.dart';
 import 'package:flutter/services.dart';
-import 'package:clever_ads_solutions/internal/InternalCASConsentFlow.dart';
 
 class CAS {
-  static String _flutterVersion = "3.13.0";
+  static const String _pluginVersion = "0.4.0";
 
-  static MethodChannel _channel =
+  static const MethodChannel _channel =
       MethodChannel("com.cleveradssolutions.cas.ads.flutter");
 
-  static InternalListenerContainer _listenerContainer =
-      new InternalListenerContainer(_channel);
-
-  static setFlutterVersion(String flutterVersion) {
-    _flutterVersion = flutterVersion;
-  }
+  static final InternalListenerContainer _listenerContainer =
+      InternalListenerContainer(_channel);
 
   static ConsentFlow buildConsentFlow() {
     return InternalCASConsentFlow(_channel, _listenerContainer);
@@ -29,7 +25,7 @@ class CAS {
 
   static ManagerBuilder buildManager() {
     return InternalManagerBuilder(
-        _channel, _listenerContainer, _flutterVersion);
+        _channel, _listenerContainer, _pluginVersion);
   }
 
   static Future<void> validateIntegration() async {
@@ -61,10 +57,11 @@ class CAS {
   static Future<UserConsent> getUserConsentStatus() async {
     int? consent = await _channel.invokeMethod<int>('getUserConsentStatus');
 
-    if (consent == null)
+    if (consent == null) {
       return UserConsent.UNDEFINED;
-    else
+    } else {
       return UserConsent.values[consent];
+    }
   }
 
   static Future<void> setCCPAStatus(CCPAStatus status) async {
@@ -74,10 +71,11 @@ class CAS {
   static Future<CCPAStatus> getCPPAStatus() async {
     int? ccpa = await _channel.invokeMethod<int>('getCPPAStatus');
 
-    if (ccpa == null)
+    if (ccpa == null) {
       return CCPAStatus.UNDEFINED;
-    else
+    } else {
       return CCPAStatus.values[ccpa];
+    }
   }
 
   static Future<void> setTaggedAudience(Audience audience) async {
@@ -88,10 +86,11 @@ class CAS {
   static Future<Audience> getTaggedAudience() async {
     int? audience = await _channel.invokeMethod<int>('getTaggedAudience');
 
-    if (audience == null)
+    if (audience == null) {
       return Audience.UNDEFINED;
-    else
+    } else {
       return Audience.values[audience];
+    }
   }
 
   static Future<void> setMutedAdSounds(bool mute) async {

@@ -1,17 +1,15 @@
 import 'dart:async';
-import 'package:clever_ads_solutions/internal/InternalListenerContainer.dart';
-import 'package:clever_ads_solutions/public/ConsentFlow.dart';
-import 'package:clever_ads_solutions/public/OnDismissListener.dart';
+
+import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
+import 'package:clever_ads_solutions/public/consent_flow.dart';
+import 'package:clever_ads_solutions/public/on_dismiss_listener.dart';
 import 'package:flutter/services.dart';
 
 class InternalCASConsentFlow extends ConsentFlow {
-  MethodChannel _channel;
-  InternalListenerContainer _listenerContainer;
+  final MethodChannel _channel;
+  final InternalListenerContainer _listenerContainer;
 
-  InternalCASConsentFlow(
-      MethodChannel channel, InternalListenerContainer listenerContainer)
-      : _channel = channel,
-        _listenerContainer = listenerContainer;
+  InternalCASConsentFlow(this._channel, this._listenerContainer);
 
   @override
   ConsentFlow disableFlow() {
@@ -36,8 +34,9 @@ class InternalCASConsentFlow extends ConsentFlow {
     if (!isEnable) {
       _channel.invokeMethod('disableConsentFlow');
     } else {
-      if (privacyPolicy.isNotEmpty)
+      if (privacyPolicy.isNotEmpty) {
         _channel.invokeMethod('withPrivacyUrl', {'privacyUrl': privacyPolicy});
+      }
 
       _channel.invokeMethod('showConsentFlow');
     }

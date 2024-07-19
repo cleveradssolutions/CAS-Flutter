@@ -2,17 +2,21 @@ import 'package:clever_ads_solutions/clever_ads_solutions.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  final GlobalKey<BannerViewState> _bannerViewKey = GlobalKey();
+  MediationManager? manager;
+  CASBannerView? view;
   bool _isReady = false;
-  GlobalKey<BannerViewState> _bannerViewKey = GlobalKey();
 
   @override
   void initState() {
@@ -27,81 +31,75 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Clever Ads Solutions Example App'),
         ),
         body: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ElevatedButton(
-                    child: Text('Initialize'),
-                    onPressed: () => initialize(),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  child: const Text('Initialize'),
+                  onPressed: () => initialize(),
+                ),
+                if (_isReady)
+                  BannerView(
+                    key: _bannerViewKey,
+                    size: AdSize.Banner,
+                    isAutoloadEnabled: true,
+                    refreshInterval: 20,
+                    listener: BannerListener(size: AdSize.Banner),
                   ),
-                  if (_isReady)
-                    BannerView(
-                      key: _bannerViewKey,
-                      size: AdSize.Banner,
-                      isAutoloadEnabled: true,
-                      refreshInterval: 20,
-                      listener: new BannerListener(size: AdSize.Banner),
-                    ),
-                  if (_isReady)
-                    ElevatedButton(
-                      child: Text('Load next add on upper widget'),
-                      onPressed: () =>
-                          _bannerViewKey.currentState?.loadNextAd(),
-                    ),
+                if (_isReady)
                   ElevatedButton(
-                    child: Text('Show interstitial'),
-                    onPressed: () => showInterstitial(),
+                    child: const Text('Load next add on upper widget'),
+                    onPressed: () => _bannerViewKey.currentState?.loadNextAd(),
                   ),
-                  if (_isReady)
-                    BannerView(
-                      size: AdSize.Leaderboard,
-                      isAutoloadEnabled: true,
-                      refreshInterval: 20,
-                      listener: new BannerListener(size: AdSize.Leaderboard),
-                    ),
-                  ElevatedButton(
-                    child: Text('Show rewarded'),
-                    onPressed: () => showRewarded(),
+                ElevatedButton(
+                  child: const Text('Show interstitial'),
+                  onPressed: () => showInterstitial(),
+                ),
+                if (_isReady)
+                  BannerView(
+                    size: AdSize.Leaderboard,
+                    isAutoloadEnabled: true,
+                    refreshInterval: 20,
+                    listener: BannerListener(size: AdSize.Leaderboard),
                   ),
-                  if (_isReady)
-                    BannerView(
-                      size: AdSize.MediumRectangle,
-                      isAutoloadEnabled: true,
-                      refreshInterval: 20,
-                      listener: new BannerListener(
-                          size: AdSize.MediumRectangle),
-                    ),
-                  ElevatedButton(
-                    child: Text('Create standart banner'),
-                    onPressed: () => createStandartBanner(),
+                ElevatedButton(
+                  child: const Text('Show rewarded'),
+                  onPressed: () => showRewarded(),
+                ),
+                if (_isReady)
+                  BannerView(
+                    size: AdSize.MediumRectangle,
+                    isAutoloadEnabled: true,
+                    refreshInterval: 20,
+                    listener: BannerListener(size: AdSize.MediumRectangle),
                   ),
-                  ElevatedButton(
-                    child: Text('Create adaptive banner'),
-                    onPressed: () => createAdaptiveBanner(),
-                  ),
-                  ElevatedButton(
-                    child: Text('Change banner position to top'),
-                    onPressed: () => changeBannerTop(),
-                  ),
-                  ElevatedButton(
-                    child: Text('Change banner to bottom'),
-                    onPressed: () => changeBannerBottom(),
-                  ),
-                ],
-              ),
-            )
+                ElevatedButton(
+                  child: const Text('Create standart banner'),
+                  onPressed: () => createStandartBanner(),
+                ),
+                ElevatedButton(
+                  child: const Text('Create adaptive banner'),
+                  onPressed: () => createAdaptiveBanner(),
+                ),
+                ElevatedButton(
+                  child: const Text('Change banner position to top'),
+                  onPressed: () => changeBannerTop(),
+                ),
+                ElevatedButton(
+                  child: const Text('Change banner to bottom'),
+                  onPressed: () => changeBannerBottom(),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  MediationManager? manager;
-
   Future<void> initialize() async {
     CAS.setDebugMode(true);
-
-    CAS.setFlutterVersion("1.20.0");
 
     //CAS.validateIntegration();
 
@@ -116,7 +114,7 @@ class _MyAppState extends State<MyApp> {
 
     manager = builder.initialize();
     bool isReady = await getInterStatus();
-    print(isReady);
+    debugPrint("isReady $isReady");
     setState(() {
       _isReady = manager != null;
     });
@@ -133,7 +131,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> showInterstitial() async {
     bool isReady = await getInterStatus();
-    print(isReady);
+    debugPrint("isReady $isReady");
     manager?.showInterstitial(InterstitialListenerWrapper());
   }
 
@@ -141,7 +139,6 @@ class _MyAppState extends State<MyApp> {
     manager?.showRewarded(InterstitialListenerWrapper());
   }
 
-  CASBannerView? view;
   Future<void> createAdaptiveBanner() async {
     view = manager?.getAdView(AdSize.Adaptive);
     view?.setAdListener(BannerListener());
@@ -167,7 +164,7 @@ class _MyAppState extends State<MyApp> {
 
 class InitializationListenerWrapper extends InitializationListener {
   @override
-  void onCASInitialized(InitConfig initConfig) {}
+  void onCASInitialized(InitConfig config) {}
 }
 
 class InterstitialListenerWrapper extends AdCallback {
@@ -197,27 +194,27 @@ class BannerListener extends AdViewListener {
 
   @override
   void onAdViewPresented() {
-    debugPrint("Banner ${this.size.toString()} ad was presented!");
+    debugPrint("Banner ${size.toString()} ad was presented!");
   }
 
   @override
   void onClicked() {
-    debugPrint("Banner ${this.size.toString()} ad was pressed!");
+    debugPrint("Banner ${size.toString()} ad was pressed!");
   }
 
   @override
   void onFailed(String? message) {
-    debugPrint("Banner ${this.size.toString()} error! $message");
+    debugPrint("Banner ${size.toString()} error! $message");
   }
 
   @override
   void onImpression(AdImpression? adImpression) {
-    debugPrint("Banner ${this.size.toString()} impression: $adImpression");
+    debugPrint("Banner ${size.toString()} impression: $adImpression");
   }
 
   @override
   void onLoaded() {
-    debugPrint("Banner ${this.size.toString()} ad was loaded!");
+    debugPrint("Banner ${size.toString()} ad was loaded!");
   }
 }
 

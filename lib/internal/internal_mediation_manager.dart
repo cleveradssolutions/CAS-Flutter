@@ -1,22 +1,20 @@
 import 'dart:async';
-import 'package:clever_ads_solutions/internal/InternalListenerContainer.dart';
-import 'package:clever_ads_solutions/public/AdCallback.dart';
-import 'package:clever_ads_solutions/public/AdLoadCallback.dart';
-import 'package:clever_ads_solutions/public/AdSize.dart';
-import 'package:clever_ads_solutions/public/CASBannerView.dart';
-import 'package:clever_ads_solutions/public/MediationManager.dart';
+
+import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
+import 'package:clever_ads_solutions/public/ad_callback.dart';
+import 'package:clever_ads_solutions/public/ad_load_callback.dart';
+import 'package:clever_ads_solutions/public/ad_size.dart';
+import 'package:clever_ads_solutions/public/cas_banner_view.dart';
+import 'package:clever_ads_solutions/public/mediation_manager.dart';
 import 'package:flutter/services.dart';
 
-import 'InternalCASBannerView.dart';
+import 'internal_cas_banner_view.dart';
 
 class InternalMediationManager extends MediationManager {
-  MethodChannel _channel;
-  InternalListenerContainer _listenerContainer;
+  final MethodChannel _channel;
+  final InternalListenerContainer _listenerContainer;
 
-  InternalMediationManager(
-      MethodChannel channel, InternalListenerContainer listenerContainer)
-      : _channel = channel,
-        _listenerContainer = listenerContainer;
+  InternalMediationManager(this._channel, this._listenerContainer);
 
   @override
   Future<void> enableAppReturn(AdCallback? callback) async {

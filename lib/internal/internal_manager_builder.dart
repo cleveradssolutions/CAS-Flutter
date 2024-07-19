@@ -1,25 +1,23 @@
 import 'dart:async';
-import 'package:clever_ads_solutions/internal/InternalListenerContainer.dart';
-import 'package:clever_ads_solutions/internal/InternalMediationManager.dart';
-import 'package:clever_ads_solutions/public/ConsentFlow.dart';
-import 'package:clever_ads_solutions/public/InitializationListener.dart';
-import 'package:clever_ads_solutions/public/ManagerBuilder.dart';
-import 'package:clever_ads_solutions/public/MediationManager.dart';
+
+import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
+import 'package:clever_ads_solutions/internal/internal_mediation_manager.dart';
+import 'package:clever_ads_solutions/public/consent_flow.dart';
+import 'package:clever_ads_solutions/public/initialization_listener.dart';
+import 'package:clever_ads_solutions/public/manager_builder.dart';
+import 'package:clever_ads_solutions/public/mediation_manager.dart';
 import 'package:flutter/services.dart';
 
 class InternalManagerBuilder extends ManagerBuilder {
   String _casId = "demo";
   int _enableAdTypes = 0;
-  String _flutterVersion = "";
+  final String _flutterVersion;
 
-  MethodChannel _channel;
-  InternalListenerContainer _listenerContainer;
+  final MethodChannel _channel;
+  final InternalListenerContainer _listenerContainer;
 
-  InternalManagerBuilder(MethodChannel channel,
-      InternalListenerContainer listenerContainer, String flutterVersion)
-      : _channel = channel,
-        _listenerContainer = listenerContainer,
-        _flutterVersion = flutterVersion;
+  InternalManagerBuilder(
+      this._channel, this._listenerContainer, this._flutterVersion);
 
   Future<void> _setTestMode(final bool isTestBuild) async {
     return _channel.invokeMethod('withTestAdMode', {'enabled': isTestBuild});

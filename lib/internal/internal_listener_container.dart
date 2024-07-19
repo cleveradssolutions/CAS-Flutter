@@ -1,13 +1,14 @@
 import 'dart:async';
-import 'package:clever_ads_solutions/public/AdImpression.dart';
-import 'package:clever_ads_solutions/public/AdType.dart';
-import 'package:clever_ads_solutions/public/InitConfig.dart';
-import 'package:clever_ads_solutions/public/InitializationListener.dart';
-import 'package:clever_ads_solutions/public/AdCallback.dart';
+
+import 'package:clever_ads_solutions/public/ad_callback.dart';
+import 'package:clever_ads_solutions/public/ad_impression.dart';
+import 'package:clever_ads_solutions/public/ad_load_callback.dart';
+import 'package:clever_ads_solutions/public/ad_type.dart';
+import 'package:clever_ads_solutions/public/ad_view_listener.dart';
+import 'package:clever_ads_solutions/public/init_config.dart';
+import 'package:clever_ads_solutions/public/initialization_listener.dart';
+import 'package:clever_ads_solutions/public/on_dismiss_listener.dart';
 import 'package:flutter/services.dart';
-import 'package:clever_ads_solutions/public/AdViewListener.dart';
-import 'package:clever_ads_solutions/public/AdLoadCallback.dart';
-import 'package:clever_ads_solutions/public/OnDismissListener.dart';
 
 class InternalListenerContainer {
   InitializationListener? initializationListener;
@@ -60,17 +61,19 @@ class InternalListenerContainer {
             finalIsTestMode = isTestMode;
           }
 
-          initializationListener?.onCASInitialized(InitConfig(finalError, finalCountryCode, finalIsConsentRequired, finalIsTestMode));
+          initializationListener?.onCASInitialized(InitConfig(finalError,
+              finalCountryCode, finalIsConsentRequired, finalIsTestMode));
         }
         break;
 
       //Consent Flow
 
-      case "OnDismissListener": {
-        int status = call.arguments["status"];
-        onDismissListener?.onConsentFlowDismissed(status);
-        break;
-      }
+      case "OnDismissListener":
+        {
+          int status = call.arguments["status"];
+          onDismissListener?.onConsentFlowDismissed(status);
+          break;
+        }
 
       //Interstitial
 

@@ -5,9 +5,9 @@
 //  Created by MacMini on 2.04.24.
 //
 
-import Foundation
-import Flutter
 import CleverAdsSolutions
+import Flutter
+import Foundation
 
 class BannerView: NSObject, FlutterPlatformView {
     private var banner: CASBannerView!
@@ -17,7 +17,7 @@ class BannerView: NSObject, FlutterPlatformView {
     func view() -> UIView {
         return banner
     }
-    
+
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
@@ -27,64 +27,66 @@ class BannerView: NSObject, FlutterPlatformView {
         listener: BannerViewEventListener
     ) {
         let args = args as? NSDictionary ?? [:]
-        
-        self.flutterId = args["id"] as? String ?? ""
-        self.channel = FlutterMethodChannel(name: "com.cleveradssolutions.cas.ads.flutter.bannerview.\(self.flutterId)", binaryMessenger: messenger!)
-        
+
+        flutterId = args["id"] as? String ?? ""
+        channel = FlutterMethodChannel(name: "com.cleveradssolutions.cas.ads.flutter.bannerview.\(flutterId)", binaryMessenger: messenger!)
+
         super.init()
-        
-        self.channel.setMethodCallHandler(self.handle)
-        
+
+        channel.setMethodCallHandler(handle)
+
         guard let bridge = factory() else {
-            fatalError("No bridge module!")
+            print("No bridge module!")
+            return
         }
-        
+
         banner = CASBannerView(adSize: CASSize.banner, manager: bridge.getManager())
         banner.tag = Int(viewId)
-        
+
         banner.adDelegate = listener
-        listener.flutterIds[banner.tag] = self.flutterId
-        
+        listener.flutterIds[banner.tag] = flutterId
+
         if let sizeMap = args["size"] as? NSDictionary {
             let serializedSize = sizeMap["size"] as? Int ?? 0
             var size = CASSize.banner
             let isAdaptive = sizeMap["isAdaptive"] as? Bool
-            
+
             if isAdaptive == true {
                 if let maxWidth = sizeMap["maxWidthDpi"] as? Int {
-                    size = maxWidth == 0 ? CASSize.getAdaptiveBanner(forMaxWidth: frame.width) 
-                    : CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidth))
+                    size = maxWidth == 0 ? CASSize.getAdaptiveBanner(forMaxWidth: frame.width)
+                        : CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidth))
                 }
             } else {
-                switch(serializedSize) {
+                switch serializedSize {
                 case 1: size = CASSize.banner
                 case 3: size = CASSize.getSmartBanner()
                 case 4: size = CASSize.leaderboard
                 case 5: size = CASSize.mediumRectangle
-                default: fatalError("Unknown CAS BannerView size")
+                default: print("Unknown CAS BannerView size")
                 }
             }
-            
+
             banner.adSize = size
         }
-        
+
         if let isAutoloadEnabled = args["isAutoloadEnabled"] as? Bool {
             banner.isAutoloadEnabled = isAutoloadEnabled
         }
-        
+
         if let refreshInterval = args["refreshInterval"] as? Int {
             banner.refreshInterval = refreshInterval
         }
     }
-    
+
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        switch(call.method) {
+        switch call.method {
         case "isAdReady":
             result(banner.isAdReady)
         case "loadNextAd":
             banner.loadNextAd()
         default:
-            fatalError("Unknown method")
+            print("Unknown method: \(call.method)")
+            result(FlutterError(code: "UNAVAILABLE", message: "Unknown method: \(call.method)", details: nil))
         }
     }
 }

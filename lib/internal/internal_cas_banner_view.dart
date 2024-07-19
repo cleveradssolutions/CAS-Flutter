@@ -1,20 +1,17 @@
 import 'dart:async';
-import 'package:clever_ads_solutions/internal/InternalListenerContainer.dart';
-import 'package:clever_ads_solutions/public/AdPosition.dart';
-import 'package:clever_ads_solutions/public/AdViewListener.dart';
-import 'package:clever_ads_solutions/public/CASBannerView.dart';
+
+import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
+import 'package:clever_ads_solutions/public/ad_position.dart';
+import 'package:clever_ads_solutions/public/ad_view_listener.dart';
+import 'package:clever_ads_solutions/public/cas_banner_view.dart';
 import 'package:flutter/services.dart';
 
 class InternalCASBannerView extends CASBannerView {
-  MethodChannel _channel;
-  InternalListenerContainer _listenerContainer;
-  int _sizeId;
+  final MethodChannel _channel;
+  final InternalListenerContainer _listenerContainer;
+  final int _sizeId;
 
-  InternalCASBannerView(MethodChannel channel,
-      InternalListenerContainer listenerContainer, int sizeId)
-      : _channel = channel,
-        _listenerContainer = listenerContainer,
-        _sizeId = sizeId;
+  InternalCASBannerView(this._channel, this._listenerContainer, this._sizeId);
 
   @override
   Future<void> disableBannerRefresh() async {
