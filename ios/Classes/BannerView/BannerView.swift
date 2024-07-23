@@ -40,34 +40,32 @@ class BannerView: NSObject, FlutterPlatformView {
             return
         }
 
-        banner = CASBannerView(adSize: CASSize.banner, manager: bridge.getManager())
-        banner.tag = Int(viewId)
-
-        banner.adDelegate = listener
-        listener.flutterIds[banner.tag] = flutterId
-
+        var adSize = CASSize.banner
         if let sizeMap = args["size"] as? NSDictionary {
             let serializedSize = sizeMap["size"] as? Int ?? 0
-            var size = CASSize.banner
             let isAdaptive = sizeMap["isAdaptive"] as? Bool
 
             if isAdaptive == true {
                 if let maxWidth = sizeMap["maxWidthDpi"] as? Int {
-                    size = maxWidth == 0 ? CASSize.getAdaptiveBanner(forMaxWidth: frame.width)
+                    adSize = maxWidth == 0 ? CASSize.getAdaptiveBanner(forMaxWidth: frame.width)
                         : CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidth))
                 }
             } else {
                 switch serializedSize {
-                case 1: size = CASSize.banner
-                case 3: size = CASSize.getSmartBanner()
-                case 4: size = CASSize.leaderboard
-                case 5: size = CASSize.mediumRectangle
+                case 1: adSize = CASSize.banner
+                case 3: adSize = CASSize.getSmartBanner()
+                case 4: adSize = CASSize.leaderboard
+                case 5: adSize = CASSize.mediumRectangle
                 default: print("Unknown CAS BannerView size")
                 }
             }
-
-            banner.adSize = size
         }
+
+        banner = CASBannerView(adSize: adSize, manager: bridge.getManager())
+        banner.tag = Int(viewId)
+
+        banner.adDelegate = listener
+        listener.flutterIds[banner.tag] = flutterId
 
         if let isAutoloadEnabled = args["isAutoloadEnabled"] as? Bool {
             banner.isAutoloadEnabled = isAutoloadEnabled
