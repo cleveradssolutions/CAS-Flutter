@@ -11,7 +11,7 @@ import 'package:clever_ads_solutions/public/user_consent.dart';
 import 'package:flutter/services.dart';
 
 class CAS {
-  static const String _pluginVersion = "0.4.0";
+  static const String _pluginVersion = "0.5.0";
 
   static const MethodChannel _channel =
       MethodChannel("com.cleveradssolutions.cas.ads.flutter");
