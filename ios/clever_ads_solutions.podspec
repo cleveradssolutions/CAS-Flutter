@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'clever_ads_solutions'
-  s.version          = '0.3.2'
+  s.version          = '0.5.0'
   s.summary          = 'CAS.AI plugin for Flutter.'
   s.description      = <<-DESC
 CAS.AI plugin for Flutter.
@@ -20,7 +20,7 @@ CAS.AI plugin for Flutter.
   s.static_framework = true
 
   s.dependency 'Flutter'
-  s.dependency 'CleverAdsSolutions-Base', '~> 3.8.1'
+  s.dependency 'CleverAdsSolutions-Base', '~> 3.9.1'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
