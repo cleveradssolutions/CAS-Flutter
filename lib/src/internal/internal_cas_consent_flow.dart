@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
-import 'package:clever_ads_solutions/public/consent_flow.dart';
-import 'package:clever_ads_solutions/public/on_dismiss_listener.dart';
 import 'package:flutter/services.dart';
+
+import '../consent_flow.dart';
+import '../internal/internal_listener_container.dart';
+import '../on_dismiss_listener.dart';
 
 class InternalCASConsentFlow extends ConsentFlow {
   final MethodChannel _channel;

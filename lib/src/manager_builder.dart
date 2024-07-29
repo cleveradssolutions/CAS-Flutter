@@ -1,6 +1,6 @@
-import 'package:clever_ads_solutions/public/consent_flow.dart';
-import 'package:clever_ads_solutions/public/initialization_listener.dart';
-import 'package:clever_ads_solutions/public/mediation_manager.dart';
+import 'consent_flow.dart';
+import 'initialization_listener.dart';
+import 'mediation_manager.dart';
 
 abstract class ManagerBuilder {
   ManagerBuilder withTestMode(final bool isTestBuild);

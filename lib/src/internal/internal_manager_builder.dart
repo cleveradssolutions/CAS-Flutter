@@ -1,12 +1,13 @@
 import 'dart:async';
 
-import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
-import 'package:clever_ads_solutions/internal/internal_mediation_manager.dart';
-import 'package:clever_ads_solutions/public/consent_flow.dart';
-import 'package:clever_ads_solutions/public/initialization_listener.dart';
-import 'package:clever_ads_solutions/public/manager_builder.dart';
-import 'package:clever_ads_solutions/public/mediation_manager.dart';
 import 'package:flutter/services.dart';
+
+import '../consent_flow.dart';
+import '../initialization_listener.dart';
+import '../internal/internal_listener_container.dart';
+import '../internal/internal_mediation_manager.dart';
+import '../manager_builder.dart';
+import '../mediation_manager.dart';
 
 class InternalManagerBuilder extends ManagerBuilder {
   String _casId = "demo";

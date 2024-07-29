@@ -35,9 +35,9 @@ class BannerView: NSObject, FlutterPlatformView {
 
         channel.setMethodCallHandler(handle)
 
-        guard let bridge = factory() else {
+        let bridge = factory()
+        if bridge == nil {
             print("No bridge module!")
-            return
         }
 
         var adSize = CASSize.banner
@@ -61,7 +61,7 @@ class BannerView: NSObject, FlutterPlatformView {
             }
         }
 
-        banner = CASBannerView(adSize: adSize, manager: bridge.getManager())
+        banner = CASBannerView(adSize: adSize, manager: bridge?.getManager())
         banner.tag = Int(viewId)
 
         banner.adDelegate = listener

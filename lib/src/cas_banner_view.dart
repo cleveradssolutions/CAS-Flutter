@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:clever_ads_solutions/public/ad_position.dart';
-import 'package:clever_ads_solutions/public/ad_view_listener.dart';
+import 'ad_position.dart';
+import 'ad_view_listener.dart';
 
 abstract class CASBannerView {
   void setAdListener(AdViewListener listener);

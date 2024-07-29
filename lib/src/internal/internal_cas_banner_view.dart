@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
-import 'package:clever_ads_solutions/public/ad_position.dart';
-import 'package:clever_ads_solutions/public/ad_view_listener.dart';
-import 'package:clever_ads_solutions/public/cas_banner_view.dart';
 import 'package:flutter/services.dart';
+
+import '../ad_position.dart';
+import '../ad_view_listener.dart';
+import '../cas_banner_view.dart';
+import 'internal_listener_container.dart';
 
 class InternalCASBannerView extends CASBannerView {
   final MethodChannel _channel;

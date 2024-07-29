@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
-import 'package:clever_ads_solutions/public/ad_callback.dart';
-import 'package:clever_ads_solutions/public/ad_load_callback.dart';
-import 'package:clever_ads_solutions/public/ad_size.dart';
-import 'package:clever_ads_solutions/public/cas_banner_view.dart';
-import 'package:clever_ads_solutions/public/mediation_manager.dart';
 import 'package:flutter/services.dart';
 
+import '../ad_callback.dart';
+import '../ad_load_callback.dart';
+import '../ad_size.dart';
+import '../cas_banner_view.dart';
+import '../internal/internal_listener_container.dart';
+import '../mediation_manager.dart';
 import 'internal_cas_banner_view.dart';
 
 class InternalMediationManager extends MediationManager {

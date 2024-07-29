@@ -1,14 +1,15 @@
-import 'package:clever_ads_solutions/internal/internal_cas_consent_flow.dart';
-import 'package:clever_ads_solutions/internal/internal_listener_container.dart';
-import 'package:clever_ads_solutions/internal/internal_manager_builder.dart';
-import 'package:clever_ads_solutions/public/audience.dart';
-import 'package:clever_ads_solutions/public/ccpa_status.dart';
-import 'package:clever_ads_solutions/public/consent_flow.dart';
-import 'package:clever_ads_solutions/public/loading_mode.dart';
-import 'package:clever_ads_solutions/public/manager_builder.dart';
-import 'package:clever_ads_solutions/public/targeting_options.dart';
-import 'package:clever_ads_solutions/public/user_consent.dart';
 import 'package:flutter/services.dart';
+
+import 'audience.dart';
+import 'ccpa_status.dart';
+import 'consent_flow.dart';
+import 'internal/internal_cas_consent_flow.dart';
+import 'internal/internal_listener_container.dart';
+import 'internal/internal_manager_builder.dart';
+import 'loading_mode.dart';
+import 'manager_builder.dart';
+import 'targeting_options.dart';
+import 'user_consent.dart';
 
 class CAS {
   static const String _pluginVersion = "0.5.0";
@@ -19,13 +20,15 @@ class CAS {
   static final InternalListenerContainer _listenerContainer =
       InternalListenerContainer(_channel);
 
+  @Deprecated("This method is no longer maintained and should not be used.")
+  static setFlutterVersion(String flutterVersion) {}
+
   static ConsentFlow buildConsentFlow() {
     return InternalCASConsentFlow(_channel, _listenerContainer);
   }
 
   static ManagerBuilder buildManager() {
-    return InternalManagerBuilder(
-        _channel, _listenerContainer, _pluginVersion);
+    return InternalManagerBuilder(_channel, _listenerContainer, _pluginVersion);
   }
 
   static Future<void> validateIntegration() async {

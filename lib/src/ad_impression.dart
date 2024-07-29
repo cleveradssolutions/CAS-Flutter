@@ -1,5 +1,5 @@
-import 'package:clever_ads_solutions/public/ad_type.dart';
-import 'package:clever_ads_solutions/public/price_accuracy.dart';
+import 'ad_type.dart';
+import 'price_accuracy.dart';
 
 class AdImpression {
   AdType adType;

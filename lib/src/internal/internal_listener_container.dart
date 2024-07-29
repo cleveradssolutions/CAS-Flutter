@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import 'package:clever_ads_solutions/public/ad_callback.dart';
-import 'package:clever_ads_solutions/public/ad_impression.dart';
-import 'package:clever_ads_solutions/public/ad_load_callback.dart';
-import 'package:clever_ads_solutions/public/ad_type.dart';
-import 'package:clever_ads_solutions/public/ad_view_listener.dart';
-import 'package:clever_ads_solutions/public/init_config.dart';
-import 'package:clever_ads_solutions/public/initialization_listener.dart';
-import 'package:clever_ads_solutions/public/on_dismiss_listener.dart';
 import 'package:flutter/services.dart';
+
+import '../ad_callback.dart';
+import '../ad_impression.dart';
+import '../ad_load_callback.dart';
+import '../ad_type.dart';
+import '../ad_view_listener.dart';
+import '../init_config.dart';
+import '../initialization_listener.dart';
+import '../on_dismiss_listener.dart';
 
 class InternalListenerContainer {
   InitializationListener? initializationListener;

@@ -1,3 +1,6 @@
+## 0.5.0
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.1 SDK
+
 ## 0.4.0
 
 ### Features

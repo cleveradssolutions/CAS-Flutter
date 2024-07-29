@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:clever_ads_solutions/public/ad_impression.dart';
-import 'package:clever_ads_solutions/public/ad_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'ad_impression.dart';
+import 'ad_size.dart';
 import 'ad_view_listener.dart';
 
 const String _viewType = '<cas-banner-view>';

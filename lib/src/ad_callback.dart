@@ -1,4 +1,4 @@
-import 'package:clever_ads_solutions/public/ad_impression.dart';
+import 'ad_impression.dart';
 
 abstract class AdCallback {
   void onShown();

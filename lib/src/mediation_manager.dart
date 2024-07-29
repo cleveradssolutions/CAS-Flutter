@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:clever_ads_solutions/public/ad_callback.dart';
-import 'package:clever_ads_solutions/public/ad_load_callback.dart';
-import 'package:clever_ads_solutions/public/ad_size.dart';
-import 'package:clever_ads_solutions/public/cas_banner_view.dart';
+import 'ad_callback.dart';
+import 'ad_load_callback.dart';
+import 'ad_size.dart';
+import 'cas_banner_view.dart';
 
 abstract class MediationManager {
   Future<void> loadInterstitial();

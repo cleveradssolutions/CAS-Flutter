@@ -5,7 +5,7 @@ repository: https://github.com/cleveradssolutions/CAS-Flutter
 documentation: https://github.com/cleveradssolutions/CAS-Flutter/wiki
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: '>=2.17.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
