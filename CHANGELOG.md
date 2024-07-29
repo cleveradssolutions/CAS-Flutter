@@ -1,6 +1,8 @@
 ## 0.5.0
 - Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.1 SDK
 ### Changes
+- [Android] Requires a minimum `compileSdkVersion` of 34.
+- [iOS] Requires apps to build with Xcode 15.3 or above.
 - The CASExchange adapter has been included to the Optimal Ads Solutions.
 - Previously beta adapters are now available to all: CASExchange, HyprMX, and StartIO.
 - All the package files have been renamed to comply with naming conventions for files.  
