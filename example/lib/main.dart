@@ -17,89 +17,106 @@ class _MyAppState extends State<MyApp> {
   MediationManager? manager;
   CASBannerView? view;
   bool _isReady = false;
+  String? _sdkVersion;
 
   @override
   void initState() {
     super.initState();
+    initialize();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Clever Ads Solutions Example App'),
-        ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton(
-                  child: const Text('Initialize'),
-                  onPressed: () => initialize(),
-                ),
-                if (_isReady)
-                  BannerView(
-                    key: _bannerViewKey,
-                    size: AdSize.Banner,
-                    isAutoloadEnabled: true,
-                    refreshInterval: 20,
-                    listener: BannerListener(size: AdSize.Banner),
-                  ),
-                if (_isReady)
-                  ElevatedButton(
-                    child: const Text('Load next add on upper widget'),
-                    onPressed: () => _bannerViewKey.currentState?.loadNextAd(),
-                  ),
-                ElevatedButton(
-                  child: const Text('Show interstitial'),
-                  onPressed: () => showInterstitial(),
-                ),
-                if (_isReady)
-                  BannerView(
-                    size: AdSize.Leaderboard,
-                    isAutoloadEnabled: true,
-                    refreshInterval: 20,
-                    listener: BannerListener(size: AdSize.Leaderboard),
-                  ),
-                ElevatedButton(
-                  child: const Text('Show rewarded'),
-                  onPressed: () => showRewarded(),
-                ),
-                if (_isReady)
-                  BannerView(
-                    size: AdSize.MediumRectangle,
-                    isAutoloadEnabled: true,
-                    refreshInterval: 20,
-                    listener: BannerListener(size: AdSize.MediumRectangle),
-                  ),
-                ElevatedButton(
-                  child: const Text('Create standart banner'),
-                  onPressed: () => createStandartBanner(),
-                ),
-                ElevatedButton(
-                  child: const Text('Create adaptive banner'),
-                  onPressed: () => createAdaptiveBanner(),
-                ),
-                ElevatedButton(
-                  child: const Text('Change banner position to top'),
-                  onPressed: () => changeBannerTop(),
-                ),
-                ElevatedButton(
-                  child: const Text('Change banner to bottom'),
-                  onPressed: () => changeBannerBottom(),
-                ),
-              ],
-            ),
+          appBar: AppBar(
+            title: const Text('CAS.AI Sample'),
           ),
-        ),
-      ),
+          body: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (_sdkVersion != null) Text('CAS.AI $_sdkVersion'),
+                    const Spacer(),
+                    Text('Plugin version ${CAS.getPluginVersion()}'),
+                  ],
+                ),
+              ),
+              Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_isReady) ...[
+                        BannerView(
+                          key: _bannerViewKey,
+                          size: AdSize.Banner,
+                          isAutoloadEnabled: true,
+                          refreshInterval: 20,
+                          listener: BannerListener(size: AdSize.Banner),
+                        ),
+                        ElevatedButton(
+                          child: const Text('Load next ad on upper widget'),
+                          onPressed: () =>
+                              _bannerViewKey.currentState?.loadNextAd(),
+                        ),
+                        BannerView(
+                          size: AdSize.Leaderboard,
+                          isAutoloadEnabled: true,
+                          refreshInterval: 20,
+                          listener: BannerListener(size: AdSize.Leaderboard),
+                        )
+                      ],
+                      ElevatedButton(
+                        // TODO Check isInterstitialReady
+                        onPressed: _isReady ? () => showInterstitial() : null,
+                        child: const Text('Show interstitial'),
+                      ),
+                      ElevatedButton(
+                        // TODO Check isRewardedReady
+                        onPressed: _isReady ? () => showRewarded() : null,
+                        child: const Text('Show rewarded'),
+                      ),
+                      if (_isReady)
+                        BannerView(
+                          size: AdSize.MediumRectangle,
+                          isAutoloadEnabled: true,
+                          refreshInterval: 20,
+                          listener:
+                              BannerListener(size: AdSize.MediumRectangle),
+                        ),
+                      ElevatedButton(
+                        onPressed:
+                            _isReady ? () => createStandardBanner() : null,
+                        child: const Text('Create standard banner'),
+                      ),
+                      ElevatedButton(
+                        onPressed:
+                            _isReady ? () => createAdaptiveBanner() : null,
+                        child: const Text('Create adaptive banner'),
+                      ),
+                      ElevatedButton(
+                        onPressed: _isReady ? () => changeBannerTop() : null,
+                        child: const Text('Change banner position to top'),
+                      ),
+                      ElevatedButton(
+                        onPressed: _isReady ? () => changeBannerBottom() : null,
+                        child: const Text('Change banner to bottom'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )),
     );
   }
 
   Future<void> initialize() async {
-    CAS.setDebugMode(true);
+    CAS.settings.setDebugMode(true);
 
     //CAS.validateIntegration();
 
@@ -114,9 +131,11 @@ class _MyAppState extends State<MyApp> {
 
     manager = builder.initialize();
     bool isReady = await getInterStatus();
-    debugPrint("isReady $isReady");
+    String version = await CAS.getSDKVersion();
+    debugPrint("CAS.AI version $version is ready: $isReady");
     setState(() {
       _isReady = manager != null;
+      _sdkVersion = version;
     });
   }
 
@@ -132,7 +151,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> showInterstitial() async {
     bool isReady = await getInterStatus();
     debugPrint("isReady $isReady");
-    manager?.showInterstitial(InterstitialListenerWrapper());
+    if (isReady) {
+      manager?.showInterstitial(InterstitialListenerWrapper());
+    }
   }
 
   Future<void> showRewarded() async {
@@ -146,7 +167,7 @@ class _MyAppState extends State<MyApp> {
     view?.showBanner();
   }
 
-  Future<void> createStandartBanner() async {
+  Future<void> createStandardBanner() async {
     view = manager?.getAdView(AdSize.Banner);
     view?.setAdListener(BannerListener());
     view?.showBanner();

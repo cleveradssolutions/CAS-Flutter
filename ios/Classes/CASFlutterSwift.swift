@@ -50,13 +50,13 @@ public class CASFlutterSwift: NSObject, FlutterPlugin {
         case "getSDKVersion": getSDKVersion(result: result)
         case "setAge": isEnabled(call: call, result: result)
         case "setGender": isEnabled(call: call, result: result)
-        case "setUserConsentStatus": setUserConsentStatus(call: call, result: result)
-        case "getUserConsentStatus": getUserConsentStatus(result: result)
+        case "setUserConsent": setUserConsent(call: call, result: result)
+        case "getUserConsent": getUserConsent(result: result)
         case "setCCPAStatus": setCCPAStatus(call: call, result: result)
         case "getCPPAStatus": getCPPAStatus(result: result)
         case "setTaggedAudience": setTaggedAudience(call: call, result: result)
         case "getTaggedAudience": getTaggedAudience(result: result)
-        case "setNativeDebug": setNativeDebug(call: call, result: result)
+        case "setDebugMode": setDebugMode(call: call, result: result)
         case "setMutedAdSounds": setMutedAdSounds(call: call, result: result)
         case "setLoadingMode": setLoadingMode(call: call, result: result)
         case "clearTestDeviceIds": clearTestDeviceIds(result: result)
@@ -333,7 +333,7 @@ public class CASFlutterSwift: NSObject, FlutterPlugin {
         }
     }
     
-    private func setUserConsentStatus(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func setUserConsent(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let consent = args["userConsent"] as? Int {
             CASSettings.setUserConsent(cosent: consent)
@@ -343,7 +343,7 @@ public class CASFlutterSwift: NSObject, FlutterPlugin {
         }
     }
     
-    private func getUserConsentStatus(result: @escaping FlutterResult) {
+    private func getUserConsent(result: @escaping FlutterResult) {
         result(Int(CASSettings.getUserConsent()))
     }
     
@@ -375,10 +375,10 @@ public class CASFlutterSwift: NSObject, FlutterPlugin {
         result(Int(CASSettings.getTaggedAudience()))
     }
     
-    private func setNativeDebug(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func setDebugMode(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let enable = args["enable"] as? Bool {
-            CASSettings.setNativeDebug(debug: enable)
+            CASSettings.setDebugMode(debug: enable)
             result(nil)
         } else {
             result(FlutterError.init(code: "", message: "Bad argument", details: nil))
