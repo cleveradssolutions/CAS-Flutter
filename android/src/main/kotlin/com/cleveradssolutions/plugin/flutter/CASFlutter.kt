@@ -88,13 +88,13 @@ class CASFlutter : FlutterPlugin, MethodCallHandler, ActivityAware {
                 "getSDKVersion" -> getSDKVersion(result)
                 "setAge" -> setAge(call, result)
                 "setGender" -> setGender(call, result)
-                "setUserConsentStatus" -> setUserConsentStatus(call, result)
-                "getUserConsentStatus" -> getUserConsentStatus(result)
+                "setUserConsent" -> setUserConsent(call, result)
+                "getUserConsent" -> getUserConsent(result)
                 "setCCPAStatus" -> setCCPAStatus(call, result)
                 "getCPPAStatus" -> getCPPAStatus(result)
                 "setTaggedAudience" -> setTaggedAudience(call, result)
                 "getTaggedAudience" -> getTaggedAudience(result)
-                "setNativeDebug" -> setNativeDebug(call, result)
+                "setDebugMode" -> setDebugMode(call, result)
                 "setMutedAdSounds" -> setMutedAdSounds(call, result)
                 "setLoadingMode" -> setLoadingMode(call, result)
                 "clearTestDeviceIds" -> clearTestDeviceIds(result)
@@ -182,7 +182,7 @@ class CASFlutter : FlutterPlugin, MethodCallHandler, ActivityAware {
         return result.success(null)
     }
 
-    private fun setUserConsentStatus(call: MethodCall, result: Result) {
+    private fun setUserConsent(call: MethodCall, result: Result) {
         val userConsent = call.argument<Int>("userConsent")
             ?: return result.error(errorTag, "userConsent is null", null)
 
@@ -191,7 +191,7 @@ class CASFlutter : FlutterPlugin, MethodCallHandler, ActivityAware {
         return result.success(null)
     }
 
-    private fun getUserConsentStatus(result: Result) {
+    private fun getUserConsent(result: Result) {
         return result.success(CASBridgeSettings.getUserConsent())
     }
 
@@ -221,11 +221,11 @@ class CASFlutter : FlutterPlugin, MethodCallHandler, ActivityAware {
         return result.success(CASBridgeSettings.getTaggedAudience())
     }
 
-    private fun setNativeDebug(call: MethodCall, result: Result) {
+    private fun setDebugMode(call: MethodCall, result: Result) {
         val enabled = call.argument<Boolean>("enable")
             ?: return result.error(errorTag, "enable is null", null)
 
-        CASBridgeSettings.setNativeDebug(enabled)
+        CASBridgeSettings.setDebugMode(enabled)
 
         return result.success(null)
     }

@@ -40,7 +40,7 @@ public class CASSettings {
         return CAS.settings.taggedAudience.rawValue
     }
     
-    public static func setNativeDebug(debug: Bool) {
+    public static func setDebugMode(debug: Bool) {
         CAS.settings.setDebugMode(debug)
     }
     

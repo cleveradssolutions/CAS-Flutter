@@ -38,7 +38,7 @@ public final class CASBridgeSettings {
         return CAS.getSettings().getTaggedAudience();
     }
 
-    public static void setNativeDebug(boolean debug) {
+    public static void setDebugMode(boolean debug) {
         CAS.getSettings().setDebugMode(debug);
     }
 
