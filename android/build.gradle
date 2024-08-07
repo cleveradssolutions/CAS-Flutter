@@ -14,10 +14,61 @@ buildscript {
     }
 }
 
-allprojects {
+rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            name = "IronSourceAdsRepo"
+            url = "https://android-sdk.is.com/"
+            content { it.includeGroup("com.ironsource.sdk") }
+        }
+        maven {
+            name = "MintegralAdsRepo"
+            url = "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea"
+            content { it.includeGroup("com.mbridge.msdk.oversea") }
+        }
+        maven {
+            name = "PangleAdsRepo"
+            url = "https://artifact.bytedance.com/repository/pangle"
+            content { it.includeGroup("com.pangle.global") }
+        }
+        maven {
+            name = "SuperAwesomeAdsRepo"
+            url = "https://aa-sdk.s3-eu-west-1.amazonaws.com/android_repo"
+            content { it.includeGroup("tv.superawesome.sdk.publisher") }
+        }
+        maven {
+            name = "ChartboostAdsRepo"
+            url = "https://cboost.jfrog.io/artifactory/chartboost-ads/"
+            content { it.includeGroup("com.chartboost") }
+        }
+        maven {
+            name = "OguryAdsRepo"
+            url = "https://maven.ogury.co"
+            content {
+                it.includeGroup("co.ogury")
+                it.includeGroup("co.ogury.module")
+            }
+        }
+        maven {
+            name = "LoopMeAdsRepo"
+            url = "https://jitpack.io"
+            content { it.includeGroup("com.github.loopme.android-united-sdk") }
+        }
+        maven {
+            name = "MadexAdsRepo"
+            url = "https://sdkpkg.sspnet.tech"
+            content {
+                it.includeGroup("sspnet.tech")
+                it.includeGroup("sspnet.tech.adapters")
+            }
+        }
+        maven {
+            name = "SmaatoAdsRepo"
+            url = "https://s3.amazonaws.com/smaato-sdk-releases/"
+            content { it.includeGroup("com.smaato.android.sdk") }
+        }
     }
 }
 
