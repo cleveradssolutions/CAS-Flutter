@@ -141,8 +141,7 @@ class CAS {
 
   @Deprecated("Use CAS.settings.clearTestDeviceIds() instead")
   static Future<void> setInterstitialInterval(int delay) async {
-    return _channel
-        .invokeMethod("setInterstitialInterval", {"interval": delay});
+    return CAS.settings.setInterstitialInterval(delay);
   }
 
   @Deprecated("Use CAS.settings.getInterstitialInterval() instead")
