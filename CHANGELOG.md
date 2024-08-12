@@ -1,3 +1,8 @@
+## 0.5.1
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.2 SDK
+### Bug Fixes
+- [Android] No longer requires to add ads repositories to your project-level build.gradle.
+
 ## 0.5.0
 - Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.1 SDK
 ### Changes
