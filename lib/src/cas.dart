@@ -12,7 +12,7 @@ import 'targeting_options.dart';
 import 'user_consent.dart';
 
 class CAS {
-  static const String _pluginVersion = "0.5.0";
+  static const String _pluginVersion = "0.5.1";
 
   static const MethodChannel _channel =
       MethodChannel("com.cleveradssolutions.cas.ads.flutter");
