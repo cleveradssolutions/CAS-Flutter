@@ -1,4 +1,4 @@
-group = 'com.cleveradssolutions.ads.flutter'
+group = 'com.cleveradssolutions.plugin.flutter'
 version = '0.5.1'
 
 buildscript {

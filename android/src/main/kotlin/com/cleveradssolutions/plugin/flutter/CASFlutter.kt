@@ -39,7 +39,7 @@ class CASFlutter : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware
 
     private var casConsentFlow: CASConsentFlow? = null
 
-    private var channelHandler: CASChannelHandler? = null
+    private var methodHandlers: Set<MethodHandler>? = null
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         flutterPluginBinding
@@ -49,52 +49,76 @@ class CASFlutter : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware
                 BannerViewFactory(this::getCASBridge, flutterPluginBinding.binaryMessenger)
             )
 
+        methodHandlers = setOf(
+            CASMethodHandler { activity },
+            AdsSettingsMethodHandler(),
+            TargetingOptionsMethodHandler()
+        )
+
         channel = MethodChannel(
             flutterPluginBinding.binaryMessenger,
-            "com.cleveradssolutions.cas.ads.flutter"
+            "com.cleveradssolutions.plugin.flutter"
         )
-        channelHandler = CASChannelHandler({ activity }, this)
-        channel.setMethodCallHandler(channelHandler)
+        channel.setMethodCallHandler(this)
 
         initCallbacks()
     }
 
     override fun onDetachedFromEngine(p0: FlutterPlugin.FlutterPluginBinding) {
-        channelHandler = null
+        methodHandlers = null
         channel.setMethodCallHandler(null)
         detachCallbacks()
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
-        try {
-            when (call.method) {
-                "withTestAdMode" -> withTestAdMode(call, result)
-                "withUserId" -> setUserId(call, result)
-                "withPrivacyUrl" -> withPrivacyUrl(call, result)
-                "disableConsentFlow" -> disableConsentFlow(result)
-                "showConsentFlow" -> showConsentFlow(result)
-                "addExtras" -> addExtras(call, result)
-                "initialize" -> build(call, result)
-                "loadAd" -> loadAd(call, result)
-                "isReadyAd" -> isReadyAd(call, result)
-                "showAd" -> showAd(call, result)
-                "enableAppReturn" -> enableAppReturn(call, result)
-                "skipNextAppReturnAds" -> skipNextAppReturnAds(result)
-                "setEnabled" -> setEnabled(call, result)
-                "isEnabled" -> isEnabled(call, result)
-                "createBannerView" -> createBannerView(call, result)
-                "loadBanner" -> loadBanner(call, result)
-                "isBannerReady" -> isBannerReady(call, result)
-                "showBanner" -> showBanner(call, result)
-                "hideBanner" -> hideBanner(call, result)
-                "setBannerPosition" -> setBannerPosition(call, result)
-                "setBannerAdRefreshRate" -> setBannerAdRefreshRate(call, result)
-                "disableBannerRefresh" -> disableBannerRefresh(call, result)
-                "disposeBanner" -> disposeBanner(call, result)
+        for (methodHandler in methodHandlers ?: return) {
+            if (methodHandler.onMethodCall(call, result)) {
+                return
             }
-        } catch (exception: Exception) {
-            result.error(LOG_TAG, exception.message, null)
         }
+        when (call.method) {
+            "withTestAdMode" -> withTestAdMode(call, result)
+            "withUserId" -> setUserId(call, result)
+            "withPrivacyUrl" -> withPrivacyUrl(call, result)
+            "disableConsentFlow" -> disableConsentFlow(result)
+            "showConsentFlow" -> showConsentFlow(result)
+            "addExtras" -> addExtras(call, result)
+            "initialize" -> build(call, result)
+            "loadAd" -> loadAd(call, result)
+            "isReadyAd" -> isReadyAd(call, result)
+            "showAd" -> showAd(call, result)
+            "enableAppReturn" -> enableAppReturn(call, result)
+            "skipNextAppReturnAds" -> skipNextAppReturnAds(result)
+            "setEnabled" -> setEnabled(call, result)
+            "isEnabled" -> isEnabled(call, result)
+            "createBannerView" -> createBannerView(call, result)
+            "loadBanner" -> loadBanner(call, result)
+            "isBannerReady" -> isBannerReady(call, result)
+            "showBanner" -> showBanner(call, result)
+            "hideBanner" -> hideBanner(call, result)
+            "setBannerPosition" -> setBannerPosition(call, result)
+            "setBannerAdRefreshRate" -> setBannerAdRefreshRate(call, result)
+            "disableBannerRefresh" -> disableBannerRefresh(call, result)
+            "disposeBanner" -> disposeBanner(call, result)
+            else -> result.notImplemented()
+        }
+    }
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        activity = binding.activity
+        getCASConsentFlow()?.withActivity(activity)
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        activity = null
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        activity = binding.activity
+    }
+
+    override fun onDetachedFromActivity() {
+        activity = null
     }
 
     /** region SDK METHODS   =======================================================================*/
@@ -446,25 +470,6 @@ class CASFlutter : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware
         return casBridge
     }
 
-    // endregion
-
-    /** region ActivityAware =======================================================================*/
-    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        activity = binding.activity
-        getCASConsentFlow()?.withActivity(activity)
-    }
-
-    override fun onDetachedFromActivityForConfigChanges() {
-        activity = null
-    }
-
-    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        activity = binding.activity
-    }
-
-    override fun onDetachedFromActivity() {
-        activity = null
-    }
     // endregion
 
     /** region Events ==============================================================================*/

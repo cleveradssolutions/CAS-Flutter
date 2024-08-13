@@ -46,7 +46,7 @@ class BannerView(
 
         flutterId = creationParams?.get("id") as? String ?: ""
 
-        channel = MethodChannel(binaryMessenger, "com.cleveradssolutions.cas.ads.flutter.bannerview.$flutterId")
+        channel = MethodChannel(binaryMessenger, "com.cleveradssolutions.plugin.flutter.bannerview.$flutterId")
         channel.setMethodCallHandler(this)
 
         listener.flutterIds[id] = flutterId

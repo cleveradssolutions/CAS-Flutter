@@ -19,7 +19,7 @@ class CAS {
   static const String _pluginVersion = "0.5.1";
 
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.cas.ads.flutter");
+      MethodChannel("com.cleveradssolutions.plugin.flutter");
 
   /// Get singleton instance for configure all mediation managers
   static final AdsSettings settings = AdsSettings(_channel);

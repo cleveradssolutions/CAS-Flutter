@@ -10,7 +10,7 @@ import 'ad_view_listener.dart';
 
 const String _viewType = '<cas-banner-view>';
 final _stream =
-    const EventChannel('com.cleveradssolutions.cas.ads.flutter.bannerview')
+    const EventChannel('com.cleveradssolutions.plugin.flutter.bannerview')
         .receiveBroadcastStream()
         .map((event) =>
             BannerViewChannelEvent(event["id"], event["event"], event["data"]));
@@ -72,7 +72,7 @@ class BannerViewState extends State<BannerView> {
     listener = widget.listener;
     id = widget.id;
     _channel =
-        MethodChannel('com.cleveradssolutions.cas.ads.flutter.bannerview.$id');
+        MethodChannel('com.cleveradssolutions.plugin.flutter.bannerview.$id');
     sub = _stream.listen((event) {
       if (event.id == id) {
         handleEvent(event);

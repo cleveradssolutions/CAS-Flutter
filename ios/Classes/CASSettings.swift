@@ -3,51 +3,6 @@ import CleverAdsSolutions
 
 public class CASSettings {
     
-    public static func getSDKVersion() -> String {
-        return CAS.getSDKVersion()
-    }
-    
-    public static func setUserConsent(cosent: Int) {
-        let val = CASConsentStatus(rawValue: cosent)
-        if (val != nil) {
-            CAS.settings.userConsent = val!
-        }
-    }
-    
-    public static func getUserConsent() -> Int {
-        return CAS.settings.userConsent.rawValue
-    }
-    
-    public static func setCcpaStatus(cppa: Int) {
-        let val = CASCCPAStatus(rawValue: cppa)
-        if (val != nil) {
-            CAS.settings.userCCPAStatus = val!
-        }
-    }
-    
-    public static func getCcpaStatus() -> Int {
-        return CAS.settings.userCCPAStatus.rawValue
-    }
-    
-    public static func setTaggedAudience(audienc: Int) {
-        let val = CASAudience(rawValue: audienc)
-        if (val != nil) {
-            CAS.settings.taggedAudience = val!
-        }
-    }
-    
-    public static func getTaggedAudience() -> Int {
-        return CAS.settings.taggedAudience.rawValue
-    }
-    
-    public static func setDebugMode(debug: Bool) {
-        CAS.settings.setDebugMode(debug)
-    }
-    
-    public static func setMutedAdSounds(muted: Bool) {
-        CAS.settings.mutedAdSounds = muted
-    }
-    
     public static func setLoadingMode(value: Int) {
         let val = CASLoadingManagerMode(rawValue: value)
         if (val != nil) {

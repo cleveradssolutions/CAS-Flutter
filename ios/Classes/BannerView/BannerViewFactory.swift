@@ -18,7 +18,7 @@ class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
         self.messenger = messenger
         self.bridge = bridge
         self.listener = BannerViewEventListener()
-        self.channel = FlutterEventChannel(name: "com.cleveradssolutions.cas.ads.flutter.bannerview", binaryMessenger: self.messenger)
+        self.channel = FlutterEventChannel(name: "com.cleveradssolutions.plugin.flutter.bannerview", binaryMessenger: self.messenger)
         self.channel.setStreamHandler(listener)
         
         super.init()

@@ -46,6 +46,39 @@ class AdsSettings {
     );
   }
 
+  /// Parses the [SharedPreferences] string with key `IABTCF_VendorConsents`
+  /// to determine the consent status of the IAB vendor with the provided ID.
+  ///
+  /// @param vendorId Vendor ID as defined in the Global Vendor List.
+  /// @return [ConsentStatus.ACCEPTED] if the advertising entity has consent, [ConsentStatus.DENIED] if not, or [ConsentStatus.UNDEFINED] if VendorConsents is not available on disk.
+  /// @see <a href="https://iabeurope.eu/vendor-list-tcf/">TCF Vendor List</a>
+  Future<ConsentStatus> getVendorConsent(int vendorId) async {
+    final int? index = await _channel.invokeMethod<int>(
+      "getVendorConsent",
+      {"vendorId": vendorId},
+    );
+    return index == null
+        ? ConsentStatus.undefined
+        : ConsentStatus.values[index];
+  }
+
+  /// Parses the [SharedPreferences] string with key `IABTCF_AddtlConsent`
+  /// to determine the consent status of the advertising entity with the provided Ad Technology Provider (ATP) ID.
+  ///
+  /// @param providerId ATP ID of the advertising entity (e.g. 89 for Meta Audience Network).
+  /// @return [ConsentStatus.ACCEPTED] if the advertising entity has consent, [ConsentStatus.DENIED] if not, or [ConsentStatus.UNDEFINED] if AddtlConsent is not available on disk.
+  /// @see <a href="https://support.google.com/admanager/answer/9681920">Google’s Additional Consent Mode technical specification</a>
+  /// @see <a href="https://storage.googleapis.com/tcfac/additional-consent-providers.csv">List of Google ATPs and their IDs</a>
+  Future<ConsentStatus> getAdditionalConsent(int providerId) async {
+    final int? index = await _channel.invokeMethod<int>(
+      "getAdditionalConsent",
+      {"providerId": providerId},
+    );
+    return index == null
+        ? ConsentStatus.undefined
+        : ConsentStatus.values[index];
+  }
+
   /// Whether or not user has opted out of the sale of their personal information.
   ///
   /// Default: [CCPAStatus.UNDEFINED]
