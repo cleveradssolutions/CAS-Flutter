@@ -12,8 +12,14 @@ const String _viewType = '<cas-banner-view>';
 final _stream =
     const EventChannel('com.cleveradssolutions.cas.ads.flutter.bannerview')
         .receiveBroadcastStream()
-        .map((event) =>
-            BannerViewChannelEvent(event["id"], event["event"], event["data"]));
+        .where((event) => event != null && event is Map)
+        .map((event) {
+  //Null check to avoid runtime error
+  final id = event["id"] as String? ?? '';
+  final eventName = event["event"] as String? ?? '';
+  final data = event["data"];
+  return BannerViewChannelEvent(id, eventName, data);
+});
 
 const Map<AdSize, Size> _sizes = {
   AdSize.Banner: Size(320, 50),
@@ -74,7 +80,8 @@ class BannerViewState extends State<BannerView> {
     _channel =
         MethodChannel('com.cleveradssolutions.cas.ads.flutter.bannerview.$id');
     sub = _stream.listen((event) {
-      if (event.id == id) {
+      //Null check to avoid runtime error
+      if (event.id == id && event.event != null && event.event.isNotEmpty) {
         handleEvent(event);
       }
     });
