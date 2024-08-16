@@ -37,33 +37,13 @@ class InternalListenerContainer {
 
       case 'onCASInitialized':
         {
-          String? error = call.arguments["error"];
-          String? countryCode = call.arguments["countryCode"];
-          bool? isConsentRequired = call.arguments["isConsentRequired"];
-          bool? isTestMode = call.arguments["testMode"];
+          String error = call.arguments["error"] ?? "";
+          String countryCode = call.arguments["countryCode"] ?? "";
+          bool isConsentRequired = call.arguments["isConsentRequired"] ?? false;
+          bool isTestMode = call.arguments["testMode"] ?? false;
 
-          String finalError = "";
-          if (error != null) {
-            finalError = error;
-          }
-
-          String finalCountryCode = "";
-          if (countryCode != null) {
-            finalCountryCode = countryCode;
-          }
-
-          bool finalIsConsentRequired = false;
-          if (isConsentRequired != null) {
-            finalIsConsentRequired = isConsentRequired;
-          }
-
-          bool finalIsTestMode = false;
-          if (isTestMode != null) {
-            finalIsTestMode = isTestMode;
-          }
-
-          initializationListener?.onCASInitialized(InitConfig(finalError,
-              finalCountryCode, finalIsConsentRequired, finalIsTestMode));
+          initializationListener?.onCASInitialized(
+              InitConfig(error, countryCode, isConsentRequired, isTestMode));
         }
         break;
 

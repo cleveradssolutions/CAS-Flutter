@@ -123,6 +123,11 @@ class AdsSettings {
     return _channel.invokeMethod("setDebugMode", {"enable": isEnable});
   }
 
+  @Deprecated("This method is no longer maintained and should not be used.")
+  Future<void> addTestDeviceId(String deviceId) async {
+    return _channel.invokeMethod("addTestDeviceId", {"deviceId": deviceId});
+  }
+
   /// Add a test device ID corresponding to test devices which will always request test ads.
   /// List of test devices should be defined before first MediationManager initialized.
   ///
@@ -131,23 +136,16 @@ class AdsSettings {
   /// "To get test ads on this device, set ... "
   /// 3. Copy your alphanumeric test device ID to your clipboard.
   /// 4. Add the test device ID to the list before call initialize MediationManager.
-  Future<Set<String>> getTestDeviceIds() async {
-    final Set<String>? testDeviceIds =
-        await _channel.invokeMethod<Set<String>>("getTestDeviceIds");
-    return testDeviceIds ?? <String>{};
+  Future<void> setTestDeviceId(String deviceIds) async {
+    return _channel.invokeMethod("setTestDeviceIds", {"devices": deviceIds});
   }
 
-  /// See [getTestDeviceIds]
-  Future<void> addTestDeviceId(String deviceId) async {
-    return _channel.invokeMethod("addTestDeviceId", {"deviceId": deviceId});
-  }
-
-  /// See [getTestDeviceIds]
+  /// See [setTestDeviceId]
   Future<void> setTestDeviceIds(Set<String> deviceIds) async {
     return _channel.invokeMethod("setTestDeviceIds", {"devices": deviceIds});
   }
 
-  /// See [getTestDeviceIds]
+  /// See [setTestDeviceId]
   Future<void> clearTestDeviceIds() async {
     return _channel.invokeMethod("clearTestDeviceIds");
   }

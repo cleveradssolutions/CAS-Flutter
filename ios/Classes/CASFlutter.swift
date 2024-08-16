@@ -185,30 +185,6 @@ public class CASFlutter: NSObject, FlutterPlugin {
         }
     }
 
-    private func setInterstitialInterval(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let interval = args["interval"] as? Int {
-            CASSettings.setInterstitialInterval(interval: interval)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
-        }
-    }
-
-    private func getInterstitialInterval(result: @escaping FlutterResult) {
-        result(CASSettings.getInterstitialInterval())
-    }
-
-    private func setBannerRefreshDelay(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let delay = args["delay"] as? Int {
-            CASSettings.setRefreshBannerDelay(delay: delay)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
-        }
-    }
-
     private func setBannerPosition(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int,
@@ -216,25 +192,6 @@ public class CASFlutter: NSObject, FlutterPlugin {
            let xOffset = args["x"] as? Int,
            let yOffset = args["y"] as? Int {
             CASFlutter.cleverAdsSolutions.getCasBridge()?.setBannerPosition(sizeId: sizeId, positionId: positionId, x: xOffset, y: yOffset)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
-        }
-    }
-
-    private func getBannerRefreshDelay(result: @escaping FlutterResult) {
-        result(Int(CASSettings.getBannerRefreshDelay()))
-    }
-
-    private func restartInterstitialInterval(result: @escaping FlutterResult) {
-        CASSettings.restartInterstitialInterval()
-        result(nil)
-    }
-
-    private func allowInterstitialAdsWhenVideoCostAreLower(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let enable = args["enable"] as? Bool {
-            CASSettings.allowInterInsteadOfRewarded(allow: enable)
             result(nil)
         } else {
             result(FlutterError(code: "", message: "Bad argument", details: nil))
@@ -283,61 +240,6 @@ public class CASFlutter: NSObject, FlutterPlugin {
             } else {
                 result(CASFlutter.cleverAdsSolutions.getCasBridge()?.isEnabled(type: adType))
             }
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
-        }
-    }
-
-    private func setAge(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let age = args["age"] as? Int {
-            CASSettings.setUserAge(age: age)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
-        }
-    }
-
-    private func setGender(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let gender = args["gender"] as? Int {
-            CASSettings.setUserGender(gender: gender)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
-        }
-    }
-
-    private func setLoadingMode(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let mode = args["loadingMode"] as? Int {
-            CASSettings.setLoadingMode(value: mode)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
-        }
-    }
-
-    private func clearTestDeviceIds(result: @escaping FlutterResult) {
-        CASSettings.clearTestDeviceIds()
-        result(nil)
-    }
-
-    private func addTestDeviceId(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let id = args["deviceId"] as? String {
-            CASSettings.addTestDeviceId(deviceId: id)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
-        }
-    }
-
-    private func setTestDeviceIds(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let devices = args["devices"] as? [String] {
-            CASSettings.setTestDeviceIds(testDeviceIds: devices)
-            result(nil)
         } else {
             result(FlutterError(code: "", message: "Bad argument", details: nil))
         }

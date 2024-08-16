@@ -20,8 +20,8 @@ class AdsSettingsMethodHandler : MethodHandler {
             "setMutedAdSounds" -> setMutedAdSounds(call, result)
             "getDebugMode" -> getDebugMode(result)
             "setDebugMode" -> setDebugMode(call, result)
-            "getTestDeviceIds" -> getTestDeviceIds(result)
             "addTestDeviceId" -> addTestDeviceId(call, result)
+            "setTestDeviceId" -> setTestDeviceId(call, result)
             "setTestDeviceIds" -> setTestDeviceIds(call, result)
             "clearTestDeviceIds" -> clearTestDeviceIds(result)
             "getTrialAdFreeInterval" -> getTrialAdFreeInterval(result)
@@ -92,12 +92,12 @@ class AdsSettingsMethodHandler : MethodHandler {
         tryGetArgSetValue<Boolean>("enable", call, result) { CAS.settings.debugMode = it }
     }
 
-    private fun getTestDeviceIds(result: Result) {
-        result.success(CAS.settings.testDeviceIDs)
-    }
-
     private fun addTestDeviceId(call: MethodCall, result: Result) {
         tryGetArgSetValue<String>("deviceId", call, result) { CAS.settings.testDeviceIDs += it }
+    }
+
+    private fun setTestDeviceId(call: MethodCall, result: Result) {
+        tryGetArgSetValue<String>("deviceId", call, result) { CAS.settings.testDeviceIDs = setOf(it) }
     }
 
     private fun setTestDeviceIds(call: MethodCall, result: Result) {

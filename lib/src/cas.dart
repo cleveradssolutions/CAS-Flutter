@@ -129,7 +129,7 @@ class CAS {
     return CAS.settings.setTestDeviceIds(deviceIds.toSet());
   }
 
-  @Deprecated("Use CAS.settings.addTestDeviceId(String deviceId) instead")
+  @Deprecated("This method is no longer maintained and should not be used.")
   static Future<void> addTestDeviceId(String deviceId) async {
     return CAS.settings.addTestDeviceId(deviceId);
   }

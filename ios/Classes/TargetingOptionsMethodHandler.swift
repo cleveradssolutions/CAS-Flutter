@@ -51,26 +51,22 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func getLocationLatitude(result: @escaping FlutterResult) {
-        result(CAS.targetingOptions.location?.latitude)
+        result(CAS.targetingOptions.locationLatitude)
     }
 
     private func setLocationLatitude(call: FlutterMethodCall, result: @escaping FlutterResult) {
         tryGetArgSetValue(name: "latitude", call: call, result: result) { latitude in
-            let location = CAS.targetingOptions.location ?? Location()
-            CAS.targetingOptions.location = location
-            location.latitude = latitude
+            CAS.targetingOptions.locationLatitude = latitude
         }
     }
 
     private func getLocationLongitude(result: @escaping FlutterResult) {
-        result(CAS.targetingOptions.location?.longitude)
+        result(CAS.targetingOptions.locationLongitude)
     }
 
     private func setLocationLongitude(call: FlutterMethodCall, result: @escaping FlutterResult) {
         tryGetArgSetValue(name: "longitude", call: call, result: result) { longitude in
-            let location = CAS.targetingOptions.location ?? Location()
-            CAS.targetingOptions.location = location
-            location.longitude = longitude
+            CAS.targetingOptions.locationLongitude = longitude
         }
     }
 

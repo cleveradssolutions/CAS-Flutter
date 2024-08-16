@@ -23,8 +23,8 @@ class AdsSettingsMethodHandler: MethodHandler {
         case "setMutedAdSounds": setMutedAdSounds(call: call, result: result)
         case "getDebugMode": getDebugMode(result: result)
         case "setDebugMode": setDebugMode(call: call, result: result)
-        case "getTestDeviceIds": getTestDeviceIds(result: result)
-        case "addTestDeviceId": addTestDeviceId(call: call, result: result)
+        case "addTestDeviceId": setTestDeviceId(call: call, result: result)
+        case "setTestDeviceId": setTestDeviceId(call: call, result: result)
         case "setTestDeviceIds": setTestDeviceIds(call: call, result: result)
         case "clearTestDeviceIds": clearTestDeviceIds(result: result)
         case "getTrialAdFreeInterval": getTrialAdFreeInterval(result: result)
@@ -49,7 +49,7 @@ class AdsSettingsMethodHandler: MethodHandler {
 
     private func setTaggedAudience(call: FlutterMethodCall, result: @escaping FlutterResult) {
         tryGetArgSetValue(name: "taggedAudience", call: call, result: result) { index in
-            if let value = CASAudience(rawValue: index){
+            if let value = CASAudience(rawValue: index) {
                 CAS.settings.taggedAudience = value
             }
         }
@@ -111,26 +111,20 @@ class AdsSettingsMethodHandler: MethodHandler {
         }
     }
 
-
-
-    private func getTestDeviceIds(result: @escaping FlutterResult) {
-        result(CAS.settings.testDeviceIDs)
-    }
-
-    private func addTestDeviceId(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func setTestDeviceId(call: FlutterMethodCall, result: @escaping FlutterResult) {
         tryGetArgSetValue(name: "deviceId", call: call, result: result) { deviceId in
-            CAS.settings.testDeviceIDs.insert(deviceId)
+            CAS.settings.setTestDevice(ids: [deviceId])
         }
     }
 
     private func setTestDeviceIds(call: FlutterMethodCall, result: @escaping FlutterResult) {
         tryGetArgSetValue(name: "deviceIds", call: call, result: result) { deviceIds in
-            CAS.settings.testDeviceIDs = deviceIds
+            CAS.settings.setTestDevice(ids: deviceIds)
         }
     }
 
     private func clearTestDeviceIds(result: @escaping FlutterResult) {
-        CAS.settings.testDeviceIDs.removeAll()
+        CAS.settings.setTestDevice(ids: [])
         result(nil)
     }
 
@@ -170,22 +164,22 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func isAllowInterstitialAdsWhenVideoCostAreLower(result: @escaping FlutterResult) {
-        result(CAS.settings.allowInterstitialAdsWhenVideoCostAreLower)
+        result(CAS.settings.isInterstitialAdsWhenVideoCostAreLowerAllowed())
     }
 
     private func allowInterstitialAdsWhenVideoCostAreLower(call: FlutterMethodCall, result: @escaping FlutterResult) {
         tryGetArgSetValue(name: "enable", call: call, result: result) { enable in
-            CAS.settings.allowInterstitialAdsWhenVideoCostAreLower = enable
+            CAS.settings.setInterstitialAdsWhenVideoCostAreLower(allow: enable)
         }
     }
 
     private func getLoadingMode(result: @escaping FlutterResult) {
-        result(CAS.settings.loadingMode)
+        result(CAS.settings.getLoadingMode())
     }
 
     private func setLoadingMode(call: FlutterMethodCall, result: @escaping FlutterResult) {
         tryGetArgSetValue(name: "loadingMode", call: call, result: result) { loadingMode in
-            CAS.settings.loadingMode = loadingMode
+            CAS.settings.setLoading(mode: loadingMode)
         }
     }
 }
