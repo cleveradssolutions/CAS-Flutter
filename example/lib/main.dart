@@ -116,48 +116,39 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initialize() async {
+    // Set Ads Settings
     CAS.settings.setDebugMode(true);
+    CAS.settings.setTaggedAudience(Audience.notChildren);
 
-    //CAS.validateIntegration();
+    // Set Manual loading mode to disable auto requests
+    // CAS.settings.setLoadingMode(LoadingManagerMode.manual);
 
-    ManagerBuilder builder = CAS
+    // Initialize SDK
+    manager = CAS
         .buildManager()
+        .withCasId("com.cleveradssolutions.plugin.flutter.example")
         .withTestMode(true)
-        .withCasId("example")
         .withAdTypes(AdTypeFlags.Banner |
-            AdTypeFlags.Rewarded |
-            AdTypeFlags.Interstitial)
-        .withInitializationListener(InitializationListenerWrapper());
-
-    manager = builder.initialize();
-    bool isReady = await getInterStatus();
-    String version = await CAS.getSDKVersion();
-    debugPrint("CAS.AI version $version is ready: $isReady");
-    setState(() {
-      _isReady = manager != null;
-      _sdkVersion = version;
-    });
-  }
-
-  Future<bool> getInterStatus() async {
-    bool isReady = false;
-    final manager = this.manager;
-    if (manager != null) {
-      isReady = await manager.isInterstitialReady();
-    }
-    return isReady;
+            AdTypeFlags.Interstitial |
+            AdTypeFlags.Rewarded)
+        // .withConsentFlow(
+        //     ConsentFlow().withDismissListener(ConsentFlowDismissListenerImpl()))
+        .withInitializationListener(InitializationListenerWrapper())
+        .initialize();
   }
 
   Future<void> showInterstitial() async {
-    bool isReady = await getInterStatus();
-    debugPrint("isReady $isReady");
-    if (isReady) {
-      manager?.showInterstitial(InterstitialListenerWrapper());
+    final manager = this.manager;
+    if (manager != null && await manager.isInterstitialReady()) {
+      manager.showInterstitial(InterstitialListenerWrapper());
     }
   }
 
   Future<void> showRewarded() async {
-    manager?.showRewarded(InterstitialListenerWrapper());
+    final manager = this.manager;
+    if (manager != null && await manager.isRewardedAdReady()) {
+      manager.showRewarded(InterstitialListenerWrapper());
+    }
   }
 
   Future<void> createAdaptiveBanner() async {

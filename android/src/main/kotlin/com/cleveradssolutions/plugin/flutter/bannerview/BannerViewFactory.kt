@@ -10,9 +10,12 @@ import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
 
-class BannerViewFactory(private val bridgeProvider: () -> CASBridge?, private val binaryMessenger: BinaryMessenger): PlatformViewFactory(StandardMessageCodec.INSTANCE) {
+class BannerViewFactory(
+    private val bridgeProvider: () -> CASBridge?,
+    private val binaryMessenger: BinaryMessenger
+) : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
     private val channel: EventChannel =
-            EventChannel(binaryMessenger, "com.cleveradssolutions.plugin.flutter.bannerview")
+        EventChannel(binaryMessenger, "com.cleveradssolutions.plugin.flutter.bannerview")
     private val listener = BannerViewEventListener()
 
     init {

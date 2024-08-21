@@ -1,14 +1,15 @@
-import 'package:clever_ads_solutions/src/consent_status.dart';
 import 'package:flutter/services.dart';
 
 import 'ads_settings.dart';
 import 'audience.dart';
 import 'ccpa_status.dart';
 import 'consent_flow.dart';
+import 'consent_status.dart';
 import 'gender.dart';
 import 'internal/internal_cas_consent_flow.dart';
 import 'internal/internal_listener_container.dart';
 import 'internal/internal_manager_builder.dart';
+import 'loading_manager_mode.dart';
 import 'loading_mode.dart';
 import 'manager_builder.dart';
 import 'targeting_options.dart';
@@ -118,9 +119,11 @@ class CAS {
   }
 
   @Deprecated(
-      "Use CAS.settings.setLoadingMode(LoadingMode loadingMode) instead")
+      "Use CAS.settings.setLoadingMode(LoadingManagerMode loadingManagerMode) instead")
   static Future<void> setLoadingMode(LoadingMode loadingMode) async {
-    return CAS.settings.setLoadingMode(loadingMode);
+    final LoadingManagerMode converted =
+        LoadingManagerMode.values[loadingMode.index];
+    return CAS.settings.setLoadingMode(converted);
   }
 
   @Deprecated(

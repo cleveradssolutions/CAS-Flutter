@@ -14,7 +14,12 @@ class BannerViewEventListener : AdViewListener, EventChannel.StreamHandler {
     private var eventSink: EventChannel.EventSink? = null
 
     override fun onAdViewLoaded(view: CASBannerView) {
-        eventSink?.success(mapOf("id" to flutterIds[view.id], "event" to "onAdViewLoaded"))
+        eventSink?.success(
+            mapOf(
+                "id" to flutterIds[view.id],
+                "event" to "onAdViewLoaded"
+            )
+        )
     }
 
     override fun onAdViewFailed(view: CASBannerView, error: AdError) {
@@ -38,8 +43,12 @@ class BannerViewEventListener : AdViewListener, EventChannel.StreamHandler {
     }
 
     override fun onAdViewClicked(view: CASBannerView) {
-        eventSink?.success(mapOf("id" to flutterIds[view.id], "event" to "onAdViewClicked"))
-        Log.i("BannerView", "Clicked!")
+        eventSink?.success(
+            mapOf(
+                "id" to flutterIds[view.id],
+                "event" to "onAdViewClicked"
+            )
+        )
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {

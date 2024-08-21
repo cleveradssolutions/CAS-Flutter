@@ -22,7 +22,6 @@ class BannerView(
 ): PlatformView, MethodChannel.MethodCallHandler {
     private val banner: CASBannerView
     private val flutterId: String
-    private val channel: MethodChannel
 
     override fun getView(): View {
         return banner
@@ -46,8 +45,8 @@ class BannerView(
 
         flutterId = creationParams?.get("id") as? String ?: ""
 
-        channel = MethodChannel(binaryMessenger, "com.cleveradssolutions.plugin.flutter.bannerview.$flutterId")
-        channel.setMethodCallHandler(this)
+        MethodChannel(binaryMessenger, "com.cleveradssolutions.plugin.flutter.bannerview.$flutterId")
+            .setMethodCallHandler(this)
 
         listener.flutterIds[id] = flutterId
 

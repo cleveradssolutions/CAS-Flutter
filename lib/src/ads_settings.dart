@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'audience.dart';
 import 'ccpa_status.dart';
-import 'loading_mode.dart';
+import 'loading_manager_mode.dart';
 
 class AdsSettings {
   final MethodChannel _channel;
@@ -240,15 +240,15 @@ class AdsSettings {
 
   /// Mediation waterfall loading mode.
   ///
-  /// Default: [LoadingMode.Optimal]
-  /// See [LoadingMode]
-  Future<LoadingMode> getLoadingMode() async {
+  /// Default: [LoadingManagerMode.Optimal]
+  /// See [LoadingManagerMode]
+  Future<LoadingManagerMode> getLoadingMode() async {
     final int? index = await _channel.invokeMethod<int>("getLoadingMode");
-    return index == null ? LoadingMode.Optimal : LoadingMode.values[index];
+    return index == null ? LoadingManagerMode.optimal : LoadingManagerMode.values[index];
   }
 
   /// See [getLoadingMode]
-  Future<void> setLoadingMode(LoadingMode loadingMode) async {
+  Future<void> setLoadingMode(LoadingManagerMode loadingMode) async {
     return _channel.invokeMethod(
       "setLoadingMode",
       {"loadingMode": loadingMode.index},
