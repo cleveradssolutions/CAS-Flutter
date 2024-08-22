@@ -426,7 +426,7 @@ class InternalListenerContainer {
       String versionInfo = call.arguments["versionInfo"];
       String identifier = call.arguments["identifier"];
       int impressionDepth = call.arguments["impressionDepth"];
-      double lifeTimeRevenue = call.arguments["lifeTimeRevenue"];
+      double lifetimeRevenue = call.arguments["lifetimeRevenue"];
       String? creativeIdentifier = call.arguments["creativeIdentifier"];
 
       AdImpression adStatusHandler = AdImpression(
@@ -438,7 +438,7 @@ class InternalListenerContainer {
           creativeIdentifier,
           identifier,
           impressionDepth,
-          lifeTimeRevenue);
+          lifetimeRevenue);
 
       return adStatusHandler;
     } else {

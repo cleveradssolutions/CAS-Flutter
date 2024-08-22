@@ -33,6 +33,9 @@ class BannerView(
     }
 
     init {
+        flutterId = creationParams?.get("id") as? String ?: ""
+        listener.flutterIds[id] = flutterId
+
         val manager = bridgeProvider()?.mediationManager;
         banner = CASBannerView(context, manager)
         banner.id = id;
@@ -43,12 +46,8 @@ class BannerView(
                 ViewGroup.LayoutParams.MATCH_PARENT
         )
 
-        flutterId = creationParams?.get("id") as? String ?: ""
-
         MethodChannel(binaryMessenger, "com.cleveradssolutions.plugin.flutter.bannerview.$flutterId")
             .setMethodCallHandler(this)
-
-        listener.flutterIds[id] = flutterId
 
         (creationParams?.get("size") as? Map<String?, Any?>)?.let { sizeMap ->
             var serializedSize = sizeMap["size"] as Int

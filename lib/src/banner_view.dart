@@ -10,10 +10,8 @@ import 'ad_view_listener.dart';
 
 const String _viewType = '<cas-banner-view>';
 final _stream =
-    const EventChannel('com.cleveradssolutions.plugin.flutter.bannerview')
-        .receiveBroadcastStream()
-        .map((event) =>
-            BannerViewChannelEvent(event["id"], event["event"], event["data"]));
+    const EventChannel("com.cleveradssolutions.plugin.flutter.bannerview")
+        .receiveBroadcastStream();
 
 const Map<AdSize, Size> _sizes = {
   AdSize.Banner: Size(320, 50),
@@ -21,14 +19,6 @@ const Map<AdSize, Size> _sizes = {
   AdSize.MediumRectangle: Size(300, 250),
   AdSize.Adaptive: Size(728, 90),
 };
-
-class BannerViewChannelEvent {
-  String id;
-  String event;
-  Object? data;
-
-  BannerViewChannelEvent(this.id, this.event, this.data);
-}
 
 class BannerView extends StatefulWidget {
   final AdSize size;
@@ -60,7 +50,7 @@ class BannerViewState extends State<BannerView> {
   late AdViewListener? listener;
   late String id;
   late MethodChannel _channel;
-  late StreamSubscription<BannerViewChannelEvent> sub;
+  late StreamSubscription subscription;
 
   @override
   void initState() {
@@ -73,36 +63,36 @@ class BannerViewState extends State<BannerView> {
     id = widget.id;
     _channel =
         MethodChannel('com.cleveradssolutions.plugin.flutter.bannerview.$id');
-    sub = _stream.listen((event) {
-      if (event.id == id) {
-        handleEvent(event);
+    subscription = _stream.listen((dynamic event) {
+      if (event is Map && event["id"] == id) {
+        final eventName = event["event"] as String?;
+        if (eventName != null) {
+          handleEvent(eventName, event["data"]);
+        }
       }
     });
   }
 
-  void handleEvent(BannerViewChannelEvent event) {
-    switch (event.event) {
+  void handleEvent(String eventName, dynamic data) {
+    switch (eventName) {
       case "onAdViewLoaded":
         listener?.onLoaded();
         break;
       case "onAdViewFailed":
-        listener?.onFailed(event.data as String);
+        listener?.onFailed(data);
         break;
       case "onAdViewPresented":
-        var data =
-            (event.data as Map<Object?, Object?>).cast<String, dynamic>();
         listener?.onAdViewPresented();
         listener?.onImpression(AdImpression(
           data["adType"] as int,
           data["cpm"] as double,
-          data["network"] as String? ?? data["networkName"] as String,
+          data["networkName"] as String,
           data["priceAccuracy"] as int,
           data["versionInfo"] as String,
           data["creativeIdentifier"] as String?,
           data["identifier"] as String,
           data["impressionDepth"] as int,
-          data["lifetimeRevenue"] as double? ??
-              data["lifeTimeRevenue"] as double,
+          data["lifetimeRevenue"] as double,
         ));
         break;
       case "onAdViewClicked":
@@ -113,7 +103,7 @@ class BannerViewState extends State<BannerView> {
 
   @override
   void dispose() {
-    sub.cancel();
+    subscription.cancel();
     super.dispose();
   }
 

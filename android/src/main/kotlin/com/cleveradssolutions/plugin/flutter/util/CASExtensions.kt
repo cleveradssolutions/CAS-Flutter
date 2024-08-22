@@ -11,7 +11,7 @@ fun AdStatusHandler.toMap(): HashMap<String, Any?> {
             "versionInfo" to this.versionInfo,
             "identifier" to this.identifier,
             "impressionDepth" to this.impressionDepth,
-            "lifeTimeRevenue" to this.lifetimeRevenue,
+            "lifetimeRevenue" to this.lifetimeRevenue,
             "creativeIdentifier" to this.creativeIdentifier
     )
 }
