@@ -45,10 +45,10 @@ class _MyAppState extends State<MyApp> {
                   ],
                 ),
               ),
-              Center(
+              Expanded(
                 child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
                       if (_isReady) ...[
                         BannerView(
