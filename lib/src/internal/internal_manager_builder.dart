@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 import '../consent_flow.dart';
-import '../initialization_listener.dart';
+import '../init_config.dart';
 import '../internal/internal_listener_container.dart';
 import '../internal/internal_mediation_manager.dart';
 import '../manager_builder.dart';
@@ -91,8 +91,9 @@ class InternalManagerBuilder extends ManagerBuilder {
   }
 
   @override
-  ManagerBuilder withInitializationListener(InitializationListener listener) {
-    _listenerContainer.initializationListener = listener;
+  ManagerBuilder withCompletionListener(
+      Function(InitConfig config) onCASInitialized) {
+    _listenerContainer.onCASInitialized = onCASInitialized;
     return this;
   }
 

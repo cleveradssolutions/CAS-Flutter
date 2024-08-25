@@ -1,6 +1,8 @@
 import 'package:clever_ads_solutions/clever_ads_solutions.dart';
 import 'package:flutter/material.dart';
 
+import 'log.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -17,6 +19,8 @@ class _MyAppState extends State<MyApp> {
   MediationManager? manager;
   CASBannerView? view;
   bool _isReady = false;
+  bool _isInterstitialReady = false;
+  bool _isRewardedReady = false;
   String? _sdkVersion;
 
   @override
@@ -35,7 +39,7 @@ class _MyAppState extends State<MyApp> {
           body: Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -71,13 +75,14 @@ class _MyAppState extends State<MyApp> {
                         )
                       ],
                       ElevatedButton(
-                        // TODO Check isInterstitialReady
-                        onPressed: _isReady ? () => showInterstitial() : null,
+                        onPressed: _isInterstitialReady
+                            ? () => showInterstitial()
+                            : null,
                         child: const Text('Show interstitial'),
                       ),
                       ElevatedButton(
-                        // TODO Check isRewardedReady
-                        onPressed: _isReady ? () => showRewarded() : null,
+                        onPressed:
+                            _isRewardedReady ? () => showRewarded() : null,
                         child: const Text('Show rewarded'),
                       ),
                       if (_isReady)
@@ -133,8 +138,31 @@ class _MyAppState extends State<MyApp> {
             AdTypeFlags.Rewarded)
         // .withConsentFlow(
         //     ConsentFlow().withDismissListener(ConsentFlowDismissListenerImpl()))
-        .withInitializationListener(InitializationListenerWrapper())
+        .withCompletionListener(onCASInitialized)
         .initialize();
+  }
+
+  void onCASInitialized(InitConfig initConfig) async {
+    String? error = initConfig.error;
+    logDebug(error == null
+        ? "Ad manager initialized"
+        : "Ad manager initialization failed: $error");
+
+    String sdkVersion = await CAS.getSDKVersion();
+    setState(() {
+      _isReady = true;
+      _sdkVersion = sdkVersion;
+    });
+    manager?.isInterstitialReady().then((status) {
+      setState(() {
+        _isInterstitialReady = status;
+      });
+    });
+    manager?.isRewardedAdReady().then((status) {
+      setState(() {
+        _isRewardedReady = status;
+      });
+    });
   }
 
   Future<void> showInterstitial() async {
@@ -172,11 +200,6 @@ class _MyAppState extends State<MyApp> {
   void changeBannerBottom() {
     view?.setBannerPosition(AdPosition.BottomCenter);
   }
-}
-
-class InitializationListenerWrapper extends InitializationListener {
-  @override
-  void onCASInitialized(InitConfig config) {}
 }
 
 class InterstitialListenerWrapper extends AdCallback {

@@ -1,4 +1,5 @@
 import 'consent_flow.dart';
+import 'init_config.dart';
 import 'initialization_listener.dart';
 import 'mediation_manager.dart';
 
@@ -15,7 +16,15 @@ abstract class ManagerBuilder {
 
   ManagerBuilder addExtras(String key, String value);
 
-  ManagerBuilder withInitializationListener(InitializationListener listener);
+  @Deprecated(
+      "Use withCompletionListener(Function(InitConfig config) onCASInitialized) instead")
+  ManagerBuilder withInitializationListener(InitializationListener listener) {
+    withCompletionListener(listener.onCASInitialized);
+    return this;
+  }
+
+  ManagerBuilder withCompletionListener(
+      Function(InitConfig config) onCASInitialized);
 
   MediationManager initialize();
 }

@@ -8,11 +8,10 @@ import '../ad_load_callback.dart';
 import '../ad_type.dart';
 import '../ad_view_listener.dart';
 import '../init_config.dart';
-import '../initialization_listener.dart';
 import '../on_dismiss_listener.dart';
 
 class InternalListenerContainer {
-  InitializationListener? initializationListener;
+  Function(InitConfig config)? onCASInitialized;
   AdCallback? interstitialListener;
   AdCallback? rewardedListener;
   AdCallback? appReturnListener;
@@ -33,8 +32,6 @@ class InternalListenerContainer {
 
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
-      // Inititalization
-
       case 'onCASInitialized':
         {
           String error = call.arguments["error"] ?? "";
@@ -42,7 +39,7 @@ class InternalListenerContainer {
           bool isConsentRequired = call.arguments["isConsentRequired"] ?? false;
           bool isTestMode = call.arguments["testMode"] ?? false;
 
-          initializationListener?.onCASInitialized(
+          onCASInitialized?.call(
               InitConfig(error, countryCode, isConsentRequired, isTestMode));
         }
         break;
