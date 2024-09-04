@@ -7,6 +7,7 @@ import '../ad_view_listener.dart';
 import '../cas_banner_view.dart';
 import 'internal_listener_container.dart';
 
+@Deprecated("Use BannerView instead")
 class InternalCASBannerView extends CASBannerView {
   final MethodChannel _channel;
   final InternalListenerContainer _listenerContainer;
@@ -72,33 +73,23 @@ class InternalCASBannerView extends CASBannerView {
   void setAdListener(AdViewListener listener) {
     switch (_sizeId) {
       case 1:
-        {
-          _listenerContainer.standartBannerListener = listener;
-        }
+        _listenerContainer.standartBannerListener = listener;
         break;
 
       case 2:
-        {
-          _listenerContainer.adaptiveBannerListener = listener;
-        }
+        _listenerContainer.adaptiveBannerListener = listener;
         break;
 
       case 3:
-        {
-          _listenerContainer.smartBannerListener = listener;
-        }
+        _listenerContainer.smartBannerListener = listener;
         break;
 
       case 4:
-        {
-          _listenerContainer.leaderBannerListener = listener;
-        }
+        _listenerContainer.leaderBannerListener = listener;
         break;
 
       case 5:
-        {
-          _listenerContainer.mrecBannerListener = listener;
-        }
+        _listenerContainer.mrecBannerListener = listener;
         break;
     }
   }

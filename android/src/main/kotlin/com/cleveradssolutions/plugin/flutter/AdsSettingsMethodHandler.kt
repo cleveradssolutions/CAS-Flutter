@@ -4,9 +4,11 @@ import com.cleversolutions.ads.android.CAS
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
 
-class AdsSettingsMethodHandler : MethodHandler {
+private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/ads_settings"
 
-    override fun onMethodCall(call: MethodCall, result: Result): Boolean {
+class AdsSettingsMethodHandler : MethodHandler(CHANNEL_NAME) {
+
+    override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "getTaggedAudience" -> getTaggedAudience(result)
             "setTaggedAudience" -> setTaggedAudience(call, result)
@@ -35,9 +37,8 @@ class AdsSettingsMethodHandler : MethodHandler {
             "allowInterstitialAdsWhenVideoCostAreLower" -> allowInterstitialAdsWhenVideoCostAreLower(call, result)
             "getLoadingMode" -> getLoadingMode(result)
             "setLoadingMode" -> setLoadingMode(call, result)
-            else -> return false
+            else -> super.onMethodCall(call, result)
         }
-        return true
     }
 
     private fun getTaggedAudience(result: Result) {
@@ -57,15 +58,11 @@ class AdsSettingsMethodHandler : MethodHandler {
     }
 
     private fun getVendorConsent(call: MethodCall, result: Result) {
-        tryGetArg<Int>("vendorId", call, result) {
-            CAS.settings.getVendorConsent(it)
-        }
+        tryGetArgReturnResult<Int>("vendorId", call, result) { CAS.settings.getVendorConsent(it) }
     }
 
     private fun getAdditionalConsent(call: MethodCall, result: Result) {
-        tryGetArg<Int>("providerId", call, result) {
-            CAS.settings.getAdditionalConsent(it)
-        }
+        tryGetArgReturnResult<Int>("providerId", call, result) { CAS.settings.getAdditionalConsent(it) }
     }
 
     private fun getCPPAStatus(result: Result) {
@@ -101,9 +98,7 @@ class AdsSettingsMethodHandler : MethodHandler {
     }
 
     private fun setTestDeviceIds(call: MethodCall, result: Result) {
-        tryGetArgSetValue<Set<String>>("deviceIds", call, result) {
-            CAS.settings.testDeviceIDs = it
-        }
+        tryGetArgSetValue<Set<String>>("deviceIds", call, result) { CAS.settings.testDeviceIDs = it }
     }
 
     private fun clearTestDeviceIds(result: Result) {
@@ -116,9 +111,7 @@ class AdsSettingsMethodHandler : MethodHandler {
     }
 
     private fun setTrialAdFreeInterval(call: MethodCall, result: Result) {
-        tryGetArgSetValue<Int>("interval", call, result) {
-            CAS.settings.bannerRefreshInterval = it
-        }
+        tryGetArgSetValue<Int>("interval", call, result) { CAS.settings.bannerRefreshInterval = it }
     }
 
     private fun getBannerRefreshDelay(result: Result) {

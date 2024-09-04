@@ -32,8 +32,8 @@ public final class CASBridgeBuilder {
         builder.withConsentFlow(new ConsentFlow(false));
     }
 
-    public void enableConsentFlow(String privacyUrl) {
-        builder.withConsentFlow(new ConsentFlow().withPrivacyPolicy(privacyUrl));
+    public void enableConsentFlow(String url) {
+        builder.withConsentFlow(new ConsentFlow().withPrivacyPolicy(url));
     }
 
     public void addExtras(String key, String value) {
@@ -48,7 +48,7 @@ public final class CASBridgeBuilder {
         this.rewardListener = rewardListener;
     }
 
-    public CASBridge build(@NonNull String id, @NonNull String flutterVersion, int formats, CASConsentFlow flow) {
+    public CASBridge build(@NonNull String id, @NonNull String flutterVersion, int formats, ConsentFlow flow) {
         try {
             return buildInternal(id, flutterVersion, formats, flow);
         } catch (Throwable e) {
@@ -57,19 +57,12 @@ public final class CASBridgeBuilder {
         }
     }
 
-    public CASBridge buildInternal(@NonNull String id, @NonNull String flutterVersion, int formats, CASConsentFlow flow){
-        //noinspection deprecation
-        builder.withEnabledAdTypes(formats);
-
-        builder.withCasId(id)
-                .withFramework("Flutter", flutterVersion);
-
-        if (flow != null)
-            builder.withConsentFlow(flow.flow);
-        else
-            builder.withConsentFlow(new ConsentFlow()
-                    .withUIContext(activity));
-
+    public CASBridge buildInternal(@NonNull String id, @NonNull String flutterVersion, int formats, ConsentFlow flow) {
+        builder.withEnabledAdTypes(formats)
+                .withCasId(id)
+                .withFramework("Flutter", flutterVersion)
+//                .withUIContext(activity)
+                .withConsentFlow(flow);
         return new CASBridge(activity, this);
     }
 }

@@ -6,18 +6,18 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
 
 private const val LOG_TAG = "CASMethodHandler"
+private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/cas"
 
 class CASMethodHandler(
     private val activityProvider: () -> Activity?
-) : MethodHandler {
+) : MethodHandler(CHANNEL_NAME) {
 
-    override fun onMethodCall(call: MethodCall, result: Result): Boolean {
+    override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "getSDKVersion" -> getSDKVersion(result)
             "validateIntegration" -> validateIntegration(result, activityProvider)
-            else -> return false
+            else -> super.onMethodCall(call, result)
         }
-        return true
     }
 
     private fun getSDKVersion(result: Result) {

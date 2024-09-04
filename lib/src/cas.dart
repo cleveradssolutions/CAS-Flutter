@@ -6,9 +6,9 @@ import 'ccpa_status.dart';
 import 'consent_flow.dart';
 import 'consent_status.dart';
 import 'gender.dart';
-import 'internal/internal_cas_consent_flow.dart';
-import 'internal/internal_listener_container.dart';
+import 'internal/ads_settings_impl.dart';
 import 'internal/internal_manager_builder.dart';
+import 'internal/targeting_options_impl.dart';
 import 'loading_manager_mode.dart';
 import 'loading_mode.dart';
 import 'manager_builder.dart';
@@ -20,32 +20,30 @@ class CAS {
   static const String _pluginVersion = "0.5.1";
 
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter");
+      MethodChannel("com.cleveradssolutions.plugin.flutter/cas");
 
   /// Get singleton instance for configure all mediation managers
-  static final AdsSettings settings = AdsSettings(_channel);
+  static final AdsSettings settings = AdsSettingsImpl();
 
   /// You can now easily tailor the way you serve your ads to fit a specific audience!
   /// You’ll need to inform our servers of the users’ details
   /// so the SDK will know to serve ads according to the segment the user belongs to.
   ///
   /// - **Attention:** Must be set before initializing the SDK.
-  static final TargetingOptions targetingOptions = TargetingOptions(_channel);
-
-  static final InternalListenerContainer _listenerContainer =
-      InternalListenerContainer(_channel);
+  static final TargetingOptions targetingOptions = TargetingOptionsImpl();
 
   @Deprecated("This method is no longer maintained and should not be used.")
   static setFlutterVersion(String flutterVersion) {}
 
+  @Deprecated("Use ConsentFlow() instead")
   static ConsentFlow buildConsentFlow() {
-    return InternalCASConsentFlow(_channel, _listenerContainer);
+    return ConsentFlow();
   }
 
   /// Create [MediationManager] builder.
   /// Don't forget to call the [ManagerBuilder.build] method to create manager instance.
   static ManagerBuilder buildManager() {
-    return InternalManagerBuilder(_channel, _listenerContainer, _pluginVersion);
+    return InternalManagerBuilder(_pluginVersion);
   }
 
   @Deprecated("Use CAS.settings.setDebugMode(bool isEnable) instead")

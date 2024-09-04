@@ -3,6 +3,7 @@ import 'dart:async';
 import 'ad_position.dart';
 import 'ad_view_listener.dart';
 
+@Deprecated("Use BannerView instead")
 abstract class CASBannerView {
   void setAdListener(AdViewListener listener);
 

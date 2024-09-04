@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,9 +9,6 @@ import 'ad_size.dart';
 import 'ad_view_listener.dart';
 
 const String _viewType = '<cas-banner-view>';
-final _stream =
-    const EventChannel("com.cleveradssolutions.plugin.flutter.bannerview")
-        .receiveBroadcastStream();
 
 const Map<AdSize, Size> _sizes = {
   AdSize.Banner: Size(320, 50),
@@ -43,28 +40,33 @@ class BannerView extends StatefulWidget {
 }
 
 class BannerViewState extends State<BannerView> {
-  late AdSize size;
-  late bool? isAutoloadEnabled;
-  late int? refreshInterval;
-  late int? maxWidthDpi;
-  late AdViewListener? listener;
-  late String id;
+  late String _id;
+
   late MethodChannel _channel;
-  late StreamSubscription subscription;
+  late StreamSubscription _subscription;
+  late AdViewListener? _listener;
+
+  late AdSize _size;
+  late bool? _isAutoloadEnabled;
+  late int? _refreshInterval;
+  late int? _maxWidthDpi;
 
   @override
   void initState() {
     super.initState();
-    size = widget.size;
-    isAutoloadEnabled = widget.isAutoloadEnabled;
-    refreshInterval = widget.refreshInterval;
-    maxWidthDpi = widget.maxWidthDpi;
-    listener = widget.listener;
-    id = widget.id;
+    _size = widget.size;
+    _isAutoloadEnabled = widget.isAutoloadEnabled;
+    _refreshInterval = widget.refreshInterval;
+    _maxWidthDpi = widget.maxWidthDpi;
+    _listener = widget.listener;
+    _id = widget.id;
     _channel =
-        MethodChannel('com.cleveradssolutions.plugin.flutter.bannerview.$id');
-    subscription = _stream.listen((dynamic event) {
-      if (event is Map && event["id"] == id) {
+        MethodChannel('com.cleveradssolutions.plugin.flutter/banner_view.$_id');
+    _subscription =
+        const EventChannel('com.cleveradssolutions.plugin.flutter/banner_view')
+            .receiveBroadcastStream()
+            .listen((dynamic event) {
+      if (event is Map && event["id"] == _id) {
         final eventName = event["event"] as String?;
         if (eventName != null) {
           handleEvent(eventName, event["data"]);
@@ -76,14 +78,14 @@ class BannerViewState extends State<BannerView> {
   void handleEvent(String eventName, dynamic data) {
     switch (eventName) {
       case "onAdViewLoaded":
-        listener?.onLoaded();
+        _listener?.onLoaded();
         break;
       case "onAdViewFailed":
-        listener?.onFailed(data);
+        _listener?.onFailed(data);
         break;
       case "onAdViewPresented":
-        listener?.onAdViewPresented();
-        listener?.onImpression(AdImpression(
+        _listener?.onAdViewPresented();
+        _listener?.onImpression(AdImpression(
           data["adType"] as int,
           data["cpm"] as double,
           data["networkName"] as String,
@@ -96,14 +98,14 @@ class BannerViewState extends State<BannerView> {
         ));
         break;
       case "onAdViewClicked":
-        listener?.onClicked();
+        _listener?.onClicked();
         break;
     }
   }
 
   @override
   void dispose() {
-    subscription.cancel();
+    _subscription.cancel();
     super.dispose();
   }
 
@@ -119,38 +121,49 @@ class BannerViewState extends State<BannerView> {
   Widget build(BuildContext context) {
     var shortestSide = MediaQuery.of(context).size.shortestSide;
     final bool isTablet = shortestSide > 600;
-    final AdSize size = this.size == AdSize.Smart
+    final AdSize size = this._size == AdSize.Smart
         ? isTablet
             ? AdSize.Leaderboard
             : AdSize.Banner
-        : this.size;
+        : this._size;
 
     Map<String, dynamic> creationParams = <String, dynamic>{
-      "id": id,
+      "id": _id,
       "size": <String, dynamic>{
         "size": size.index + 1,
-        "maxWidthDpi": maxWidthDpi,
+        "maxWidthDpi": _maxWidthDpi,
         "isAdaptive": size == AdSize.Adaptive
       },
-      "isAutoloadEnabled": isAutoloadEnabled,
-      "refreshInterval": refreshInterval,
+      "isAutoloadEnabled": _isAutoloadEnabled,
+      "refreshInterval": _refreshInterval,
     };
+
+    dynamic widget;
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        widget = AndroidView(
+          viewType: _viewType,
+          // layoutDirection: TextDirection.ltr,
+          creationParams: creationParams,
+          creationParamsCodec: const StandardMessageCodec(),
+        );
+        break;
+      case TargetPlatform.iOS:
+        widget = UiKitView(
+          viewType: _viewType,
+          // layoutDirection: TextDirection.ltr,
+          creationParams: creationParams,
+          creationParamsCodec: const StandardMessageCodec(),
+        );
+        break;
+      default:
+        widget = const Text("Platform is not supported");
+        break;
+    }
 
     return SizedBox(
         width: _sizes[size]?.width ?? 0,
         height: _sizes[size]?.height ?? 0,
-        child: Platform.isAndroid
-            ? AndroidView(
-                viewType: _viewType,
-                layoutDirection: TextDirection.ltr,
-                creationParams: creationParams,
-                creationParamsCodec: const StandardMessageCodec(),
-              )
-            : UiKitView(
-                viewType: _viewType,
-                layoutDirection: TextDirection.ltr,
-                creationParams: creationParams,
-                creationParamsCodec: const StandardMessageCodec(),
-              ));
+        child: widget);
   }
 }

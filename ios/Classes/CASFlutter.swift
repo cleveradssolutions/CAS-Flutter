@@ -17,7 +17,7 @@ public class CASFlutter: NSObject, FlutterPlugin {
     }
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "com.cleveradssolutions.plugin.flutter", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "com.cleveradssolutions.plugin.flutter/mediation_manager", binaryMessenger: registrar.messenger())
         let instance = CASFlutter(pluginChannel: channel, methodHandlers: [
             CASMethodHandler(),
             AdsSettingsMethodHandler(),
@@ -39,9 +39,9 @@ public class CASFlutter: NSObject, FlutterPlugin {
         switch call.method {
         case "withTestAdMode": withTestAdMode(call: call, result: result)
         case "withUserId": setUserId(call: call, result: result)
-        case "withPrivacyUrl": withPrivacyUrl(call: call, result: result)
+        case "withPrivacyPolicy": withPrivacyPolicy(call: call, result: result)
         case "disableConsentFlow": disableConsentFlow(result: result)
-        case "showConsentFlow": showConsentFlow(result: result)
+        case "showConsentFlow": showConsentFlow(call: call, result: result)
         case "initialize": buildBridge(call: call, result: result)
         case "loadAd": loadAd(call: call, result: result)
         case "isReadyAd": isReadyAd(call: call, result: result)
@@ -90,10 +90,10 @@ public class CASFlutter: NSObject, FlutterPlugin {
         }
     }
 
-    private func withPrivacyUrl(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func withPrivacyPolicy(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
-           let privacy = args["privacyUrl"] as? String {
-            CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().enableConsentFlow(privacyUrl: privacy)
+           let url = args["url"] as? String {
+            CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().enableConsentFlow(url: url)
             result(nil)
         } else {
             result(FlutterError(code: "", message: "Bad argument", details: nil))

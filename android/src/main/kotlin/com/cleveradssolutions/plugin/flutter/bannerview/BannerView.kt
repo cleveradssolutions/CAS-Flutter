@@ -46,7 +46,7 @@ class BannerView(
                 ViewGroup.LayoutParams.MATCH_PARENT
         )
 
-        MethodChannel(binaryMessenger, "com.cleveradssolutions.plugin.flutter.bannerview.$flutterId")
+        MethodChannel(binaryMessenger, "com.cleveradssolutions.plugin.flutter/banner_view.$flutterId")
             .setMethodCallHandler(this)
 
         (creationParams?.get("size") as? Map<String?, Any?>)?.let { sizeMap ->

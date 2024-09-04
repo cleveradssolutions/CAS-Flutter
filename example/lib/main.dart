@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final GlobalKey<BannerViewState> _bannerViewKey = GlobalKey();
   MediationManager? manager;
-  CASBannerView? view;
+  BannerView? view;
   bool _isReady = false;
   bool _isInterstitialReady = false;
   bool _isRewardedReady = false;
@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initialize();
+    _initialize();
   }
 
   @override
@@ -76,13 +76,13 @@ class _MyAppState extends State<MyApp> {
                       ],
                       ElevatedButton(
                         onPressed: _isInterstitialReady
-                            ? () => showInterstitial()
+                            ? () => _showInterstitial()
                             : null,
                         child: const Text('Show interstitial'),
                       ),
                       ElevatedButton(
                         onPressed:
-                            _isRewardedReady ? () => showRewarded() : null,
+                            _isRewardedReady ? () => _showRewarded() : null,
                         child: const Text('Show rewarded'),
                       ),
                       if (_isReady)
@@ -95,20 +95,21 @@ class _MyAppState extends State<MyApp> {
                         ),
                       ElevatedButton(
                         onPressed:
-                            _isReady ? () => createStandardBanner() : null,
+                            _isReady ? () => _createStandardBanner() : null,
                         child: const Text('Create standard banner'),
                       ),
                       ElevatedButton(
                         onPressed:
-                            _isReady ? () => createAdaptiveBanner() : null,
+                            _isReady ? () => _createAdaptiveBanner() : null,
                         child: const Text('Create adaptive banner'),
                       ),
                       ElevatedButton(
-                        onPressed: _isReady ? () => changeBannerTop() : null,
+                        onPressed: _isReady ? () => _changeBannerTop() : null,
                         child: const Text('Change banner position to top'),
                       ),
                       ElevatedButton(
-                        onPressed: _isReady ? () => changeBannerBottom() : null,
+                        onPressed:
+                            _isReady ? () => _changeBannerBottom() : null,
                         child: const Text('Change banner to bottom'),
                       ),
                     ],
@@ -120,7 +121,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<void> initialize() async {
+  Future<void> _initialize() async {
     // Set Ads Settings
     CAS.settings.setDebugMode(true);
     CAS.settings.setTaggedAudience(Audience.notChildren);
@@ -131,18 +132,18 @@ class _MyAppState extends State<MyApp> {
     // Initialize SDK
     manager = CAS
         .buildManager()
-        .withCasId("com.cleveradssolutions.plugin.flutter.example")
+        .withCasId("demo")
         .withTestMode(true)
         .withAdTypes(AdTypeFlags.Banner |
             AdTypeFlags.Interstitial |
             AdTypeFlags.Rewarded)
-        // .withConsentFlow(
-        //     ConsentFlow().withDismissListener(ConsentFlowDismissListenerImpl()))
-        .withCompletionListener(onCASInitialized)
-        .initialize();
+        .withConsentFlow(ConsentFlow(isEnabled: true)
+            .withDismissListener(_onConsentFlowDismiss))
+        .withCompletionListener(_onCASInitialized)
+        .build();
   }
 
-  void onCASInitialized(InitConfig initConfig) async {
+  void _onCASInitialized(InitConfig initConfig) async {
     String? error = initConfig.error;
     logDebug(error == null
         ? "Ad manager initialized"
@@ -165,40 +166,44 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future<void> showInterstitial() async {
+  void _onConsentFlowDismiss(Status status) {
+    logDebug("Consent flow dismissed");
+  }
+
+  Future<void> _showInterstitial() async {
     final manager = this.manager;
     if (manager != null && await manager.isInterstitialReady()) {
       manager.showInterstitial(InterstitialListenerWrapper());
     }
   }
 
-  Future<void> showRewarded() async {
+  Future<void> _showRewarded() async {
     final manager = this.manager;
     if (manager != null && await manager.isRewardedAdReady()) {
       manager.showRewarded(InterstitialListenerWrapper());
     }
   }
 
-  Future<void> createAdaptiveBanner() async {
-    view = manager?.getAdView(AdSize.Adaptive);
-    view?.setAdListener(BannerListener());
-    view?.setBannerPosition(AdPosition.TopCenter);
-    view?.showBanner();
+  Future<void> _createAdaptiveBanner() async {
+    // view = manager?.getAdView(AdSize.Adaptive);
+    // view?.setAdListener(BannerListener());
+    // view?.setBannerPosition(AdPosition.TopCenter);
+    // view?.showBanner();
   }
 
-  Future<void> createStandardBanner() async {
-    view = manager?.getAdView(AdSize.Banner);
-    view?.setAdListener(BannerListener());
-    view?.showBanner();
-    view?.setBannerPositionWithOffset(25, 100);
+  Future<void> _createStandardBanner() async {
+    // view = manager?.getAdView(AdSize.Banner);
+    // view?.setAdListener(BannerListener());
+    // view?.showBanner();
+    // view?.setBannerPositionWithOffset(25, 100);
   }
 
-  void changeBannerTop() {
-    view?.setBannerPosition(AdPosition.TopCenter);
+  void _changeBannerTop() {
+    // view?.setBannerPosition(AdPosition.TopCenter);
   }
 
-  void changeBannerBottom() {
-    view?.setBannerPosition(AdPosition.BottomCenter);
+  void _changeBannerBottom() {
+    // view?.setBannerPosition(AdPosition.BottomCenter);
   }
 }
 

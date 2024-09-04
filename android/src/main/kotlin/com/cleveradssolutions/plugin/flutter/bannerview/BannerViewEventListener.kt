@@ -1,6 +1,5 @@
 package com.cleveradssolutions.plugin.flutter.bannerview
 
-import android.util.Log
 import com.cleveradssolutions.plugin.flutter.util.toMap
 import com.cleversolutions.ads.AdError
 import com.cleversolutions.ads.AdImpression

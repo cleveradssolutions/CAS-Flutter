@@ -69,11 +69,11 @@ public class CASBridgeBuilder : FlutterCaller {
         managerBuilder.withConsentFlow(consent)
     }
     
-    func enableConsentFlow(privacyUrl: String) {
+    func enableConsentFlow(url: String) {
         consent = CASConsentFlow()
             .withViewControllerToPresent(rootViewController)
             .withCompletionHandler(consentHandler)
-            .withPrivacyPolicy(privacyUrl)
+            .withPrivacyPolicy(url)
         managerBuilder.withConsentFlow(consent)
     }
     

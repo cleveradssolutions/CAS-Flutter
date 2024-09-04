@@ -29,7 +29,7 @@ class BannerView: NSObject, FlutterPlatformView {
         let args = args as? NSDictionary ?? [:]
 
         flutterId = args["id"] as? String ?? ""
-        channel = FlutterMethodChannel(name: "com.cleveradssolutions.plugin.flutter.bannerview.\(flutterId)", binaryMessenger: messenger!)
+        channel = FlutterMethodChannel(name: "com.cleveradssolutions.plugin.flutter/banner_view.\(flutterId)", binaryMessenger: messenger!)
 
         super.init()
 

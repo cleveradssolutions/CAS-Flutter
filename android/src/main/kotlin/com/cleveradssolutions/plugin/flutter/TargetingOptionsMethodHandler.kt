@@ -1,13 +1,16 @@
 package com.cleveradssolutions.plugin.flutter
 
 import android.location.Location
+import android.util.Log
 import com.cleversolutions.ads.android.CAS
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
 
-class TargetingOptionsMethodHandler : MethodHandler {
+private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/targeting_options"
 
-    override fun onMethodCall(call: MethodCall, result: Result): Boolean {
+class TargetingOptionsMethodHandler : MethodHandler(CHANNEL_NAME) {
+
+    override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "getGender" -> getGender(result)
             "setGender" -> setGender(call, result)
@@ -23,9 +26,8 @@ class TargetingOptionsMethodHandler : MethodHandler {
             "setKeywords" -> setKeywords(call, result)
             "getContentUrl" -> getContentUrl(result)
             "setContentUrl" -> setContentUrl(call, result)
-            else -> return false
+            else -> super.onMethodCall(call, result)
         }
-        return true
     }
 
     private fun getGender(result: Result) {
