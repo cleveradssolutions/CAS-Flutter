@@ -70,6 +70,7 @@ abstract class MediationManager {
 
   Future<int> getBannerRefreshDelay();
 
+  @Deprecated("message")
   CASBannerView getAdView(AdSize size);
 
   void setAdLoadCallback(AdLoadCallback callback);

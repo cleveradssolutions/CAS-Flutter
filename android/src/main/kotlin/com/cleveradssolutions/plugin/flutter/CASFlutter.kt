@@ -1,8 +1,15 @@
 package com.cleveradssolutions.plugin.flutter
 
-import ManagerBuilderMethodHandler
 import android.app.Activity
 import com.cleveradssolutions.plugin.flutter.bannerview.BannerViewFactory
+import com.cleveradssolutions.plugin.flutter.bridge.AdSizeMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.AdsSettingsMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.CASMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.ManagerBuilderMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.TargetingOptionsMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -16,28 +23,32 @@ class CASFlutter : FlutterPlugin, ActivityAware {
     private var casBridge: CASBridge? = null
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        val consentFlowMethodHandler = ConsentFlowMethodHandler { activity }
+        val activityProvider = { activity }
+        val casBridgeProvider = { casBridge }
+        val consentFlowMethodHandler = ConsentFlowMethodHandler(activityProvider)
+
         methodHandlers = setOf(
             consentFlowMethodHandler,
+            AdSizeMethodHandler(),
             AdsSettingsMethodHandler(),
-            BannerMethodHandler { casBridge },
-            CASMethodHandler { activity },
-            ManagerBuilderMethodHandler(consentFlowMethodHandler, { activity }, { casBridge = it }),
-            MediationManagerMethodHandler {casBridge},
+            CASMethodHandler(activityProvider),
+            ManagerBuilderMethodHandler(consentFlowMethodHandler, activityProvider) { casBridge = it },
+            MediationManagerMethodHandler(casBridgeProvider),
             TargetingOptionsMethodHandler()
         )
-        methodHandlers.forEach { it.onAttachedToEngine(flutterPluginBinding) }
+
+        methodHandlers.forEach { it.onAttachedToFlutter(flutterPluginBinding) }
 
         flutterPluginBinding
             .platformViewRegistry
             .registerViewFactory(
                 "<cas-banner-view>",
-                BannerViewFactory(flutterPluginBinding.binaryMessenger) { casBridge }
+                BannerViewFactory(flutterPluginBinding.binaryMessenger, casBridgeProvider)
             )
     }
 
     override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        methodHandlers.forEach { it.onDetachedFromEngine() }
+        methodHandlers.forEach { it.onDetachedFromFlutter() }
         methodHandlers = emptySet()
     }
 

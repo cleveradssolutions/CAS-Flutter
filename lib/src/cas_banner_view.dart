@@ -17,7 +17,8 @@ abstract class CASBannerView {
 
   Future<void> setBannerPosition(AdPosition position);
 
-  Future<void> setBannerPositionWithOffset(int xOffsetInDP, int yOffsetInDP);
+  Future<void> setBannerPositionWithOffset(
+      AdPosition position, int xOffsetInDP, int yOffsetInDP);
 
   Future<void> setBannerAdRefreshRate(int refresh);
 

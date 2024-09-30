@@ -16,17 +16,17 @@ class InternalCASBannerView extends CASBannerView {
   InternalCASBannerView(this._channel, this._listenerContainer, this._sizeId);
 
   @override
-  Future<void> disableBannerRefresh() async {
+  Future<void> disableBannerRefresh() {
     return _channel.invokeMethod('disableBannerRefresh', {"sizeId": _sizeId});
   }
 
   @override
-  Future<void> disposeBanner() async {
+  Future<void> disposeBanner() {
     return _channel.invokeMethod('disposeBanner', {"sizeId": _sizeId});
   }
 
   @override
-  Future<void> hideBanner() async {
+  Future<void> hideBanner() {
     return _channel.invokeMethod('hideBanner', {"sizeId": _sizeId});
   }
 
@@ -38,29 +38,30 @@ class InternalCASBannerView extends CASBannerView {
   }
 
   @override
-  Future<void> loadBanner() async {
+  Future<void> loadBanner() {
     return _channel.invokeMethod('loadBanner', {"sizeId": _sizeId});
   }
 
   @override
-  Future<void> setBannerAdRefreshRate(int refresh) async {
+  Future<void> setBannerAdRefreshRate(int refresh) {
     return _channel.invokeMethod(
         'setBannerAdRefreshRate', {"refresh": refresh, "sizeId": _sizeId});
   }
 
   @override
-  Future<void> setBannerPosition(AdPosition position) async {
+  Future<void> setBannerPosition(AdPosition position) {
     return _channel.invokeMethod('setBannerPosition',
         {"positionId": position.index, "sizeId": _sizeId, "x": 0, "y": 0});
   }
 
   @override
-  Future<void> showBanner() async {
+  Future<void> showBanner() {
     return _channel.invokeMethod('showBanner', {"sizeId": _sizeId});
   }
 
   @override
-  Future<void> setBannerPositionWithOffset(int xOffsetInDP, int yOffsetInDP) {
+  Future<void> setBannerPositionWithOffset(
+      AdPosition position, int xOffsetInDP, int yOffsetInDP) {
     return _channel.invokeMethod('setBannerPosition', {
       "positionId": AdPosition.TopLeft.index,
       "sizeId": _sizeId,

@@ -1,16 +1,17 @@
-package com.cleveradssolutions.plugin.flutter
+package com.cleveradssolutions.plugin.flutter.bridge
 
 import android.location.Location
-import android.util.Log
+import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
+import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleversolutions.ads.android.CAS
 import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.MethodChannel
 
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/targeting_options"
 
 class TargetingOptionsMethodHandler : MethodHandler(CHANNEL_NAME) {
 
-    override fun onMethodCall(call: MethodCall, result: Result) {
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "getGender" -> getGender(result)
             "setGender" -> setGender(call, result)
@@ -30,28 +31,32 @@ class TargetingOptionsMethodHandler : MethodHandler(CHANNEL_NAME) {
         }
     }
 
-    private fun getGender(result: Result) {
+    private fun getGender(result: MethodChannel.Result) {
         result.success(CAS.targetingOptions.gender)
     }
 
-    private fun setGender(call: MethodCall, result: Result) {
-        tryGetArgSetValue<Int>("gender", call, result) { CAS.targetingOptions.gender = it }
+    private fun setGender(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<Int>("gender", result) {
+            CAS.targetingOptions.gender = it
+        }
     }
 
-    private fun getAge(result: Result) {
+    private fun getAge(result: MethodChannel.Result) {
         result.success(CAS.targetingOptions.age)
     }
 
-    private fun setAge(call: MethodCall, result: Result) {
-        tryGetArgSetValue<Int>("age", call, result) { CAS.targetingOptions.age = it }
+    private fun setAge(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<Int>("age", result) {
+            CAS.targetingOptions.age = it
+        }
     }
 
-    private fun getLocationLatitude(result: Result) {
+    private fun getLocationLatitude(result: MethodChannel.Result) {
         result.success(CAS.targetingOptions.location?.latitude)
     }
 
-    private fun setLocationLatitude(call: MethodCall, result: Result) {
-        tryGetArgSetValue<Double>("latitude", call, result) {
+    private fun setLocationLatitude(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<Double>("latitude", result) {
             val location = CAS.targetingOptions.location ?: Location("").also {
                 CAS.targetingOptions.location = it
             }
@@ -59,12 +64,12 @@ class TargetingOptionsMethodHandler : MethodHandler(CHANNEL_NAME) {
         }
     }
 
-    private fun getLocationLongitude(result: Result) {
+    private fun getLocationLongitude(result: MethodChannel.Result) {
         result.success(CAS.targetingOptions.location?.longitude)
     }
 
-    private fun setLocationLongitude(call: MethodCall, result: Result) {
-        tryGetArgSetValue<Double>("longitude", call, result) {
+    private fun setLocationLongitude(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<Double>("longitude", result) {
             val location = CAS.targetingOptions.location ?: Location("").also {
                 CAS.targetingOptions.location = it
             }
@@ -72,32 +77,32 @@ class TargetingOptionsMethodHandler : MethodHandler(CHANNEL_NAME) {
         }
     }
 
-    private fun isLocationCollectionEnabled(result: Result) {
+    private fun isLocationCollectionEnabled(result: MethodChannel.Result) {
         result.success(CAS.targetingOptions.locationCollectionEnabled)
     }
 
-    private fun setLocationCollectionEnabled(call: MethodCall, result: Result) {
-        tryGetArgSetValue<Boolean>("isEnabled", call, result) {
+    private fun setLocationCollectionEnabled(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<Boolean>("isEnabled", result) {
             CAS.targetingOptions.locationCollectionEnabled = it
         }
     }
 
-    private fun getKeywords(result: Result) {
+    private fun getKeywords(result: MethodChannel.Result) {
         result.success(CAS.targetingOptions.keywords)
     }
 
-    private fun setKeywords(call: MethodCall, result: Result) {
-        tryGetArgSetValue<Set<String>?>("keywords", call, result) {
+    private fun setKeywords(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<Set<String>?>("keywords", result) {
             CAS.targetingOptions.keywords = it
         }
     }
 
-    private fun getContentUrl(result: Result) {
+    private fun getContentUrl(result: MethodChannel.Result) {
         result.success(CAS.targetingOptions.contentUrl)
     }
 
-    private fun setContentUrl(call: MethodCall, result: Result) {
-        tryGetArgSetValue<String?>("contentUrl", call, result) {
+    private fun setContentUrl(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<String?>("contentUrl", result) {
             CAS.targetingOptions.contentUrl = it
         }
     }

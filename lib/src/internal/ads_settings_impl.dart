@@ -17,7 +17,7 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> setTaggedAudience(Audience audience) async {
+  Future<void> setTaggedAudience(Audience audience) {
     return _channel.invokeMethod(
       "setTaggedAudience",
       {"taggedAudience": audience.index},
@@ -33,7 +33,7 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> setUserConsent(ConsentStatus consent) async {
+  Future<void> setUserConsent(ConsentStatus consent) {
     return _channel.invokeMethod(
       "setUserConsent",
       {"userConsent": consent.index},
@@ -65,11 +65,24 @@ class AdsSettingsImpl extends AdsSettings {
   @override
   Future<CCPAStatus> getCPPAStatus() async {
     final int? index = await _channel.invokeMethod<int>('getCPPAStatus');
-    return index == null ? CCPAStatus.UNDEFINED : CCPAStatus.values[index];
+    return index == null ? CCPAStatus.undefined : CCPAStatus.values[index];
   }
 
   @override
-  Future<void> setCCPAStatus(CCPAStatus status) async {
+  Future<void> setCCPAStatus(CCPAStatus status) {
+    switch (status) {
+      case CCPAStatus.UNDEFINED:
+        status = CCPAStatus.undefined;
+        break;
+      case CCPAStatus.OPT_OUT_SALE:
+        status = CCPAStatus.optOutSale;
+        break;
+      case CCPAStatus.OPT_IN_SALE:
+        status = CCPAStatus.optInSale;
+        break;
+      default:
+        break;
+    }
     return _channel.invokeMethod("setCCPAStatus", {"ccpa": status.index});
   }
 
@@ -80,7 +93,7 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> setMutedAdSounds(bool muted) async {
+  Future<void> setMutedAdSounds(bool muted) {
     return _channel.invokeMethod("setMutedAdSounds", {"muted": muted});
   }
 
@@ -92,27 +105,27 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> setDebugMode(bool isEnable) async {
+  Future<void> setDebugMode(bool isEnable) {
     return _channel.invokeMethod("setDebugMode", {"enable": isEnable});
   }
 
   @override
-  Future<void> addTestDeviceId(String deviceId) async {
+  Future<void> addTestDeviceId(String deviceId) {
     return _channel.invokeMethod("addTestDeviceId", {"deviceId": deviceId});
   }
 
   @override
-  Future<void> setTestDeviceId(String deviceIds) async {
+  Future<void> setTestDeviceId(String deviceIds) {
     return _channel.invokeMethod("setTestDeviceIds", {"devices": deviceIds});
   }
 
   @override
-  Future<void> setTestDeviceIds(Set<String> deviceIds) async {
+  Future<void> setTestDeviceIds(Set<String> deviceIds) {
     return _channel.invokeMethod("setTestDeviceIds", {"devices": deviceIds});
   }
 
   @override
-  Future<void> clearTestDeviceIds() async {
+  Future<void> clearTestDeviceIds() {
     return _channel.invokeMethod("clearTestDeviceIds");
   }
 
@@ -124,7 +137,7 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> setTrialAdFreeInterval(int interval) async {
+  Future<void> setTrialAdFreeInterval(int interval) {
     return _channel.invokeMethod(
       'setTrialAdFreeInterval',
       {"interval": interval},
@@ -139,7 +152,7 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> setBannerRefreshInterval(int interval) async {
+  Future<void> setBannerRefreshInterval(int interval) {
     return _channel.invokeMethod(
       'setBannerRefreshInterval',
       {"interval": interval},
@@ -154,7 +167,7 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> setInterstitialInterval(int interval) async {
+  Future<void> setInterstitialInterval(int interval) {
     return _channel.invokeMethod(
       'setInterstitialInterval',
       {"interval": interval},
@@ -162,7 +175,7 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> restartInterstitialInterval() async {
+  Future<void> restartInterstitialInterval() {
     return _channel.invokeMethod("restartInterstitialInterval");
   }
 
@@ -174,7 +187,7 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> allowInterstitialAdsWhenVideoCostAreLower(bool isAllow) async {
+  Future<void> allowInterstitialAdsWhenVideoCostAreLower(bool isAllow) {
     return _channel.invokeMethod(
       'allowInterstitialAdsWhenVideoCostAreLower',
       {'enable': isAllow},
@@ -190,7 +203,7 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> setLoadingMode(LoadingManagerMode loadingMode) async {
+  Future<void> setLoadingMode(LoadingManagerMode loadingMode) {
     return _channel.invokeMethod(
       "setLoadingMode",
       {"loadingMode": loadingMode.index},

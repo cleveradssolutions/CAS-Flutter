@@ -8,7 +8,7 @@ export 'src/ad_types.dart';
 export 'src/ad_view_listener.dart';
 export 'src/ads_settings.dart';
 export 'src/audience.dart';
-export 'src/banner_view.dart';
+export 'src/banner_widget.dart';
 export 'src/cas.dart';
 export 'src/cas_banner_view.dart';
 export 'src/ccpa_status.dart';

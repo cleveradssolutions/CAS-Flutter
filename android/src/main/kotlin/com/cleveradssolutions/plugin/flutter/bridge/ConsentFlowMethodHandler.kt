@@ -1,10 +1,12 @@
-package com.cleveradssolutions.plugin.flutter
+package com.cleveradssolutions.plugin.flutter.bridge
 
 import android.app.Activity
+import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
+import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
+import com.cleveradssolutions.plugin.flutter.util.success
 import com.cleversolutions.ads.ConsentFlow
-import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.MethodChannel
 
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/consent_flow"
 
@@ -15,8 +17,8 @@ class ConsentFlowMethodHandler(
     private var consentFlow: ConsentFlow? = null
     private var consentFlowDismissListener: ConsentFlow.OnDismissListener? = null
 
-    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        super.onAttachedToEngine(flutterPluginBinding)
+    override fun onAttachedToFlutter(flutterPluginBinding: FlutterPluginBinding) {
+        super.onAttachedToFlutter(flutterPluginBinding)
         consentFlowDismissListener = ConsentFlow.OnDismissListener { status ->
             invokeMethod(
                 "OnDismissListener",
@@ -25,31 +27,14 @@ class ConsentFlowMethodHandler(
         }
     }
 
-    override fun onMethodCall(call: MethodCall, result: Result) {
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "withPrivacyPolicy" -> withPrivacyPolicy(call, result)
+            // disable in native
             "disableConsentFlow" -> disableConsentFlow(result)
+            // show in native
             "showConsentFlow" -> showConsentFlow(call, result)
             else -> super.onMethodCall(call, result)
-        }
-    }
-
-    private fun withPrivacyPolicy(call: MethodCall, result: Result) {
-        tryGetArgSetValue<String>("url", call, result) {
-            getConsentFlow().withPrivacyPolicy(it)
-        }
-    }
-
-    private fun disableConsentFlow(result: Result) {
-        getConsentFlow().isEnabled = false
-        result.success(null)
-    }
-
-    private fun showConsentFlow(call: MethodCall, result: Result) {
-        tryGetArgSetValue<Boolean>("force", call, result) { force ->
-            getConsentFlow().let {
-                if (force) it.show() else it.showIfRequired()
-            }
         }
     }
 
@@ -58,6 +43,25 @@ class ConsentFlowMethodHandler(
             .withUIContext(activityProvider())
             .withDismissListener(consentFlowDismissListener)
             .also { consentFlow = it }
+    }
+
+    private fun withPrivacyPolicy(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<String>("url", result) {
+            getConsentFlow().withPrivacyPolicy(it)
+        }
+    }
+
+    private fun disableConsentFlow(result: MethodChannel.Result) {
+        getConsentFlow().isEnabled = false
+        result.success()
+    }
+
+    private fun showConsentFlow(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<Boolean>("force", result) { force ->
+            getConsentFlow().let {
+                if (force) it.show() else it.showIfRequired()
+            }
+        }
     }
 
 }

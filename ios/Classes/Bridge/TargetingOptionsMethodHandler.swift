@@ -1,6 +1,6 @@
 //
 //  CASMethodHandler.swift
-//  Runner
+//  clever_ads_solutions
 //
 //  Created by Dmytro Uzhva on 13.08.2024.
 //
@@ -8,8 +8,14 @@
 import CleverAdsSolutions
 import Flutter
 
+private let channelName = "com.cleveradssolutions.plugin.flutter/targeting_options"
+
 class TargetingOptionsMethodHandler: MethodHandler {
-    func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) -> Bool {
+    init() {
+        super.init(channelName: channelName)
+    }
+
+    override func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "getGender": getGender(result: result)
         case "setGender": setGender(call: call, result: result)
@@ -25,9 +31,8 @@ class TargetingOptionsMethodHandler: MethodHandler {
         case "setKeywords": setKeywords(call: call, result: result)
         case "getContentUrl": getContentUrl(result: result)
         case "setContentUrl": setContentUrl(call: call, result: result)
-        default: return false
+        default: super.onMethodCall(call: call, result: result)
         }
-        return true
     }
 
     private func getGender(result: @escaping FlutterResult) {
@@ -35,7 +40,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setGender(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        tryGetArgSetValue(name: "gender", call: call, result: result) { gender in
+        call.getArgAndReturnResult(name: "gender", result: result) { gender in
             CAS.targetingOptions.gender = gender
         }
     }
@@ -45,7 +50,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setAge(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        tryGetArgSetValue(name: "age", call: call, result: result) { age in
+        call.getArgAndReturnResult(name: "age", result: result) { age in
             CAS.targetingOptions.age = age
         }
     }
@@ -55,7 +60,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setLocationLatitude(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        tryGetArgSetValue(name: "latitude", call: call, result: result) { latitude in
+        call.getArgAndReturnResult(name: "latitude", result: result) { latitude in
             CAS.targetingOptions.locationLatitude = latitude
         }
     }
@@ -65,7 +70,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setLocationLongitude(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        tryGetArgSetValue(name: "longitude", call: call, result: result) { longitude in
+        call.getArgAndReturnResult(name: "longitude", result: result) { longitude in
             CAS.targetingOptions.locationLongitude = longitude
         }
     }
@@ -75,7 +80,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setLocationCollectionEnabled(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        tryGetArgSetValue(name: "isEnabled", call: call, result: result) { isEnabled in
+        call.getArgAndReturnResult(name: "isEnabled", result: result) { isEnabled in
             CAS.targetingOptions.locationCollectionEnabled = isEnabled
         }
     }
@@ -85,7 +90,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setKeywords(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        tryGetArgSetValue(name: "keywords", call: call, result: result) { keywords in
+        call.getArgAndReturnResult(name: "keywords", result: result) { keywords in
             CAS.targetingOptions.keywords = keywords
         }
     }
@@ -95,7 +100,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setContentUrl(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        tryGetArgSetValue(name: "contentUrl", call: call, result: result) { contentUrl in
+        call.getArgAndReturnResult(name: "contentUrl", result: result) { contentUrl in
             CAS.targetingOptions.contentUrl = contentUrl
         }
     }

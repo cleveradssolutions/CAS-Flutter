@@ -14,7 +14,7 @@ class TargetingOptionsImpl extends TargetingOptions {
   }
 
   @override
-  Future<void> setGender(Gender gender) async {
+  Future<void> setGender(Gender gender) {
     switch (gender) {
       case Gender.UNKNOWN:
         gender = Gender.unknown;
@@ -37,17 +37,17 @@ class TargetingOptionsImpl extends TargetingOptions {
   }
 
   @override
-  Future<void> setAge(int age) async {
+  Future<void> setAge(int age) {
     return _channel.invokeMethod("setAge", {"age": age});
   }
 
   @override
-  Future<double?> getLocationLatitude() async {
-    return await _channel.invokeMethod<double>("getLocationLatitude");
+  Future<double?> getLocationLatitude() {
+    return _channel.invokeMethod<double>("getLocationLatitude");
   }
 
   @override
-  Future<void> setLocationLatitude(double latitude) async {
+  Future<void> setLocationLatitude(double latitude) {
     return _channel.invokeMethod(
       "setLocationLatitude",
       {"latitude": latitude},
@@ -55,12 +55,12 @@ class TargetingOptionsImpl extends TargetingOptions {
   }
 
   @override
-  Future<double?> getLocationLongitude() async {
-    return await _channel.invokeMethod<double>("getLocationLongitude");
+  Future<double?> getLocationLongitude() {
+    return _channel.invokeMethod<double>("getLocationLongitude");
   }
 
   @override
-  Future<void> setLocationLongitude(double longitude) async {
+  Future<void> setLocationLongitude(double longitude) {
     return _channel.invokeMethod(
       "setLocationLongitude",
       {"longitude": longitude},
@@ -75,7 +75,7 @@ class TargetingOptionsImpl extends TargetingOptions {
   }
 
   @override
-  Future<void> setLocationCollectionEnabled(bool isEnabled) async {
+  Future<void> setLocationCollectionEnabled(bool isEnabled) {
     return _channel.invokeMethod(
       "setLocationCollectionEnabled",
       {"isEnabled": isEnabled},
@@ -83,22 +83,22 @@ class TargetingOptionsImpl extends TargetingOptions {
   }
 
   @override
-  Future<Set<String>?> getKeywords() async {
+  Future<Set<String>?> getKeywords() {
     return _channel.invokeMethod<Set<String>>("getKeywords");
   }
 
   @override
-  Future<void> setKeywords(Set<String>? keywords) async {
+  Future<void> setKeywords(Set<String>? keywords) {
     return _channel.invokeMethod("setKeywords", {"keywords": keywords});
   }
 
   @override
-  Future<String?> getContentUrl() async {
+  Future<String?> getContentUrl() {
     return _channel.invokeMethod<String>("getContentUrl");
   }
 
   @override
-  Future<void> setContentUrl(String? contentUrl) async {
+  Future<void> setContentUrl(String? contentUrl) {
     return _channel.invokeMethod("setContentUrl", {"contentUrl": contentUrl});
   }
 }

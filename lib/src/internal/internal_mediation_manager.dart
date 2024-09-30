@@ -6,10 +6,10 @@ import '../ad_callback.dart';
 import '../ad_load_callback.dart';
 import '../ad_size.dart';
 import '../ad_type.dart';
+import '../banner_widget.dart';
 import '../cas_banner_view.dart';
 import '../mediation_manager.dart';
 import 'ad_listener.dart';
-import 'internal_cas_banner_view.dart';
 import 'internal_listener_container.dart';
 
 class InternalMediationManager extends AdListener implements MediationManager {
@@ -158,12 +158,12 @@ class InternalMediationManager extends AdListener implements MediationManager {
   }
 
   @override
-  Future<void> loadInterstitial() async {
+  Future<void> loadInterstitial() {
     return _channel.invokeMethod('loadAd', {'adType': 1});
   }
 
   @override
-  Future<void> loadRewarded() async {
+  Future<void> loadRewarded() {
     return _channel.invokeMethod('loadAd', {'adType': 2});
   }
 
@@ -182,19 +182,19 @@ class InternalMediationManager extends AdListener implements MediationManager {
   }
 
   @override
-  Future<void> showInterstitial(AdCallback? callback) async {
+  Future<void> showInterstitial(AdCallback? callback) {
     interstitialListener = callback;
     return _channel.invokeMethod("showAd", {"adType": 1});
   }
 
   @override
-  Future<void> showRewarded(AdCallback? callback) async {
+  Future<void> showRewarded(AdCallback? callback) {
     rewardedListener = callback;
     return _channel.invokeMethod("showAd", {"adType": 2});
   }
 
   @override
-  Future<void> setEnabled(int adType, bool isEnable) async {
+  Future<void> setEnabled(int adType, bool isEnable) {
     return _channel
         .invokeMethod("setEnabled", {"adType": adType, "enable": isEnable});
   }
@@ -207,23 +207,23 @@ class InternalMediationManager extends AdListener implements MediationManager {
   }
 
   @override
-  Future<void> enableAppReturn(AdCallback? callback) async {
+  Future<void> enableAppReturn(AdCallback? callback) {
     appReturnListener = callback;
     return _channel.invokeMethod('enableAppReturn', {'enable': true});
   }
 
   @override
-  Future<void> disableAppReturn() async {
+  Future<void> disableAppReturn() {
     return _channel.invokeMethod('enableAppReturn', {'enable': false});
   }
 
   @override
-  Future<void> skipNextAppReturnAds() async {
+  Future<void> skipNextAppReturnAds() {
     return _channel.invokeMethod("skipNextAppReturnAds");
   }
 
   @override
-  Future<void> setBannerRefreshDelay(int delay) async {
+  Future<void> setBannerRefreshDelay(int delay) {
     return _channel.invokeMethod("setBannerRefreshDelay", {"delay": delay});
   }
 
@@ -235,9 +235,33 @@ class InternalMediationManager extends AdListener implements MediationManager {
 
   @override
   CASBannerView getAdView(AdSize size) {
-    int sizeId = size.index + 1;
+    int sizeId;
+    switch (size) {
+      case AdSize.banner:
+      case AdSize.Banner:
+        sizeId = 1;
+        break;
+      case AdSize.Adaptive:
+        sizeId = 2;
+        break;
+      case AdSize.Smart:
+        sizeId = 3;
+        break;
+      case AdSize.leaderboard:
+      case AdSize.Leaderboard:
+        sizeId = 4;
+        break;
+      case AdSize.mediumRectangle:
+      case AdSize.MediumRectangle:
+        sizeId = 5;
+        break;
+      default:
+        sizeId = 0;
+        break;
+    }
+
     _channel.invokeMethod("createBannerView", {"sizeId": sizeId});
-    return InternalCASBannerView(_channel, _listenerContainer, size.index + 1);
+    return BannerWidget(size: size, _listenerContainer);
   }
 
   @override

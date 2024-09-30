@@ -1,5 +1,6 @@
 package com.cleveradssolutions.plugin.flutter;
 
+import com.cleversolutions.ads.AdCallback;
 import com.cleversolutions.ads.AdStatusHandler;
 
 public interface CASCallback {
@@ -20,4 +21,5 @@ public interface CASCallback {
     void onClosed();
 
     void onRect( int x, int y, int width, int height );
+
 }

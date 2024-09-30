@@ -2,98 +2,103 @@ package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import com.cleveradssolutions.plugin.flutter.CASBridge
 import com.cleversolutions.ads.AdSize
 import com.cleversolutions.ads.android.CASBannerView
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 
 class BannerView(
-        context: Context,
-        private val id: Int,
-        creationParams: Map<String?, Any?>?,
-        bridgeProvider: () -> CASBridge?,
-        binaryMessenger: BinaryMessenger,
-        private val listener: BannerViewEventListener
-): PlatformView, MethodChannel.MethodCallHandler {
-    private val banner: CASBannerView
-    private val flutterId: String
+    context: Context,
+    viewId: Int,
+    creationParams: Map<*, *>?,
+    binaryMessenger: BinaryMessenger,
+    bridgeProvider: () -> CASBridge?
+) : PlatformView {
 
-    override fun getView(): View {
-        return banner
-    }
+    private val flutterId = creationParams?.get("id") as? String ?: ""
 
-    override fun dispose() {
-        listener.flutterIds.remove(id)
-        banner.destroy()
-    }
+    private var banner: CASBannerView? = null
+    private var methodHandler: BannerMethodHandler? = null
+    private var eventHandler: BannerEventHandler? = null
 
     init {
-        flutterId = creationParams?.get("id") as? String ?: ""
-        listener.flutterIds[id] = flutterId
-
         val manager = bridgeProvider()?.mediationManager;
-        banner = CASBannerView(context, manager)
-        banner.id = id;
-        banner.adListener = listener
+        val banner = CASBannerView(context, manager)
+        this.banner = banner
+        banner.id = viewId
 
-        banner.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        )
+        methodHandler = BannerMethodHandler(flutterId, banner, bridgeProvider, ::dispose).also {
+            it.onAttachedToFlutter(binaryMessenger)
+        }
+        eventHandler = BannerEventHandler(flutterId).also {
+            it.onAttachedToFlutter(binaryMessenger)
+        }
+        banner.adListener = eventHandler
 
-        MethodChannel(binaryMessenger, "com.cleveradssolutions.plugin.flutter/banner_view.$flutterId")
-            .setMethodCallHandler(this)
+//        banner.layoutParams = ViewGroup.LayoutParams( ???
+//            ViewGroup.LayoutParams.WRAP_CONTENT,
+//            ViewGroup.LayoutParams.MATCH_PARENT
+//        )
 
-        (creationParams?.get("size") as? Map<String?, Any?>)?.let { sizeMap ->
-            var serializedSize = sizeMap["size"] as Int
-            var size: AdSize = AdSize.BANNER
+        (creationParams?.get("size") as? Map<*, *>)?.let { size ->
+//            var size: AdSize = AdSize.BANNER
 
-            if (sizeMap["isAdaptive"] as? Boolean == true) {
-                (sizeMap["maxWidthDpi"] as? Int)?.let {
-                    size = if (it == 0) {
+            if (size["isAdaptive"] == true) {
+                banner.size = (size["maxWidthDpi"] as? Int).let {
+                    if (it == null || it == 0) {
                         AdSize.getAdaptiveBannerInScreen(view.context)
                     } else {
                         AdSize.getAdaptiveBanner(view.context, it)
                     }
                 }
             } else {
-                when (serializedSize) {
-                    3 -> size = AdSize.getSmartBanner(context)
-                    4 -> size = AdSize.LEADERBOARD
-                    5 -> size = AdSize.MEDIUM_RECTANGLE
-                }
-            }
+//            else {
+//                when (size["size"] as Int) {
+//                    3 -> size = AdSize.getSmartBanner(context)
+//                    4 -> size = AdSize.LEADERBOARD
+//                    5 -> size = AdSize.MEDIUM_RECTANGLE
+//                }
+//            }
+                val width = size["width"]
+                val height = size["height"]
+                val mode = size["mode"]
 
-            banner.size = size
+                val adSizeClass = Class.forName("AdSize")
+                val intClass = Integer::class.java
+                val constructor = adSizeClass.getDeclaredConstructor(intClass, intClass, intClass)
+                constructor.isAccessible = true
+
+                banner.size = constructor.newInstance(width, height, mode) as AdSize
+            }
         }
 
         (creationParams?.get("isAutoloadEnabled") as? Boolean)?.let {
             banner.isAutoloadEnabled = it
         }
 
-        (creationParams?.get("s") as? Int)?.let {
+        (creationParams?.get("refreshInterval") as? Int)?.let {
             banner.refreshInterval = it
         }
     }
 
-    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        try {
-            when (call.method) {
-                "isAdReady" -> {
-                    result.success(banner.isAdReady)
-                }
-                "loadNextAd" -> {
-                    banner.loadNextAd()
-                }
-                else -> return result.notImplemented()
-            }
-        } catch (exception: Exception) {
-            result.error("CAS", exception.message, null)
+    override fun getView(): View {
+        return banner!!
+    }
+
+    override fun dispose() {
+        methodHandler?.let {
+            it.onDetachedFromFlutter()
+            methodHandler = null
+        }
+        eventHandler?.let {
+            it.onDetachedFromFlutter()
+            eventHandler = null
+        }
+        banner.let {
+            it?.destroy()
+            banner = null
         }
     }
+
 }

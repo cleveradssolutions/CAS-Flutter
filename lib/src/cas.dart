@@ -47,7 +47,7 @@ class CAS {
   }
 
   @Deprecated("Use CAS.settings.setDebugMode(bool isEnable) instead")
-  static Future<void> setDebugMode(bool isEnable) async {
+  static Future<void> setDebugMode(bool isEnable) {
     return settings.setDebugMode(isEnable);
   }
 
@@ -65,22 +65,22 @@ class CAS {
   ///
   /// Call Integration Helper and check current integration in console.
   /// Log tag: [CASIntegrationHelper]
-  static Future<void> validateIntegration() async {
+  static Future<void> validateIntegration() {
     return _channel.invokeMethod('validateIntegration');
   }
 
   @Deprecated("Use CAS.targetingOptions.setAge(int age) instead")
-  static Future<void> setAge(int age) async {
+  static Future<void> setAge(int age) {
     return CAS.targetingOptions.setAge(age);
   }
 
   @Deprecated("Use CAS.targetingOptions.setGender(Gender gender) instead")
-  static Future<void> setGender(Gender gender) async {
+  static Future<void> setGender(Gender gender) {
     return CAS.targetingOptions.setGender(gender);
   }
 
   @Deprecated("Use CAS.settings.setUserConsent(ConsentStatus consent) instead")
-  static Future<void> setUserConsent(UserConsent consent) async {
+  static Future<void> setUserConsent(UserConsent consent) {
     final ConsentStatus converted = ConsentStatus.values[consent.index];
     return CAS.settings.setUserConsent(converted);
   }
@@ -92,33 +92,33 @@ class CAS {
   }
 
   @Deprecated("Use CAS.settings.setCCPAStatus(CCPAStatus status) instead")
-  static Future<void> setCCPAStatus(CCPAStatus status) async {
+  static Future<void> setCCPAStatus(CCPAStatus status) {
     return CAS.settings.setCCPAStatus(status);
   }
 
   @Deprecated("Use CAS.settings.getCCPAStatus() instead")
-  static Future<CCPAStatus> getCPPAStatus() async {
+  static Future<CCPAStatus> getCPPAStatus() {
     return CAS.settings.getCPPAStatus();
   }
 
   @Deprecated("Use CAS.settings.setTaggedAudience(Audience audience) instead")
-  static Future<void> setTaggedAudience(Audience audience) async {
+  static Future<void> setTaggedAudience(Audience audience) {
     return CAS.settings.setTaggedAudience(audience);
   }
 
   @Deprecated("Use CAS.settings.getTaggedAudience() instead")
-  static Future<Audience> getTaggedAudience() async {
+  static Future<Audience> getTaggedAudience() {
     return CAS.settings.getTaggedAudience();
   }
 
   @Deprecated("Use CAS.settings.setMutedAdSounds(bool muted) instead")
-  static Future<void> setMutedAdSounds(bool mute) async {
+  static Future<void> setMutedAdSounds(bool mute) {
     return CAS.settings.setMutedAdSounds(mute);
   }
 
   @Deprecated(
       "Use CAS.settings.setLoadingMode(LoadingManagerMode loadingManagerMode) instead")
-  static Future<void> setLoadingMode(LoadingMode loadingMode) async {
+  static Future<void> setLoadingMode(LoadingMode loadingMode) {
     final LoadingManagerMode converted =
         LoadingManagerMode.values[loadingMode.index];
     return CAS.settings.setLoadingMode(converted);
@@ -126,39 +126,39 @@ class CAS {
 
   @Deprecated(
       "Use CAS.settings.setTestDeviceIds(Set<String> deviceIds) instead")
-  static Future<void> setTestDeviceIds(List<String> deviceIds) async {
+  static Future<void> setTestDeviceIds(List<String> deviceIds) {
     return CAS.settings.setTestDeviceIds(deviceIds.toSet());
   }
 
   @Deprecated("This method is no longer maintained and should not be used.")
-  static Future<void> addTestDeviceId(String deviceId) async {
+  static Future<void> addTestDeviceId(String deviceId) {
     return CAS.settings.addTestDeviceId(deviceId);
   }
 
   @Deprecated("Use CAS.settings.clearTestDeviceIds() instead")
-  static Future<void> clearTestDeviceIds() async {
+  static Future<void> clearTestDeviceIds() {
     return CAS.settings.clearTestDeviceIds();
   }
 
   @Deprecated("Use CAS.settings.clearTestDeviceIds() instead")
-  static Future<void> setInterstitialInterval(int delay) async {
+  static Future<void> setInterstitialInterval(int delay) {
     return CAS.settings.setInterstitialInterval(delay);
   }
 
   @Deprecated("Use CAS.settings.getInterstitialInterval() instead")
-  static Future<int> getInterstitialInterval() async {
+  static Future<int> getInterstitialInterval() {
     return CAS.settings.getInterstitialInterval();
   }
 
   @Deprecated("Use CAS.settings.restartInterstitialInterval() instead")
-  static Future<void> restartInterstitialInterval() async {
+  static Future<void> restartInterstitialInterval() {
     return CAS.settings.restartInterstitialInterval();
   }
 
   @Deprecated(
       "Use CAS.settings.allowInterstitialAdsWhenVideoCostAreLower(bool isAllow) instead")
   static Future<void> allowInterstitialAdsWhenVideoCostAreLower(
-      final bool isAllow) async {
+      final bool isAllow) {
     return CAS.settings.allowInterstitialAdsWhenVideoCostAreLower(isAllow);
   }
 }

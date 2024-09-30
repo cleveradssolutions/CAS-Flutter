@@ -9,19 +9,13 @@ import Flutter
 import Foundation
 
 class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
+
     private var messenger: FlutterBinaryMessenger
     private var bridge: () -> CASBridge?
-    private let listener: BannerViewEventListener
-    private let channel: FlutterEventChannel
 
-    init(bridge: @escaping () -> CASBridge?, messenger: FlutterBinaryMessenger) {
+    init(messenger: FlutterBinaryMessenger, bridge: @escaping () -> CASBridge?) {
         self.messenger = messenger
         self.bridge = bridge
-        listener = BannerViewEventListener()
-        channel = FlutterEventChannel(name: "com.cleveradssolutions.plugin.flutter/banner_view", binaryMessenger: self.messenger)
-        channel.setStreamHandler(listener)
-
-        super.init()
     }
 
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
@@ -31,10 +25,12 @@ class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
             arguments: args,
             binaryMessenger: messenger,
             bridgeFactory: bridge,
-            listener: listener)
+
+        )
     }
 
     public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
         return FlutterStandardMessageCodec.sharedInstance()
     }
+
 }

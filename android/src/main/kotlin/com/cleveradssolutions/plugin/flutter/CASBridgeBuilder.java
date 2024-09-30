@@ -1,12 +1,13 @@
 package com.cleveradssolutions.plugin.flutter;
 
 import android.app.Activity;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.cleversolutions.ads.ConsentFlow;
 import com.cleversolutions.ads.android.CAS;
+
+import org.jetbrains.annotations.Contract;
 
 public final class CASBridgeBuilder {
     final CAS.ManagerBuilder builder;
@@ -48,15 +49,14 @@ public final class CASBridgeBuilder {
         this.rewardListener = rewardListener;
     }
 
+    @NonNull
+    @Contract("_, _, _, _ -> new")
     public CASBridge build(@NonNull String id, @NonNull String flutterVersion, int formats, ConsentFlow flow) {
-        try {
-            return buildInternal(id, flutterVersion, formats, flow);
-        } catch (Throwable e) {
-            Log.e("CAS.dart", "Initialize Flutter Bridge failed", e);
-            return null;
-        }
+        return buildInternal(id, flutterVersion, formats, flow);
     }
 
+    @NonNull
+    @Contract("_, _, _, _ -> new")
     public CASBridge buildInternal(@NonNull String id, @NonNull String flutterVersion, int formats, ConsentFlow flow) {
         builder.withEnabledAdTypes(formats)
                 .withCasId(id)
