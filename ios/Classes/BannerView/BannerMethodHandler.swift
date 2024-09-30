@@ -2,7 +2,7 @@
 //  BannerMethodHandler.swift
 //  clever_ads_solutions
 //
-//  Created by Dmytro Uzhva on 24.09.2024.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import CleverAdsSolutions
@@ -18,31 +18,31 @@ class BannerMethodHandler: MethodHandler {
     private let disposeBanner: () -> ()
 
     init(_ flutterId: String, _ bannerView: CASBannerView, _ bridgeProvider: @escaping () -> CASBridge?, _ disposeBanner: @escaping () -> ()) {
-        super.init(channelName: channelName + flutterId)
         self.bannerView = bannerView
         self.bridgeProvider = bridgeProvider
         self.disposeBanner = disposeBanner
+        super.init(channelName: channelName + flutterId)
     }
 
-    override func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "isAdReady": result(bannerView.isAdReady)
         case "loadNextAd": bannerView.loadNextAd()
 
-        case "createBannerView": createBannerView(call: call, result: result)
-        case "loadBanner": loadBanner(call: call, result: result)
-        case "isBannerReady": isBannerReady(call: call, result: result)
-        case "showBanner": showBanner(call: call, result: result)
-        case "hideBanner": hideBanner(call: call, result: result)
-        case "setBannerPosition": setBannerPosition(call: call, result: result)
-        case "setBannerAdRefreshRate": setBannerAdRefreshRate(call: call, result: result)
-        case "disableBannerRefresh": disableBannerRefresh(call: call, result: result)
-        case "dispose": dispose(call: call, result: result)
-        default: super.onMethodCall(call: call, result: result)
+        case "createBannerView": createBannerView(call, result)
+        case "loadBanner": loadBanner(call, result)
+        case "isBannerReady": isBannerReady(call, result)
+        case "showBanner": showBanner(call, result)
+        case "hideBanner": hideBanner(call, result)
+        case "setBannerPosition": setBannerPosition(call, result)
+        case "setBannerAdRefreshRate": setBannerAdRefreshRate(call, result)
+        case "disableBannerRefresh": disableBannerRefresh(call, result)
+        case "dispose": dispose(call, result)
+        default: super.onMethodCall(call, result)
         }
     }
 
-    private func createBannerView(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func createBannerView(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? [String: Any?],
            let sizeId = args["sizeId"] as? Int {
             CASFlutter.cleverAdsSolutions.getCasBridge()?.showGlobalBannerAd(sizeId: sizeId)
@@ -52,7 +52,7 @@ class BannerMethodHandler: MethodHandler {
         }
     }
 
-    private func loadBanner(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func loadBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int {
             CASFlutter.cleverAdsSolutions.getCasBridge()?.loadNextBanner(sizeId: sizeId)
@@ -62,7 +62,7 @@ class BannerMethodHandler: MethodHandler {
         }
     }
 
-    private func isBannerReady(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func isBannerReady(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int {
             result(Bool(CASFlutter.cleverAdsSolutions.getCasBridge()?.isBannerViewAdReady(sizeId: sizeId) ?? false))
@@ -71,7 +71,7 @@ class BannerMethodHandler: MethodHandler {
         }
     }
 
-    private func showBanner(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func showBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int {
             CASFlutter.cleverAdsSolutions.getCasBridge()?.showGlobalBannerAd(sizeId: sizeId)
@@ -81,7 +81,7 @@ class BannerMethodHandler: MethodHandler {
         }
     }
 
-    private func hideBanner(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func hideBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int {
             CASFlutter.cleverAdsSolutions.getCasBridge()?.hideBanner(sizeId: sizeId)
@@ -91,7 +91,7 @@ class BannerMethodHandler: MethodHandler {
         }
     }
 
-    private func setBannerPosition(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func setBannerPosition(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int,
            let positionId = args["positionId"] as? Int,
@@ -104,7 +104,7 @@ class BannerMethodHandler: MethodHandler {
         }
     }
 
-    private func setBannerAdRefreshRate(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func setBannerAdRefreshRate(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int,
            let interval = args["refresh"] as? Int {
@@ -115,7 +115,7 @@ class BannerMethodHandler: MethodHandler {
         }
     }
 
-    private func disableBannerRefresh(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func disableBannerRefresh(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int {
             CASFlutter.cleverAdsSolutions.getCasBridge()?.disableBannerRefresh(sizeId: sizeId)
@@ -125,7 +125,7 @@ class BannerMethodHandler: MethodHandler {
         }
     }
 
-    private func dispose(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func dispose(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         disposeBanner()
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int {

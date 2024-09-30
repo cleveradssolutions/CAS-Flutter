@@ -2,7 +2,7 @@
 //  EventHandler.swift
 //  clever_ads_solutions
 //
-//  Created by Dmytro Uzhva on 24.09.2024.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import Flutter
@@ -16,7 +16,8 @@ class EventHandler: NSObject, FlutterStreamHandler {
         self.channelName = channelName
     }
 
-    open func onAttachedToFlutter(binaryMessenger: FlutterBinaryMessenger) {
+    open func onAttachedToFlutter(_ registrar: FlutterPluginRegistrar) {
+        let binaryMessenger = registrar.messenger()
         channel = FlutterEventChannel(name: channelName, binaryMessenger: binaryMessenger)
         channel!.setStreamHandler(self)
     }

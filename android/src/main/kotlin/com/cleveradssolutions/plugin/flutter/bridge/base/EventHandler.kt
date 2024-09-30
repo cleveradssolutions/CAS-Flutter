@@ -2,7 +2,7 @@ package com.cleveradssolutions.plugin.flutter.bridge.base
 
 import androidx.annotation.CallSuper
 import androidx.annotation.MainThread
-import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.EventChannel
 
 abstract class EventHandler(
@@ -14,8 +14,8 @@ abstract class EventHandler(
 
     @CallSuper
     @MainThread
-    open fun onAttachedToFlutter(binaryMessenger: BinaryMessenger) {
-        channel = EventChannel(binaryMessenger, channelName).also {
+    open fun onAttachedToFlutter(flutterPluginBinding: FlutterPluginBinding) {
+        channel = EventChannel(flutterPluginBinding.binaryMessenger, channelName).also {
             it.setStreamHandler(this)
         }
     }

@@ -1,8 +1,8 @@
 //
-//  CASMethodHandler.swift
+//  AdsSettingsMethodHandler.swift
 //  clever_ads_solutions
 //
-//  Created by Dmytro Uzhva on 13.08.2024.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import CleverAdsSolutions
@@ -15,175 +15,175 @@ class AdsSettingsMethodHandler: MethodHandler {
         super.init(channelName: channelName)
     }
 
-    override func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
-        case "getTaggedAudience": getTaggedAudience(result: result)
-        case "setTaggedAudience": setTaggedAudience(call: call, result: result)
-        case "getUserConsent": getUserConsent(result: result)
-        case "setUserConsent": setUserConsent(call: call, result: result)
-        case "getVendorConsent": getVendorConsent(call: call, result: result)
-        case "getAdditionalConsent": getAdditionalConsent(call: call, result: result)
-        case "getCPPAStatus": getCPPAStatus(result: result)
-        case "setCCPAStatus": setCCPAStatus(call: call, result: result)
-        case "getMutedAdSounds": getMutedAdSounds(result: result)
-        case "setMutedAdSounds": setMutedAdSounds(call: call, result: result)
-        case "getDebugMode": getDebugMode(result: result)
-        case "setDebugMode": setDebugMode(call: call, result: result)
-        case "addTestDeviceId": setTestDeviceId(call: call, result: result)
-        case "setTestDeviceId": setTestDeviceId(call: call, result: result)
-        case "setTestDeviceIds": setTestDeviceIds(call: call, result: result)
-        case "clearTestDeviceIds": clearTestDeviceIds(result: result)
-        case "getTrialAdFreeInterval": getTrialAdFreeInterval(result: result)
-        case "setTrialAdFreeInterval": setTrialAdFreeInterval(call: call, result: result)
-        case "getBannerRefreshDelay": getBannerRefreshDelay(result: result)
-        case "setBannerRefreshDelay": setBannerRefreshDelay(call: call, result: result)
-        case "getInterstitialInterval": getInterstitialInterval(result: result)
-        case "setInterstitialInterval": setInterstitialInterval(call: call, result: result)
-        case "restartInterstitialInterval": restartInterstitialInterval(result: result)
-        case "isAllowInterstitialAdsWhenVideoCostAreLower": isAllowInterstitialAdsWhenVideoCostAreLower(result: result)
-        case "allowInterstitialAdsWhenVideoCostAreLower": allowInterstitialAdsWhenVideoCostAreLower(call: call, result: result)
-        case "getLoadingMode": getLoadingMode(result: result)
-        case "setLoadingMode": setLoadingMode(call: call, result: result)
-        default: super.onMethodCall(call: call, result: result)
+        case "getTaggedAudience": getTaggedAudience(result)
+        case "setTaggedAudience": setTaggedAudience(call, result)
+        case "getUserConsent": getUserConsent(result)
+        case "setUserConsent": setUserConsent(call, result)
+        case "getVendorConsent": getVendorConsent(call, result)
+        case "getAdditionalConsent": getAdditionalConsent(call, result)
+        case "getCPPAStatus": getCPPAStatus(result)
+        case "setCCPAStatus": setCCPAStatus(call, result)
+        case "getMutedAdSounds": getMutedAdSounds(result)
+        case "setMutedAdSounds": setMutedAdSounds(call, result)
+        case "getDebugMode": getDebugMode(result)
+        case "setDebugMode": setDebugMode(call, result)
+        case "addTestDeviceId": setTestDeviceId(call, result)
+        case "setTestDeviceId": setTestDeviceId(call, result)
+        case "setTestDeviceIds": setTestDeviceIds(call, result)
+        case "clearTestDeviceIds": clearTestDeviceIds(result)
+        case "getTrialAdFreeInterval": getTrialAdFreeInterval(result)
+        case "setTrialAdFreeInterval": setTrialAdFreeInterval(call, result)
+        case "getBannerRefreshDelay": getBannerRefreshDelay(result)
+        case "setBannerRefreshDelay": setBannerRefreshDelay(call, result)
+        case "getInterstitialInterval": getInterstitialInterval(result)
+        case "setInterstitialInterval": setInterstitialInterval(call, result)
+        case "restartInterstitialInterval": restartInterstitialInterval(result)
+        case "isAllowInterstitialAdsWhenVideoCostAreLower": isAllowInterstitialAdsWhenVideoCostAreLower(result)
+        case "allowInterstitialAdsWhenVideoCostAreLower": allowInterstitialAdsWhenVideoCostAreLower(call, result)
+        case "getLoadingMode": getLoadingMode(result)
+        case "setLoadingMode": setLoadingMode(call, result)
+        default: super.onMethodCall(call, result)
         }
     }
 
-    private func getTaggedAudience(result: @escaping FlutterResult) {
+    private func getTaggedAudience(_ result: @escaping FlutterResult) {
         result(CAS.settings.taggedAudience.rawValue)
     }
 
-    private func setTaggedAudience(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "taggedAudience", result: result) { index in
+    private func setTaggedAudience(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturn("taggedAudience", result) { index in
             if let value = CASAudience(rawValue: index) {
                 CAS.settings.taggedAudience = value
             }
         }
     }
 
-    private func getUserConsent(result: @escaping FlutterResult) {
+    private func getUserConsent(_ result: @escaping FlutterResult) {
         result(CAS.settings.userConsent.rawValue)
     }
 
-    private func setUserConsent(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "userConsent", result: result) { index in
+    private func setUserConsent(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturn("userConsent", result) { index in
             if let value = CASConsentStatus(rawValue: index) {
                 CAS.settings.userConsent = value
             }
         }
     }
 
-    private func getVendorConsent(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "vendorId", result: result) { vendorId in
+    private func getVendorConsent(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("vendorId", result) { vendorId in
             CAS.settings.getVendorConsent(vendorId: vendorId).rawValue
         }
     }
 
-    private func getAdditionalConsent(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "providerId", result: result) { providerId in
+    private func getAdditionalConsent(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("providerId", result) { providerId in
             CAS.settings.getAdditionalConsent(providerId: providerId).rawValue
         }
     }
 
-    private func getCPPAStatus(result: @escaping FlutterResult) {
+    private func getCPPAStatus(_ result: @escaping FlutterResult) {
         result(CAS.settings.userCCPAStatus.rawValue)
     }
 
-    private func setCCPAStatus(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "ccpa", result: result) { index in
+    private func setCCPAStatus(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturn("ccpa", result) { index in
             if let value = CASCCPAStatus(rawValue: index) {
                 CAS.settings.userCCPAStatus = value
             }
         }
     }
 
-    private func getMutedAdSounds(result: @escaping FlutterResult) {
+    private func getMutedAdSounds(_ result: @escaping FlutterResult) {
         result(CAS.settings.mutedAdSounds)
     }
 
-    private func setMutedAdSounds(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "muted", result: result) { value in
+    private func setMutedAdSounds(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("muted", result) { value in
             CAS.settings.mutedAdSounds = value
         }
     }
 
-    private func getDebugMode(result: @escaping FlutterResult) {
+    private func getDebugMode(_ result: @escaping FlutterResult) {
         result(CAS.settings.debugMode)
     }
 
-    private func setDebugMode(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "enable", result: result) { value in
+    private func setDebugMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("enable", result) { value in
             CAS.settings.debugMode = value
         }
     }
 
-    private func setTestDeviceId(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "deviceId", result: result) { deviceId in
+    private func setTestDeviceId(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("deviceId", result) { deviceId in
             CAS.settings.setTestDevice(ids: [deviceId])
         }
     }
 
-    private func setTestDeviceIds(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "deviceIds", result: result) { deviceIds in
+    private func setTestDeviceIds(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("deviceIds", result) { deviceIds in
             CAS.settings.setTestDevice(ids: deviceIds)
         }
     }
 
-    private func clearTestDeviceIds(result: @escaping FlutterResult) {
+    private func clearTestDeviceIds(_ result: @escaping FlutterResult) {
         CAS.settings.setTestDevice(ids: [])
         result(nil)
     }
 
-    private func getTrialAdFreeInterval(result: @escaping FlutterResult) {
+    private func getTrialAdFreeInterval(_ result: @escaping FlutterResult) {
         result(CAS.settings.trialAdFreeInterval)
     }
 
-    private func setTrialAdFreeInterval(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "interval", result: result) { interval in
+    private func setTrialAdFreeInterval(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("interval", result) { interval in
             CAS.settings.trialAdFreeInterval = interval
         }
     }
 
-    private func getBannerRefreshDelay(result: @escaping FlutterResult) {
+    private func getBannerRefreshDelay(_ result: @escaping FlutterResult) {
         result(CAS.settings.bannerRefreshInterval)
     }
 
-    private func setBannerRefreshDelay(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "delay", result: result) { delay in
+    private func setBannerRefreshDelay(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("delay", result) { delay in
             CAS.settings.bannerRefreshInterval = delay
         }
     }
 
-    private func getInterstitialInterval(result: @escaping FlutterResult) {
+    private func getInterstitialInterval(_ result: @escaping FlutterResult) {
         result(CAS.settings.interstitialInterval)
     }
 
-    private func setInterstitialInterval(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "delay", result: result) { delay in
+    private func setInterstitialInterval(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("delay", result) { delay in
             CAS.settings.interstitialInterval = delay
         }
     }
 
-    private func restartInterstitialInterval(result: @escaping FlutterResult) {
+    private func restartInterstitialInterval(_ result: @escaping FlutterResult) {
         CAS.settings.restartInterstitialInterval()
         result(nil)
     }
 
-    private func isAllowInterstitialAdsWhenVideoCostAreLower(result: @escaping FlutterResult) {
+    private func isAllowInterstitialAdsWhenVideoCostAreLower(_ result: @escaping FlutterResult) {
         result(CAS.settings.isInterstitialAdsWhenVideoCostAreLowerAllowed())
     }
 
-    private func allowInterstitialAdsWhenVideoCostAreLower(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "enable", result: result) { enable in
+    private func allowInterstitialAdsWhenVideoCostAreLower(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("enable", result) { enable in
             CAS.settings.setInterstitialAdsWhenVideoCostAreLower(allow: enable)
         }
     }
 
-    private func getLoadingMode(result: @escaping FlutterResult) {
+    private func getLoadingMode(_ result: @escaping FlutterResult) {
         result(CAS.settings.getLoadingMode())
     }
 
-    private func setLoadingMode(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "loadingMode", result: result) { loadingMode in
+    private func setLoadingMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("loadingMode", result) { loadingMode in
             CAS.settings.setLoading(mode: loadingMode)
         }
     }

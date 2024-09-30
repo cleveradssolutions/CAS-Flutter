@@ -2,7 +2,7 @@
 //  CASMethodHandler.swift
 //  clever_ads_solutions
 //
-//  Created by Dmytro Uzhva on 12.08.2024.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import CleverAdsSolutions
@@ -15,19 +15,19 @@ class CASMethodHandler: MethodHandler {
         super.init(channelName: channelName)
     }
 
-    override func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
-        case "getSDKVersion": getSDKVersion(result: result)
-        case "validateIntegration": validateIntegration(result: result)
-        default: super.onMethodCall(call: call, result: result)
+        case "getSDKVersion": getSDKVersion(result)
+        case "validateIntegration": validateIntegration(result)
+        default: super.onMethodCall(call, result)
         }
     }
 
-    private func getSDKVersion(result: @escaping FlutterResult) {
+    private func getSDKVersion(_ result: @escaping FlutterResult) {
         result(CAS.getSDKVersion())
     }
 
-    private func validateIntegration(result: @escaping FlutterResult) {
+    private func validateIntegration(_ result: @escaping FlutterResult) {
         CAS.validateIntegration()
         result(nil)
     }

@@ -11,6 +11,7 @@ import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandle
 import com.cleveradssolutions.plugin.flutter.bridge.TargetingOptionsMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
@@ -22,7 +23,7 @@ class CASFlutter : FlutterPlugin, ActivityAware {
 
     private var casBridge: CASBridge? = null
 
-    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPluginBinding) {
         val activityProvider = { activity }
         val casBridgeProvider = { casBridge }
         val consentFlowMethodHandler = ConsentFlowMethodHandler(activityProvider)
@@ -43,11 +44,11 @@ class CASFlutter : FlutterPlugin, ActivityAware {
             .platformViewRegistry
             .registerViewFactory(
                 "<cas-banner-view>",
-                BannerViewFactory(flutterPluginBinding.binaryMessenger, casBridgeProvider)
+                BannerViewFactory(flutterPluginBinding, casBridgeProvider)
             )
     }
 
-    override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onDetachedFromEngine(flutterPluginBinding: FlutterPluginBinding) {
         methodHandlers.forEach { it.onDetachedFromFlutter() }
         methodHandlers = emptySet()
     }

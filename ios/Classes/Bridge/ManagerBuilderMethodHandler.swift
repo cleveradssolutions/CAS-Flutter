@@ -2,7 +2,7 @@
 //  ManagerBuilderMethodHandler.swift
 //  clever_ads_solutions
 //
-//  Created by Dmytro Uzhva on 19.09.2024.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import CleverAdsSolutions
@@ -15,17 +15,17 @@ class ManagerBuilderMethodHandler: MethodHandler {
         super.init(channelName: channelName)
     }
 
-    override func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
-        case "withTestAdMode": withTestAdMode(call: call, result: result)
-        case "withUserId": setUserId(call: call, result: result)
-        case "withMediationExtras": withMediationExtras(call: call, result: result)
-        case "build": buildBridge(call: call, result: result)
-        default: super.onMethodCall(call: call, result: result)
+        case "withTestAdMode": withTestAdMode(call, result)
+        case "withUserId": withUserId(call, result)
+        case "withMediationExtras": withMediationExtras(call, result)
+        case "build": build(call, result)
+        default: super.onMethodCall(call, result)
         }
     }
 
-    private func withTestAdMode(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func withTestAdMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let enabled = args["enabled"] as? Bool {
             CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().withTestMode(enable: enabled)
@@ -35,7 +35,7 @@ class ManagerBuilderMethodHandler: MethodHandler {
         }
     }
 
-    private func withUserId(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func withUserId(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let id = args["userId"] as? String {
             CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().setUserId(id: id)
@@ -45,7 +45,7 @@ class ManagerBuilderMethodHandler: MethodHandler {
         }
     }
 
-    private func withMediationExtras(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func withMediationExtras(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let key = args["key"] as? String,
            let value = args["value"] as? String {
@@ -56,16 +56,15 @@ class ManagerBuilderMethodHandler: MethodHandler {
         }
     }
 
-    private func build(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let casId = args["id"] as? String,
            let formats = args["formats"] as? Int,
            let version = args["version"] as? String {
-            flutterInit = true
             CASFlutter.cleverAdsSolutions.buildBridge(id: casId, flutterVersion: version, formats: formats)
             result(nil)
         } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
+            result(call.errorArgNil("id"))
         }
     }
 }

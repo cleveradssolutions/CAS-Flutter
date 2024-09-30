@@ -9,7 +9,6 @@ public class CASFlutter: NSObject, FlutterPlugin {
     private var methodHandlers: [MethodHandler]
 
     init(with registrar: FlutterPluginRegistrar) {
-        //        self.pluginChannel = pluginChannel
         methodHandlers = [
             AdSizeMethodHandler(),
             AdsSettingsMethodHandler(),
@@ -19,21 +18,17 @@ public class CASFlutter: NSObject, FlutterPlugin {
             MediationManagerMethodHandler(),
             TargetingOptionsMethodHandler(),
         ]
+
         methodHandlers.forEach { handler in
             handler.onAttachedToFlutter(registrar)
         }
 
-        registrar.register(BannerViewFactory(messenger: registrar.messenger(), bridge: CASFlutter.cleverAdsSolutions.getCasBridge), withId: "<cas-banner-view>")
+        registrar.register(BannerViewFactory(registrar: registrar, bridgeProvider: CASFlutter.cleverAdsSolutions.getCasBridge), withId: "<cas-banner-view>")
     }
 
-    public static func register(with registrar: FlutterPluginRegistrar) {
-//        let channel = FlutterMethodChannel(name: "com.cleveradssolutions.plugin.flutter/mediation_manager", binaryMessenger: registrar.messenger())
-        //let instance =
-        CASFlutter(with: registrar)
-
-//        registrar.addMethodCallDelegate(instance, channel: channel)
-
-//        CASFlutter.cleverAdsSolutions.setFlutterCallerToCallbacks(caller: instance.invokeChannelMethod)
+    public static func register(with registrar: any FlutterPluginRegistrar) {
+        let instance = CASFlutter(with: registrar)
+        registrar.publish(instance)
     }
 
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
@@ -42,12 +37,4 @@ public class CASFlutter: NSObject, FlutterPlugin {
         }
         methodHandlers = []
     }
-
-//    private let pluginChannel: FlutterMethodChannel
-
-//    private func invokeChannelMethod(methodName: String, args: Any? = nil) {
-//        if flutterInit {
-//            pluginChannel.invokeMethod(methodName, arguments: args)
-//        }
-//    }
 }

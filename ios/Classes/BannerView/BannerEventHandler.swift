@@ -1,8 +1,8 @@
 //
-//  BannerViewEventListener.swift
+//  BannerEventHandler.swift
 //  clever_ads_solutions
 //
-//  Created by MacMini on 2.04.24.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import CleverAdsSolutions

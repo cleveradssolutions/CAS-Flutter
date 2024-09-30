@@ -2,7 +2,7 @@
 //  BannerView.swift
 //  clever_ads_solutions
 //
-//  Created by MacMini on 2.04.24.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import CleverAdsSolutions
@@ -20,7 +20,7 @@ class BannerView: NSObject, FlutterPlatformView {
         frame: CGRect,
         viewId: Int64,
         args: [String: Any?]?,
-        binaryMessenger: FlutterBinaryMessenger,
+        registrar: FlutterPluginRegistrar,
         bridgeProvider: @escaping () -> CASBridge?
     ) {
         flutterId = args?["id"] as? String ?? ""
@@ -39,15 +39,15 @@ class BannerView: NSObject, FlutterPlatformView {
                 let height = size["height"]
                 let mode = size["mode"]
 
-                CASSize()
+//                CASSize()
 
-                switch serializedSize {
-                case 1: adSize = CASSize.banner
-                case 3: adSize = CASSize.getSmartBanner()
-                case 4: adSize = CASSize.leaderboard
-                case 5: adSize = CASSize.mediumRectangle
-                default: print("Unknown CAS BannerView size")
-                }
+//                switch serializedSize {
+//                case 1: adSize = CASSize.banner
+//                case 3: adSize = CASSize.getSmartBanner()
+//                case 4: adSize = CASSize.leaderboard
+//                case 5: adSize = CASSize.mediumRectangle
+//                default: print("Unknown CAS BannerView size")
+//                }
             }
         } else {
             adSize = CASSize.banner
@@ -59,10 +59,10 @@ class BannerView: NSObject, FlutterPlatformView {
         banner.tag = Int(viewId)
 
         methodHandler = BannerMethodHandler(flutterId, banner, bridgeProvider, dispose)
-        methodHandler!.onAttachedToFlutter(binaryMessenger: binaryMessenger)
+        methodHandler!.onAttachedToFlutter(registrar)
 
         eventHandler = BannerEventHandler(flutterId)
-        eventHandler!.onAttachedToFlutter(binaryMessenger: binaryMessenger)
+        eventHandler!.onAttachedToFlutter(registrar)
         banner.adDelegate = eventHandler
 
         if let isAutoloadEnabled = args?["isAutoloadEnabled"] as? Bool {

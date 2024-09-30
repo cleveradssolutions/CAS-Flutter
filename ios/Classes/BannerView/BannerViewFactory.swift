@@ -2,7 +2,7 @@
 //  BannerViewFactory.swift
 //  clever_ads_solutions
 //
-//  Created by MacMini on 2.04.24.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import Flutter
@@ -10,22 +10,22 @@ import Foundation
 
 class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
 
-    private var messenger: FlutterBinaryMessenger
-    private var bridge: () -> CASBridge?
+    private var registrar: FlutterPluginRegistrar
+    private var bridgeProvider: () -> CASBridge?
 
-    init(messenger: FlutterBinaryMessenger, bridge: @escaping () -> CASBridge?) {
-        self.messenger = messenger
-        self.bridge = bridge
+    init(registrar: FlutterPluginRegistrar, bridgeProvider: @escaping () -> CASBridge?) {
+        self.registrar = registrar
+        self.bridgeProvider = bridgeProvider
     }
 
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
+        let args = args as? [String: Any?]
         return BannerView(
             frame: frame,
-            viewIdentifier: viewId,
-            arguments: args,
-            binaryMessenger: messenger,
-            bridgeFactory: bridge,
-
+            viewId: viewId,
+            args: args,
+            registrar: registrar,
+            bridgeProvider: bridgeProvider
         )
     }
 

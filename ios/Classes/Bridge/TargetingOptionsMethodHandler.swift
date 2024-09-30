@@ -1,8 +1,8 @@
 //
-//  CASMethodHandler.swift
+//  TargetingOptionsMethodHandler.swift
 //  clever_ads_solutions
 //
-//  Created by Dmytro Uzhva on 13.08.2024.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import CleverAdsSolutions
@@ -15,92 +15,92 @@ class TargetingOptionsMethodHandler: MethodHandler {
         super.init(channelName: channelName)
     }
 
-    override func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
-        case "getGender": getGender(result: result)
-        case "setGender": setGender(call: call, result: result)
-        case "getAge": getAge(result: result)
-        case "setAge": setAge(call: call, result: result)
-        case "getLocationLatitude": getLocationLatitude(result: result)
-        case "setLocationLatitude": setLocationLatitude(call: call, result: result)
-        case "getLocationLongitude": getLocationLongitude(result: result)
-        case "setLocationLongitude": setLocationLongitude(call: call, result: result)
-        case "isLocationCollectionEnabled": isLocationCollectionEnabled(result: result)
-        case "setLocationCollectionEnabled": setLocationCollectionEnabled(call: call, result: result)
-        case "getKeywords": getKeywords(result: result)
-        case "setKeywords": setKeywords(call: call, result: result)
-        case "getContentUrl": getContentUrl(result: result)
-        case "setContentUrl": setContentUrl(call: call, result: result)
-        default: super.onMethodCall(call: call, result: result)
+        case "getGender": getGender(result)
+        case "setGender": setGender(call, result)
+        case "getAge": getAge(result)
+        case "setAge": setAge(call, result)
+        case "getLocationLatitude": getLocationLatitude(result)
+        case "setLocationLatitude": setLocationLatitude(call, result)
+        case "getLocationLongitude": getLocationLongitude(result)
+        case "setLocationLongitude": setLocationLongitude(call, result)
+        case "isLocationCollectionEnabled": isLocationCollectionEnabled(result)
+        case "setLocationCollectionEnabled": setLocationCollectionEnabled(call, result)
+        case "getKeywords": getKeywords(result)
+        case "setKeywords": setKeywords(call, result)
+        case "getContentUrl": getContentUrl(result)
+        case "setContentUrl": setContentUrl(call, result)
+        default: super.onMethodCall(call, result)
         }
     }
 
-    private func getGender(result: @escaping FlutterResult) {
+    private func getGender(_ result: @escaping FlutterResult) {
         result(CAS.targetingOptions.gender)
     }
 
-    private func setGender(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "gender", result: result) { gender in
+    private func setGender(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("gender", result) { gender in
             CAS.targetingOptions.gender = gender
         }
     }
 
-    private func getAge(result: @escaping FlutterResult) {
+    private func getAge(_ result: @escaping FlutterResult) {
         result(CAS.targetingOptions.age)
     }
 
-    private func setAge(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "age", result: result) { age in
+    private func setAge(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("age", result) { age in
             CAS.targetingOptions.age = age
         }
     }
 
-    private func getLocationLatitude(result: @escaping FlutterResult) {
+    private func getLocationLatitude(_ result: @escaping FlutterResult) {
         result(CAS.targetingOptions.locationLatitude)
     }
 
-    private func setLocationLatitude(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "latitude", result: result) { latitude in
+    private func setLocationLatitude(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("latitude", result) { latitude in
             CAS.targetingOptions.locationLatitude = latitude
         }
     }
 
-    private func getLocationLongitude(result: @escaping FlutterResult) {
+    private func getLocationLongitude(_ result: @escaping FlutterResult) {
         result(CAS.targetingOptions.locationLongitude)
     }
 
-    private func setLocationLongitude(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "longitude", result: result) { longitude in
+    private func setLocationLongitude(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("longitude", result) { longitude in
             CAS.targetingOptions.locationLongitude = longitude
         }
     }
 
-    private func isLocationCollectionEnabled(result: @escaping FlutterResult) {
+    private func isLocationCollectionEnabled(_ result: @escaping FlutterResult) {
         result(CAS.targetingOptions.locationCollectionEnabled)
     }
 
-    private func setLocationCollectionEnabled(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "isEnabled", result: result) { isEnabled in
+    private func setLocationCollectionEnabled(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("isEnabled", result) { isEnabled in
             CAS.targetingOptions.locationCollectionEnabled = isEnabled
         }
     }
 
-    private func getKeywords(result: @escaping FlutterResult) {
+    private func getKeywords(_ result: @escaping FlutterResult) {
         result(CAS.targetingOptions.keywords)
     }
 
-    private func setKeywords(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "keywords", result: result) { keywords in
+    private func setKeywords(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("keywords", result) { keywords in
             CAS.targetingOptions.keywords = keywords
         }
     }
 
-    private func getContentUrl(result: @escaping FlutterResult) {
+    private func getContentUrl(_ result: @escaping FlutterResult) {
         result(CAS.targetingOptions.contentUrl)
     }
 
-    private func setContentUrl(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        call.getArgAndReturnResult(name: "contentUrl", result: result) { contentUrl in
+    private func setContentUrl(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturnResult("contentUrl", result) { contentUrl in
             CAS.targetingOptions.contentUrl = contentUrl
         }
     }

@@ -10,6 +10,7 @@ import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
 import com.cleveradssolutions.plugin.flutter.util.success
 import com.cleveradssolutions.plugin.flutter.util.toMap
 import com.cleversolutions.ads.AdStatusHandler
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 

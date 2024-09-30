@@ -50,7 +50,7 @@ inline fun <T> MethodCall.getArgAndReturn(name: String, result: Result, action: 
     getArgAndReturnResult(name, result, action)
 
 inline fun <T, T2> MethodCall.getArgAndReturn(name1: String, name2: String, result: Result, action: (T, T2) -> Unit) =
-    getArgAndReturnResult<T, T2>(name1, name2, result, action)
+    getArgAndReturnResult(name1, name2, result, action)
 
 inline fun Result.success() = success(null)
 

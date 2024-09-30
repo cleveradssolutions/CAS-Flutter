@@ -5,18 +5,18 @@ import android.view.View
 import com.cleveradssolutions.plugin.flutter.CASBridge
 import com.cleversolutions.ads.AdSize
 import com.cleversolutions.ads.android.CASBannerView
-import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.platform.PlatformView
 
 class BannerView(
     context: Context,
     viewId: Int,
-    creationParams: Map<*, *>?,
-    binaryMessenger: BinaryMessenger,
+    args: Map<*, *>?,
+    flutterPluginBinding: FlutterPluginBinding,
     bridgeProvider: () -> CASBridge?
 ) : PlatformView {
 
-    private val flutterId = creationParams?.get("id") as? String ?: ""
+    private val flutterId = args?.get("id") as? String ?: ""
 
     private var banner: CASBannerView? = null
     private var methodHandler: BannerMethodHandler? = null
@@ -29,10 +29,10 @@ class BannerView(
         banner.id = viewId
 
         methodHandler = BannerMethodHandler(flutterId, banner, bridgeProvider, ::dispose).also {
-            it.onAttachedToFlutter(binaryMessenger)
+            it.onAttachedToFlutter(flutterPluginBinding)
         }
         eventHandler = BannerEventHandler(flutterId).also {
-            it.onAttachedToFlutter(binaryMessenger)
+            it.onAttachedToFlutter(flutterPluginBinding)
         }
         banner.adListener = eventHandler
 
@@ -41,7 +41,7 @@ class BannerView(
 //            ViewGroup.LayoutParams.MATCH_PARENT
 //        )
 
-        (creationParams?.get("size") as? Map<*, *>)?.let { size ->
+        (args?.get("size") as? Map<*, *>)?.let { size ->
 //            var size: AdSize = AdSize.BANNER
 
             if (size["isAdaptive"] == true) {
@@ -73,11 +73,11 @@ class BannerView(
             }
         }
 
-        (creationParams?.get("isAutoloadEnabled") as? Boolean)?.let {
+        (args?.get("isAutoloadEnabled") as? Boolean)?.let {
             banner.isAutoloadEnabled = it
         }
 
-        (creationParams?.get("refreshInterval") as? Int)?.let {
+        (args?.get("refreshInterval") as? Int)?.let {
             banner.refreshInterval = it
         }
     }

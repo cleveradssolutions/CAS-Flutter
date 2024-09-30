@@ -2,7 +2,7 @@
 //  CASInitCallback.swift
 //  clever_ads_solutions
 //
-//  Created by Владислав Горик on 08.08.2023.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import Foundation

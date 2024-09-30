@@ -2,7 +2,7 @@
 //  MethodHandler.swift
 //  clever_ads_solutions
 //
-//  Created by Dmytro Uzhva on 12.08.2024.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import Flutter
@@ -18,10 +18,9 @@ class MethodHandler {
     }
 
     open func onAttachedToFlutter(_ registrar: FlutterPluginRegistrar) {
-        let binaryMessenger = registrar.binaryMessenger
-        channel = FlutterMethodChannel(name: channelName, registrar: registrar)
+        let binaryMessenger = registrar.messenger()
+        channel = FlutterMethodChannel(name: channelName, binaryMessenger: binaryMessenger)
         channel!.setMethodCallHandler(onMethodCall)
-        registrar.addMethodCallDelegate(instance, channel: channel)
     }
 
     open func onDetachedFromFlutter() {
@@ -29,7 +28,7 @@ class MethodHandler {
         channel = nil
     }
 
-    open func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    open func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         print("\(logTag) Unknown method '\(call.method)' in '\(channelName)'")
         result(FlutterMethodNotImplemented)
     }

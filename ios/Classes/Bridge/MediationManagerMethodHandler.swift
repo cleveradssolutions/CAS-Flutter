@@ -2,7 +2,7 @@
 //  MediationManagerMethodHandler.swift
 //  clever_ads_solutions
 //
-//  Created by Dmytro Uzhva on 19.09.2024.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import CleverAdsSolutions
@@ -15,21 +15,21 @@ class MediationManagerMethodHandler: MethodHandler {
         super.init(channelName: channelName)
     }
 
-    override func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
-        case "setLastPageContent": setLastPageContent(call: call, result: result)
-        case "loadAd": loadAd(call: call, result: result)
-        case "isReadyAd": isReadyAd(call: call, result: result)
-        case "showAd": showAd(call: call, result: result)
-        case "enableAppReturn": enableAppReturn(call: call, result: result)
-        case "skipNextAppReturnAds": skipNextAppReturnAds(result: result)
-        case "setEnabled": setEnabled(call: call, result: result)
-        case "isEnabled": isEnabled(call: call, result: result)
-        default: super.onMethodCall(call: call, result: result)
+        case "setLastPageContent": setLastPageContent(call, result)
+        case "loadAd": loadAd(call, result)
+        case "isReadyAd": isReadyAd(call, result)
+        case "showAd": showAd(call, result)
+        case "enableAppReturn": enableAppReturn(call, result)
+        case "skipNextAppReturnAds": skipNextAppReturnAds(result)
+        case "setEnabled": setEnabled(call, result)
+        case "isEnabled": isEnabled(call, result)
+        default: super.onMethodCall(call, result)
         }
     }
 
-    private func setLastPageContent(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func setLastPageContent(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let json = args["lastPageJson"] as? String {
             CASFlutter.cleverAdsSolutions.getCasBridge()?.setLastPageContent(json: json)
@@ -39,7 +39,7 @@ class MediationManagerMethodHandler: MethodHandler {
         }
     }
 
-    private func loadAd(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func loadAd(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int {
             if adType == 1 {
@@ -56,7 +56,7 @@ class MediationManagerMethodHandler: MethodHandler {
         }
     }
 
-    private func isReadyAd(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func isReadyAd(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int {
             if adType == 1 {
@@ -73,7 +73,7 @@ class MediationManagerMethodHandler: MethodHandler {
         }
     }
 
-    private func showAd(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func showAd(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int {
             if adType == 1 {
@@ -90,7 +90,7 @@ class MediationManagerMethodHandler: MethodHandler {
         }
     }
 
-    private func enableAppReturn(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func enableAppReturn(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let enable = args["enable"] as? Bool {
             if enable {
@@ -104,12 +104,12 @@ class MediationManagerMethodHandler: MethodHandler {
         }
     }
 
-    private func skipNextAppReturnAds(result: @escaping FlutterResult) {
+    private func skipNextAppReturnAds(_ result: @escaping FlutterResult) {
         CASFlutter.cleverAdsSolutions.getCasBridge()?.skipNextReturnAds()
         result(nil)
     }
 
-    private func setEnabled(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func setEnabled(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int,
            let enabled = args["enable"] as? Bool {
@@ -124,7 +124,7 @@ class MediationManagerMethodHandler: MethodHandler {
         }
     }
 
-    private func isEnabled(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func isEnabled(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int {
             if adType < 0 || adType > 2 {
