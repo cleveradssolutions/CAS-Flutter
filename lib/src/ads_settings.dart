@@ -1,7 +1,6 @@
-import 'package:clever_ads_solutions/src/consent_status.dart';
-
 import 'audience.dart';
 import 'ccpa_status.dart';
+import 'consent_status.dart';
 import 'loading_manager_mode.dart';
 
 abstract class AdsSettings {

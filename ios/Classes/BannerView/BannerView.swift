@@ -25,36 +25,10 @@ class BannerView: NSObject, FlutterPlatformView {
     ) {
         flutterId = args?["id"] as? String ?? ""
 
-        let adSize: CASSize
-        if let size = args?["size"] as? [String: Any?] {
-            if size["isAdaptive"] as? Bool == true {
-                if let maxWidth = size["maxWidthDpi"] as? Int,
-                   maxWidth != 0 {
-                    adSize = CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidth))
-                } else {
-                    adSize = CASSize.getAdaptiveBanner(forMaxWidth: frame.width)
-                }
-            } else {
-                let width = size["width"]
-                let height = size["height"]
-                let mode = size["mode"]
-
-//                CASSize()
-
-//                switch serializedSize {
-//                case 1: adSize = CASSize.banner
-//                case 3: adSize = CASSize.getSmartBanner()
-//                case 4: adSize = CASSize.leaderboard
-//                case 5: adSize = CASSize.mediumRectangle
-//                default: print("Unknown CAS BannerView size")
-//                }
-            }
-        } else {
-            adSize = CASSize.banner
-        }
+        super.init()
 
         let manager = bridgeProvider()?.mediationManager
-        let banner = CASBannerView(adSize: adSize, manager: manager)
+        let banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
         self.banner = banner
         banner.tag = Int(viewId)
 
@@ -64,6 +38,7 @@ class BannerView: NSObject, FlutterPlatformView {
         eventHandler = BannerEventHandler(flutterId)
         eventHandler!.onAttachedToFlutter(registrar)
         banner.adDelegate = eventHandler
+
 
         if let isAutoloadEnabled = args?["isAutoloadEnabled"] as? Bool {
             banner.isAutoloadEnabled = isAutoloadEnabled
@@ -91,5 +66,29 @@ class BannerView: NSObject, FlutterPlatformView {
             banner.destroy()
             self.banner = nil
         }
+    }
+
+    private static func getAdSize(_ args: [String: Any?]?, _ frame: CGRect) -> CASSize {
+        if let size = args?["size"] as? [String: Any?] {
+            if size["isAdaptive"] as? Bool == true {
+                if let maxWidth = size["maxWidthDpi"] as? Int,
+                   maxWidth != 0 {
+                    return CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidth))
+                } else {
+                    return CASSize.getAdaptiveBanner(forMaxWidth: frame.width)
+                }
+            } else {
+                let width = size["width"]
+                let height = size["height"]
+                let mode = size["mode"]
+
+                let selector = NSSelectorFromString("init")
+                if let myClassType = NSClassFromString("CASSize") as? NSObject.Type,
+                   let instance = myClassType.perform(selector)?.takeUnretainedValue() as? CASSize {
+                    return instance
+                }
+            }
+        }
+        return CASSize.banner
     }
 }

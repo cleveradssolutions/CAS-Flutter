@@ -261,7 +261,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
     }
 
     _channel.invokeMethod("createBannerView", {"sizeId": sizeId});
-    return BannerWidget(size: size, _listenerContainer);
+    return BannerWidget(size: size, listener: _listenerContainer);
   }
 
   @override

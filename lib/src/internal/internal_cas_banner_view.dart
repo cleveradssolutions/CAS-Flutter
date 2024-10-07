@@ -33,13 +33,13 @@ class InternalCASBannerView extends CASBannerView {
   @override
   Future<bool> isBannerReady() async {
     bool? isReady =
-        await _channel.invokeMethod<bool>('isBannerReady', {"sizeId": _sizeId});
+        await _channel.invokeMethod<bool>('isAdReady', {"sizeId": _sizeId});
     return isReady ?? false;
   }
 
   @override
   Future<void> loadBanner() {
-    return _channel.invokeMethod('loadBanner', {"sizeId": _sizeId});
+    return _channel.invokeMethod('loadNextAd', {"sizeId": _sizeId});
   }
 
   @override

@@ -27,6 +27,7 @@ import com.cleversolutions.ads.MediationManager;
 import com.cleversolutions.ads.android.CASBannerView;
 import com.cleveradssolutions.sdk.base.CASHandler;
 
+@Deprecated
 public final class CASViewWrapper implements AdViewListener {
     private static final int AD_POSITION_TOP_CENTER = 0;
     private static final int AD_POSITION_TOP_LEFT = 1;

@@ -157,9 +157,11 @@ class _MyAppState extends State<MyApp> {
         ? "Ad manager initialized"
         : "Ad manager initialization failed: $error");
 
-    String sdkVersion = await CAS.getSDKVersion();
     setState(() {
       _isReady = true;
+    });
+    String sdkVersion = await CAS.getSDKVersion();
+    setState(() {
       _sdkVersion = sdkVersion;
     });
     // TODO Use AdLoadCallback
@@ -194,8 +196,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _createAdaptiveBanner() async {
-    _dynamicBannerKey?.currentState?.hideBanner();
-    _dynamicBannerKey?.currentState?.dispose();
+    final oldState = _dynamicBannerKey?.currentState;
+    if (oldState != null) {
+      oldState.hideBanner();
+      oldState.dispose();
+    }
 
     _dynamicBannerKey = GlobalKey<BannerWidgetState>();
     BannerWidget(
@@ -208,8 +213,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _createStandardBanner() {
-    _dynamicBannerKey?.currentState?.hideBanner();
-    _dynamicBannerKey?.currentState?.dispose();
+    final oldState = _dynamicBannerKey?.currentState;
+    if (oldState != null) {
+      oldState.hideBanner();
+      oldState.dispose();
+    }
 
     _dynamicBannerKey = GlobalKey<BannerWidgetState>();
     BannerWidget(

@@ -18,17 +18,17 @@ class BannerView(
 
     private val flutterId = args?.get("id") as? String ?: ""
 
-    private var banner: CASBannerView? = null
+    private var banner: CASBannerView
     private var methodHandler: BannerMethodHandler? = null
     private var eventHandler: BannerEventHandler? = null
 
     init {
-        val manager = bridgeProvider()?.mediationManager;
+        val manager = bridgeProvider()?.mediationManager
         val banner = CASBannerView(context, manager)
         this.banner = banner
         banner.id = viewId
 
-        methodHandler = BannerMethodHandler(flutterId, banner, bridgeProvider, ::dispose).also {
+        methodHandler = BannerMethodHandler(flutterId, this, banner, bridgeProvider).also {
             it.onAttachedToFlutter(flutterPluginBinding)
         }
         eventHandler = BannerEventHandler(flutterId).also {
@@ -42,8 +42,6 @@ class BannerView(
 //        )
 
         (args?.get("size") as? Map<*, *>)?.let { size ->
-//            var size: AdSize = AdSize.BANNER
-
             if (size["isAdaptive"] == true) {
                 banner.size = (size["maxWidthDpi"] as? Int).let {
                     if (it == null || it == 0) {
@@ -53,13 +51,6 @@ class BannerView(
                     }
                 }
             } else {
-//            else {
-//                when (size["size"] as Int) {
-//                    3 -> size = AdSize.getSmartBanner(context)
-//                    4 -> size = AdSize.LEADERBOARD
-//                    5 -> size = AdSize.MEDIUM_RECTANGLE
-//                }
-//            }
                 val width = size["width"]
                 val height = size["height"]
                 val mode = size["mode"]
@@ -82,8 +73,8 @@ class BannerView(
         }
     }
 
-    override fun getView(): View {
-        return banner!!
+    override fun getView(): CASBannerView {
+        return banner
     }
 
     override fun dispose() {
@@ -95,10 +86,7 @@ class BannerView(
             it.onDetachedFromFlutter()
             eventHandler = null
         }
-        banner.let {
-            it?.destroy()
-            banner = null
-        }
+        banner.destroy()
     }
 
 }

@@ -30,8 +30,8 @@ class BannerMethodHandler: MethodHandler {
         case "loadNextAd": bannerView.loadNextAd()
 
         case "createBannerView": createBannerView(call, result)
-        case "loadBanner": loadBanner(call, result)
-        case "isBannerReady": isBannerReady(call, result)
+        case "loadNextAd": loadNextAd(call, result)
+        case "isAdReady": isAdReady(call, result)
         case "showBanner": showBanner(call, result)
         case "hideBanner": hideBanner(call, result)
         case "setBannerPosition": setBannerPosition(call, result)
@@ -52,7 +52,7 @@ class BannerMethodHandler: MethodHandler {
         }
     }
 
-    private func loadBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func loadNextAd(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
            let sizeId = args["sizeId"] as? Int {
             CASFlutter.cleverAdsSolutions.getCasBridge()?.loadNextBanner(sizeId: sizeId)

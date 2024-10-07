@@ -1,11 +1,11 @@
 import "dart:async";
 
-import "package:clever_ads_solutions/src/ad_position.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
 import "ad_impression.dart";
+import "ad_position.dart";
 import "ad_size.dart";
 import "ad_view_listener.dart";
 import "cas_banner_view.dart";

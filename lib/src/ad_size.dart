@@ -33,11 +33,18 @@ class AdSize {
   @Deprecated("Use AdSize.mediumRectangle instead")
   static const AdSize MediumRectangle = mediumRectangle;
 
-  @Deprecated("Use AdSize.getAdaptiveBannerInScreen() instead")
+  @Deprecated("Use AdSize.getAdaptiveBanner() instead")
   static const AdSize Adaptive = AdSize._(728, 90, 2);
 
   @Deprecated("Use AdSize.getSmartBanner() instead")
   static const AdSize Smart = AdSize._(320, 50, 0);
+
+  /// Typically, Smart Banners on phones have a [BANNER] size.
+  /// Or on tablets a [LEADERBOARD] size.
+  static Future<AdSize> getSmartBanner() async {
+    final Map<String, int> map = await _channel.invokeMethod("getSmartBanner");
+    return AdSize._parseMap(map);
+  }
 
   /// Inline adaptive banners are larger, taller banners compared to anchored adaptive banners.
   /// They are of variable height, and can be as tall as the device screen.
@@ -58,11 +65,10 @@ class AdSize {
   /// - The height of adaptive banners cannot be less than 50 dp and more than 250 dp.
   /// - The width of adaptive banners cannot be less than 300 dp.
   /// - The adaptive banners use fixed aspect ratios instead of fixed heights.
-  static Future<AdSize> getAdaptiveBanner(int maxWidthDp,
-      {int orientation = 0}) async {
+  static Future<AdSize> getAdaptiveBanner(int maxWidthDp) async {
     final Map<String, int> map = await _channel.invokeMethod(
         "getAdaptiveBanner",
-        {"maxWidthDp": maxWidthDp, "orientation": orientation});
+        {"maxWidthDp": maxWidthDp});
     return AdSize._parseMap(map);
   }
 
@@ -73,13 +79,6 @@ class AdSize {
   static Future<AdSize> getAdaptiveBannerInScreen() async {
     final Map<String, int> map =
         await _channel.invokeMethod("getAdaptiveBannerInScreen");
-    return AdSize._parseMap(map);
-  }
-
-  /// Typically, Smart Banners on phones have a [BANNER] size.
-  /// Or on tablets a [LEADERBOARD] size.
-  static Future<AdSize> getSmartBanner() async {
-    final Map<String, int> map = await _channel.invokeMethod("getSmartBanner");
     return AdSize._parseMap(map);
   }
 }

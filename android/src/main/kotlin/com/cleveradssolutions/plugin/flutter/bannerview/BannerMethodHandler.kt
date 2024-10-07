@@ -5,6 +5,7 @@ import com.cleveradssolutions.plugin.flutter.CASCallback
 import com.cleveradssolutions.plugin.flutter.CASViewWrapper
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.errorArgNull
+import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
 import com.cleveradssolutions.plugin.flutter.util.success
 import com.cleveradssolutions.plugin.flutter.util.toMap
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
@@ -14,35 +15,76 @@ import com.cleversolutions.ads.android.CASBannerView
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val LOG_TAG = "BannerMethodHandler"
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/banner."
 
 class BannerMethodHandler(
     flutterId: String,
+    private val platformView: BannerView,
     private val bannerView: CASBannerView,
-    private val bridgeProvider: () -> CASBridge?,
-    private val disposeBanner: () -> Unit
+    private val bridgeProvider: () -> CASBridge?
 ) : MethodHandler(CHANNEL_NAME + flutterId) {
-
-    private val banners = mutableMapOf<Int, CASViewWrapper?>()
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
-            "isAdReady" -> result.success(bannerView.isAdReady)
-            "loadNextAd" -> bannerView.loadNextAd()
-
-            "createBannerView" -> createBannerView(call, result)
-            "loadBanner" -> loadBanner(call, result)
-            "isBannerReady" -> isBannerReady(call, result)
-            "showBanner" -> showBanner(call, result)
-            "hideBanner" -> hideBanner(call, result)
+            "isAdReady" -> isAdReady(result)
+            "loadNextAd" -> loadNextAd(result)
+            "showBanner" -> showBanner(result)
+            "hideBanner" -> hideBanner(result)
             "setBannerPosition" -> setBannerPosition(call, result)
             "setBannerAdRefreshRate" -> setBannerAdRefreshRate(call, result)
-            "disableBannerRefresh" -> disableBannerRefresh(call, result)
-            "dispose" -> dispose(call, result)
+            "disableBannerRefresh" -> disableBannerRefresh(result)
+            "dispose" -> dispose(result)
+            "createBannerView" -> createBannerView(call, result)
             else -> super.onMethodCall(call, result)
         }
     }
+
+    private fun isAdReady(result: MethodChannel.Result) {
+        result.success(bannerView.isAdReady)
+    }
+
+    private fun loadNextAd(result: MethodChannel.Result) {
+        bannerView.loadNextAd()
+        result.success()
+    }
+
+    private fun setBannerAdRefreshRate(call: MethodCall, result: MethodChannel.Result) {
+        call.getArgAndReturn<Int>("refresh", result) {
+            bannerView.refreshInterval = it
+        }
+    }
+
+    private fun disableBannerRefresh(result: MethodChannel.Result) {
+        bannerView.disableAdRefresh()
+        result.success()
+    }
+
+    private fun showBanner(result: MethodChannel.Result) {
+        platformView.show()
+        result.success()
+    }
+
+    private fun hideBanner(result: MethodChannel.Result) {
+        platformView.hide()
+        result.success()
+    }
+
+    private fun setBannerPosition(call: MethodCall, result: MethodChannel.Result) {
+        val positionId = call.getArgAndCheckNull<Int>("positionId", result) ?: return
+        val x = call.getArgAndCheckNull<Int>("x", result) ?: return
+        val y = call.getArgAndCheckNull<Int>("y", result) ?: return
+
+        platformView.setPosition(positionId, x, y)
+
+        result.success()
+    }
+
+    private fun dispose(result: MethodChannel.Result) {
+        platformView.dispose()
+        result.success()
+    }
+
+    private val banners = mutableMapOf<Int, CASViewWrapper?>()
 
     private fun createBannerView(call: MethodCall, result: MethodChannel.Result) {
         val sizeId = call.argument<Int>("sizeId") ?: return result.errorArgNull(call, "sizeId")
@@ -60,54 +102,6 @@ class BannerMethodHandler(
         }
 
         result.success()
-    }
-
-    private fun loadBanner(call: MethodCall, result: MethodChannel.Result) {
-        call.getArgAndReturn<Int>("sizeId", result) { banners[it]?.load() }
-    }
-
-    private fun isBannerReady(call: MethodCall, result: MethodChannel.Result) {
-        call.getArgAndReturn<Int>("sizeId", result) { banners[it]?.isReady }
-    }
-
-    private fun showBanner(call: MethodCall, result: MethodChannel.Result) {
-        call.getArgAndReturn<Int>("sizeId", result) { banners[it]?.show() }
-    }
-
-    private fun hideBanner(call: MethodCall, result: MethodChannel.Result) {
-        call.getArgAndReturn<Int>("sizeId", result) { banners[it]?.hide() }
-    }
-
-    private fun setBannerPosition(call: MethodCall, result: MethodChannel.Result) {
-        val positionId = call.argument<Int>("positionId") ?: return result.errorArgNull(call, "positionId")
-        val sizeId = call.argument<Int>("sizeId") ?: return result.errorArgNull(call, "sizeId")
-        val x = call.argument<Int>("x") ?: return result.errorArgNull(call, "x")
-        val y = call.argument<Int>("y") ?: return result.errorArgNull(call, "y")
-
-        banners[sizeId]?.setPosition(positionId, x, y);
-
-        result.success()
-    }
-
-    private fun setBannerAdRefreshRate(call: MethodCall, result: MethodChannel.Result) {
-        call.getArgAndReturn<Int, Int>("refresh", "sizeId", result) { refresh, sizeId ->
-            banners[sizeId]?.refreshInterval = refresh
-        }
-    }
-
-    private fun disableBannerRefresh(call: MethodCall, result: MethodChannel.Result) {
-        call.getArgAndReturn<Int>("sizeId", result) {
-            banners[it]?.refreshInterval = 0
-        }
-    }
-
-    private fun dispose(call: MethodCall, result: MethodChannel.Result) {
-        disposeBanner()
-
-        call.getArgAndReturn<Int>("sizeId", result) {
-            banners[it]?.destroy()
-            banners.remove(it)
-        }
     }
 
     private fun createListener(name: String): CASCallback {
