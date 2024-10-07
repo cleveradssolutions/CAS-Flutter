@@ -71,5 +71,5 @@ flutter {
 }
 
 dependencies {
-    implementation("com.cleveradssolutions:cas-families:3.9.2")
+    implementation("com.cleveradssolutions:cas-families:3.9.4")
 }

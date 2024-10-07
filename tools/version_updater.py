@@ -4,7 +4,7 @@ import sys
 
 
 # To run, execute the command:
-# python version_updater.py CAS_VERSION=3.9.1 FLUTTER_PLUGIN_VERSION=0.5.0
+# python version_updater.py CAS_VERSION=3.9.4 FLUTTER_PLUGIN_VERSION=0.6.0
 
 def parse_args(args):
     cas_version = None
