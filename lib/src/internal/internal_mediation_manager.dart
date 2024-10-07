@@ -16,10 +16,10 @@ class InternalMediationManager extends AdListener implements MediationManager {
   static const MethodChannel _channel =
       MethodChannel("com.cleveradssolutions.plugin.flutter/mediation_manager");
 
-  AdCallback? interstitialListener;
-  AdCallback? rewardedListener;
-  AdCallback? appReturnListener;
-  AdLoadCallback? adLoadCallback;
+  AdCallback? _interstitialListener;
+  AdCallback? _rewardedListener;
+  AdCallback? _appReturnListener;
+  AdLoadCallback? _adLoadCallback;
 
   static final InternalListenerContainer _listenerContainer =
       InternalListenerContainer(_channel);
@@ -33,107 +33,95 @@ class InternalMediationManager extends AdListener implements MediationManager {
       //Interstitial
 
       case 'OnInterstitialAdLoaded':
-        adLoadCallback?.onAdLoaded(AdType.Interstitial);
+        _adLoadCallback?.onAdLoaded(AdType.Interstitial);
         break;
 
       case 'OnInterstitialAdFailedToLoad':
-        if ((call.arguments as Object?) != null) {
-          adLoadCallback?.onAdFailedToLoad(
-              AdType.Interstitial, call.arguments["message"]);
-        } else {
-          adLoadCallback?.onAdFailedToLoad(AdType.Interstitial, null);
-        }
+          _adLoadCallback?.onAdFailedToLoad(
+              AdType.Interstitial, call.arguments?["message"]);
         break;
 
       case 'OnInterstitialAdShown':
-        interstitialListener?.onShown();
+        _interstitialListener?.onShown();
         break;
 
       case 'OnInterstitialAdImpression':
-        interstitialListener?.onImpression(tryGetAdImpression(call));
+        _interstitialListener?.onImpression(tryGetAdImpression(call));
         break;
 
       case 'OnInterstitialAdFailedToShow':
-        if ((call.arguments as Object?) != null) {
-          interstitialListener?.onShowFailed(call.arguments["message"]);
-        }
+        _interstitialListener?.onShowFailed(call.arguments?["message"]);
         break;
 
       case 'OnInterstitialAdClicked':
-        interstitialListener?.onClicked();
+        _interstitialListener?.onClicked();
         break;
 
       case 'OnInterstitialAdComplete':
-        interstitialListener?.onComplete();
+        _interstitialListener?.onComplete();
         break;
 
       case 'OnInterstitialAdClosed':
-        interstitialListener?.onClosed();
+        _interstitialListener?.onClosed();
         break;
 
       //Rewarded
 
       case 'OnRewardedAdLoaded':
-        adLoadCallback?.onAdLoaded(AdType.Rewarded);
+        _adLoadCallback?.onAdLoaded(AdType.Rewarded);
         break;
 
       case 'OnRewardedAdFailedToLoad':
-        if ((call.arguments as Object?) != null) {
-          adLoadCallback?.onAdFailedToLoad(
-              AdType.Rewarded, call.arguments["message"]);
-        } else {
-          adLoadCallback?.onAdFailedToLoad(AdType.Rewarded, null);
-        }
+        _adLoadCallback?.onAdFailedToLoad(
+            AdType.Rewarded, call.arguments?["message"]);
         break;
 
       case 'OnRewardedAdShown':
-        rewardedListener?.onShown();
+        _rewardedListener?.onShown();
         break;
 
       case 'OnRewardedAdImpression':
-        rewardedListener?.onImpression(tryGetAdImpression(call));
+        _rewardedListener?.onImpression(tryGetAdImpression(call));
         break;
 
       case 'OnRewardedAdFailedToShow':
-        if ((call.arguments as Object?) != null) {
-          rewardedListener?.onShowFailed(call.arguments["message"]);
-        }
+        _rewardedListener?.onShowFailed(call.arguments?["message"]);
         break;
 
       case 'OnRewardedAdClicked':
-        rewardedListener?.onClicked();
+        _rewardedListener?.onClicked();
         break;
 
       case 'OnRewardedAdCompleted':
-        rewardedListener?.onComplete();
+        _rewardedListener?.onComplete();
         break;
 
       case 'OnRewardedAdClosed':
-        rewardedListener?.onClosed();
+        _rewardedListener?.onClosed();
         break;
 
       //AppReturn
 
       case 'OnAppReturnAdShown':
-        rewardedListener?.onShown();
+        _rewardedListener?.onShown();
         break;
 
       case 'OnAppReturnAdImpression':
-        appReturnListener?.onImpression(tryGetAdImpression(call));
+        _appReturnListener?.onImpression(tryGetAdImpression(call));
         break;
 
       case 'OnAppReturnAdFailedToShow':
         if ((call.arguments as Object?) != null) {
-          rewardedListener?.onShowFailed(call.arguments["message"]);
+          _rewardedListener?.onShowFailed(call.arguments["message"]);
         }
         break;
 
       case 'OnAppReturnAdClicked':
-        rewardedListener?.onClicked();
+        _rewardedListener?.onClicked();
         break;
 
       case 'OnAppReturnAdClosed':
-        rewardedListener?.onComplete();
+        _rewardedListener?.onComplete();
         break;
     }
   }
@@ -183,13 +171,13 @@ class InternalMediationManager extends AdListener implements MediationManager {
 
   @override
   Future<void> showInterstitial(AdCallback? callback) {
-    interstitialListener = callback;
+    _interstitialListener = callback;
     return _channel.invokeMethod("showAd", {"adType": 1});
   }
 
   @override
   Future<void> showRewarded(AdCallback? callback) {
-    rewardedListener = callback;
+    _rewardedListener = callback;
     return _channel.invokeMethod("showAd", {"adType": 2});
   }
 
@@ -208,7 +196,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
 
   @override
   Future<void> enableAppReturn(AdCallback? callback) {
-    appReturnListener = callback;
+    _appReturnListener = callback;
     return _channel.invokeMethod('enableAppReturn', {'enable': true});
   }
 
@@ -265,7 +253,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
   }
 
   @override
-  void setAdLoadCallback(AdLoadCallback callback) {
-    adLoadCallback = callback;
+  void setAdLoadCallback(AdLoadCallback? callback) {
+    _adLoadCallback = callback;
   }
 }

@@ -14,12 +14,10 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> implements AdLoadCallback {
   final GlobalKey<BannerWidgetState> _bannerKey = GlobalKey();
-  GlobalKey<BannerWidgetState>? _dynamicBannerKey;
   MediationManager? _manager;
 
-  //BannerWidget? _bannerWidget;
   bool _isReady = false;
   bool _isInterstitialReady = false;
   bool _isRewardedReady = false;
@@ -74,14 +72,12 @@ class _MyAppState extends State<MyApp> {
                         )
                       ],
                       ElevatedButton(
-                        onPressed: _isInterstitialReady
-                            ? () => _showInterstitial()
-                            : null,
+                        onPressed:
+                            _isInterstitialReady ? _showInterstitial : null,
                         child: const Text('Show interstitial'),
                       ),
                       ElevatedButton(
-                        onPressed:
-                            _isRewardedReady ? () => _showRewarded() : null,
+                        onPressed: _isRewardedReady ? _showRewarded : null,
                         child: const Text('Show rewarded'),
                       ),
                       if (_isReady)
@@ -91,35 +87,6 @@ class _MyAppState extends State<MyApp> {
                           refreshInterval: 20,
                           listener: BannerListener("mediumRectangle"),
                         ),
-                      ElevatedButton(
-                        onPressed: _isReady ? _createStandardBanner : null,
-                        child: const Text('Create standard banner'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _isReady ? _createAdaptiveBanner : null,
-                        child: const Text('Create adaptive banner'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _isReady
-                            ? () => _bannerKey.currentState
-                                ?.setBannerPosition(AdPosition.topCenter)
-                            : null,
-                        child: const Text('Move banner to top'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _isReady
-                            ? () => _bannerKey.currentState
-                                ?.setBannerPosition(AdPosition.middleCenter)
-                            : null,
-                        child: const Text('Move banner to middle'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _isReady
-                            ? () => _bannerKey.currentState
-                                ?.setBannerPosition(AdPosition.bottomCenter)
-                            : null,
-                        child: const Text('Move banner to bottom'),
-                      ),
                     ],
                   ),
                 ),
@@ -152,102 +119,89 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onCASInitialized(InitConfig initConfig) async {
-    String? error = initConfig.error;
-    logDebug(error == null
-        ? "Ad manager initialized"
-        : "Ad manager initialization failed: $error");
+    final String? error = initConfig.error;
+    if (error != null) {
+      logDebug("Ad manager initialization failed: $error");
+      return;
+    }
+    logDebug("Ad manager initialized");
 
     setState(() {
       _isReady = true;
     });
-    String sdkVersion = await CAS.getSDKVersion();
+
+    _manager?.setAdLoadCallback(this);
+    final String sdkVersion = await CAS.getSDKVersion();
     setState(() {
       _sdkVersion = sdkVersion;
     });
-    // TODO Use AdLoadCallback
-    _manager?.isInterstitialReady().then((status) {
+  }
+
+  @override
+  void onAdLoaded(AdType adType) {
+    if (adType == AdType.Interstitial) {
       setState(() {
-        _isInterstitialReady = status;
+        _isInterstitialReady = true;
       });
-    });
-    _manager?.isRewardedAdReady().then((status) {
+    } else if (adType == AdType.Rewarded) {
       setState(() {
-        _isRewardedReady = status;
+        _isRewardedReady = true;
       });
-    });
+    }
+  }
+
+  @override
+  void onAdFailedToLoad(AdType adType, String? error) {
+    logDebug("Ad ${adType.name} failed to load: ${error}");
   }
 
   void _onConsentFlowDismiss(Status status) {
     logDebug("Consent flow dismissed");
   }
 
-  Future<void> _showInterstitial() async {
-    final manager = _manager;
-    if (manager != null && await manager.isInterstitialReady()) {
-      manager.showInterstitial(InterstitialListenerWrapper());
-    }
+  void _showInterstitial() {
+    _manager?.showInterstitial(AdListener("Interstitial"));
   }
 
-  Future<void> _showRewarded() async {
-    final manager = _manager;
-    if (manager != null && await manager.isRewardedAdReady()) {
-      manager.showRewarded(InterstitialListenerWrapper());
-    }
-  }
-
-  Future<void> _createAdaptiveBanner() async {
-    final oldState = _dynamicBannerKey?.currentState;
-    if (oldState != null) {
-      oldState.hideBanner();
-      oldState.dispose();
-    }
-
-    _dynamicBannerKey = GlobalKey<BannerWidgetState>();
-    BannerWidget(
-      key: _dynamicBannerKey,
-      size: await AdSize.getAdaptiveBannerInScreen(),
-      listener: BannerListener("adaptive"),
-      // position: AdPosition.topCenter
-    );
-    _dynamicBannerKey?.currentState?.showBanner();
-  }
-
-  void _createStandardBanner() {
-    final oldState = _dynamicBannerKey?.currentState;
-    if (oldState != null) {
-      oldState.hideBanner();
-      oldState.dispose();
-    }
-
-    _dynamicBannerKey = GlobalKey<BannerWidgetState>();
-    BannerWidget(
-      key: _dynamicBannerKey,
-      listener: BannerListener("standard"),
-      // position: AdPosition.topCenter
-    );
-    _dynamicBannerKey?.currentState?.showBanner();
-    // view?.setBannerPositionWithOffset(25, 100);
+  void _showRewarded() {
+    _manager?.showRewarded(AdListener("Rewarded"));
   }
 }
 
-class InterstitialListenerWrapper extends AdCallback {
-  @override
-  void onClicked() {}
+class AdListener extends AdCallback {
+  String? _name;
+
+  AdListener(this._name);
 
   @override
-  void onClosed() {}
+  void onClicked() {
+    debugPrint("$_name ad was pressed!");
+  }
 
   @override
-  void onComplete() {}
+  void onClosed() {
+    debugPrint("$_name ad was closed!");
+  }
 
   @override
-  void onImpression(AdImpression? adImpression) {}
+  void onComplete() {
+    debugPrint("$_name ad was complete!");
+  }
 
   @override
-  void onShowFailed(String? message) {}
+  void onImpression(AdImpression? adImpression) {
+    debugPrint("$_name ad did impression: $adImpression!");
+  }
 
   @override
-  void onShown() {}
+  void onShowFailed(String? message) {
+    debugPrint("$_name ad failed to show: $message!");
+  }
+
+  @override
+  void onShown() {
+    debugPrint("$_name ad shown!");
+  }
 }
 
 class BannerListener extends AdViewListener {
@@ -279,12 +233,4 @@ class BannerListener extends AdViewListener {
   void onLoaded() {
     debugPrint("Banner $_name ad was loaded!");
   }
-}
-
-class LoadCallback extends AdLoadCallback {
-  @override
-  void onAdFailedToLoad(AdType adType, String? error) {}
-
-  @override
-  void onAdLoaded(AdType adType) {}
 }

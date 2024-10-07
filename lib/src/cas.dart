@@ -32,7 +32,7 @@ class CAS {
   /// - **Attention:** Must be set before initializing the SDK.
   static final TargetingOptions targetingOptions = TargetingOptionsImpl();
 
-  @Deprecated("This method is no longer maintained and should not be used.")
+  @Deprecated("This method is no longer maintained and should not be used")
   static setFlutterVersion(String flutterVersion) {}
 
   @Deprecated("Use ConsentFlow() instead")
@@ -130,7 +130,7 @@ class CAS {
     return CAS.settings.setTestDeviceIds(deviceIds.toSet());
   }
 
-  @Deprecated("This method is no longer maintained and should not be used.")
+  @Deprecated("This method is no longer maintained and should not be used")
   static Future<void> addTestDeviceId(String deviceId) {
     return CAS.settings.addTestDeviceId(deviceId);
   }

@@ -3,10 +3,10 @@ import 'dart:async';
 import 'ad_callback.dart';
 import 'ad_load_callback.dart';
 import 'ad_size.dart';
+import 'ad_type.dart';
 import 'cas_banner_view.dart';
 
 abstract class MediationManager {
-
   /// CAS manager (Placement) identifier
   Future<String> getManagerID();
 
@@ -70,8 +70,8 @@ abstract class MediationManager {
 
   Future<int> getBannerRefreshDelay();
 
-  @Deprecated("message")
+  @Deprecated("This method is no longer maintained and should not be used")
   CASBannerView getAdView(AdSize size);
 
-  void setAdLoadCallback(AdLoadCallback callback);
+  void setAdLoadCallback(AdLoadCallback? callback);
 }
