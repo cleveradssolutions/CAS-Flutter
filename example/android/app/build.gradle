@@ -3,6 +3,12 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+    id("com.cleveradssolutions.gradle-plugin") version "3.9.3"
+}
+
+cas {
+    casId = "com.cleveradssolutions.plugin.flutter.example"
+    includeOptimalAds = true
 }
 
 def localProperties = new Properties()
@@ -65,5 +71,5 @@ flutter {
 }
 
 dependencies {
-    implementation("com.cleveradssolutions:cas-families:3.9.2")
+    implementation("com.cleveradssolutions:cas-families:3.9.4")
 }

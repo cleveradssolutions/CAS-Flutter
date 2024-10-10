@@ -2,7 +2,7 @@
 //  CASBridgeBuilder.swift
 //  clever_ads_solutions
 //
-//  Created by Владислав Горик on 01.08.2023.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import Foundation
@@ -55,8 +55,8 @@ public class CASBridgeBuilder : FlutterCaller {
         consent.withCompletionHandler(consentHandler)
     }
     
-    func withTestMode(enable: Bool) {
-        managerBuilder.withTestAdMode(enable)
+    func withTestMode(isEnabled: Bool) {
+        managerBuilder.withTestAdMode(isEnabled)
     }
     
     func setUserId(id: String) {
@@ -69,11 +69,11 @@ public class CASBridgeBuilder : FlutterCaller {
         managerBuilder.withConsentFlow(consent)
     }
     
-    func enableConsentFlow(privacyUrl: String) {
+    func enableConsentFlow(url: String) {
         consent = CASConsentFlow()
             .withViewControllerToPresent(rootViewController)
             .withCompletionHandler(consentHandler)
-            .withPrivacyPolicy(privacyUrl)
+            .withPrivacyPolicy(url)
         managerBuilder.withConsentFlow(consent)
     }
     

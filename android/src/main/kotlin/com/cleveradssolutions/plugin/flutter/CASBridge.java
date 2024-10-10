@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.cleveradssolutions.mediation.ContextService;
+import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler;
 import com.cleveradssolutions.sdk.base.CASHandler;
 import com.cleversolutions.ads.AdError;
 import com.cleversolutions.ads.AdLoadCallback;
@@ -32,7 +33,11 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
     @Nullable
     private CASInitCallback initCallback;
 
-    public CASBridge(Activity activity, CASBridgeBuilder builder) {
+    public CASBridge(
+            Activity activity,
+            CASBridgeBuilder builder,
+            MediationManagerMethodHandler mediationManagerMethodHandler
+    ) {
         this.activity = activity;
         this.initCallback = builder.initCallback;
         manager = builder.builder.withCompletionListener(this)
@@ -40,11 +45,15 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
         manager.getOnAdLoadEvent().add(this);
 
         this.initCallback = builder.initCallback;
-        this.interstitialAdListener = new AdCallbackWrapper(builder.interListener, false);
-        this.rewardedListener = new AdCallbackWrapper(builder.rewardListener, true);
+        this.interstitialAdListener =
+                new AdCallbackWrapper(mediationManagerMethodHandler.getInterstitialCallbackWrapper(), false);
+        this.rewardedListener =
+                new AdCallbackWrapper(mediationManagerMethodHandler.getRewardedCallbackWrapper(), true);
     }
 
-    public MediationManager getMediationManager() { return manager; }
+    public MediationManager getMediationManager() {
+        return manager;
+    }
 
     public boolean isTestAdModeEnabled() {
         return manager.isDemoAdMode();
@@ -118,11 +127,11 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
     @Override
     public void onCASInitialized(@NonNull InitialConfiguration config) {
         if (initCallback != null) {
-            final String error = config.getError() == null ? "" : config.getError();
-            final boolean isTestMode = config.getManager().isDemoAdMode();
-
-            initCallback.onCASInitialized(error, config.getCountryCode(), config.isConsentRequired(), isTestMode);
-
+            initCallback.onCASInitialized(
+                    config.getError(),
+                    config.getCountryCode(),
+                    config.isConsentRequired(),
+                    config.getManager().isDemoAdMode());
             initCallback = null;
         }
     }
