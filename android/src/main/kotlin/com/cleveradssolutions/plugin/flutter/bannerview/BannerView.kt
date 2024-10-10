@@ -35,18 +35,13 @@ class BannerView(
         }
         banner.adListener = eventHandler
 
-//        banner.layoutParams = ViewGroup.LayoutParams( ???
-//            ViewGroup.LayoutParams.WRAP_CONTENT,
-//            ViewGroup.LayoutParams.MATCH_PARENT
-//        )
-
         (args?.get("size") as? Map<*, *>)?.let { size ->
             if (size["isAdaptive"] == true) {
                 banner.size = (size["maxWidthDpi"] as? Int).let {
                     if (it == null || it == 0) {
-                        AdSize.getAdaptiveBannerInScreen(view.context)
+                        AdSize.getAdaptiveBannerInScreen(context)
                     } else {
-                        AdSize.getAdaptiveBanner(view.context, it)
+                        AdSize.getAdaptiveBanner(context, it)
                     }
                 }
             } else {
@@ -54,12 +49,13 @@ class BannerView(
                 val height = size["height"]
                 val mode = size["mode"]
 
-                val adSizeClass = Class.forName("AdSize")
-                val intClass = Integer::class.java
+                val adSizeClass = Class.forName("com.cleversolutions.ads.AdSize")
+                val intClass = Int::class.java
                 val constructor = adSizeClass.getDeclaredConstructor(intClass, intClass, intClass)
                 constructor.isAccessible = true
+                val adSize = constructor.newInstance(width, height, mode) as AdSize
 
-                banner.size = constructor.newInstance(width, height, mode) as AdSize
+                banner.size = adSize
             }
         }
 
