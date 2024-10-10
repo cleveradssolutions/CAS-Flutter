@@ -8,7 +8,6 @@ import com.cleversolutions.ads.android.CAS
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val LOG_TAG = "CASMethodHandler"
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/cas"
 
 class CASMethodHandler(

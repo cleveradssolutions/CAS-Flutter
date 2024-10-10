@@ -26,8 +26,8 @@ class InternalManagerBuilder extends ManagerBuilder {
     switch (call.method) {
       case 'onCASInitialized':
         {
-          String error = call.arguments["error"] ?? "";
-          String countryCode = call.arguments["countryCode"] ?? "";
+          String? error = call.arguments["error"];
+          String? countryCode = call.arguments["countryCode"];
           bool isConsentRequired = call.arguments["isConsentRequired"] ?? false;
           bool isTestMode = call.arguments["testMode"] ?? false;
 
@@ -51,8 +51,8 @@ class InternalManagerBuilder extends ManagerBuilder {
   }
 
   @override
-  ManagerBuilder withTestMode(final bool isTestBuild) {
-    _channel.invokeMethod('withTestAdMode', {'enabled': isTestBuild});
+  ManagerBuilder withTestMode(final bool isEnabled) {
+    _channel.invokeMethod('withTestAdMode', {'isEnabled': isEnabled});
     return this;
   }
 
@@ -96,7 +96,7 @@ class InternalManagerBuilder extends ManagerBuilder {
 
   @override
   MediationManager build() {
-    _channel.invokeMethod('initialize',
+    _channel.invokeMethod('build',
         {'id': _casId, "formats": _enableAdTypes, "version": _flutterVersion});
     return InternalMediationManager();
   }

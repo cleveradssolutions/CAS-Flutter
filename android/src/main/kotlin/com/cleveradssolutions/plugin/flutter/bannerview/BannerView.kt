@@ -1,7 +1,6 @@
 package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
-import android.view.View
 import com.cleveradssolutions.plugin.flutter.CASBridge
 import com.cleversolutions.ads.AdSize
 import com.cleversolutions.ads.android.CASBannerView
@@ -28,7 +27,7 @@ class BannerView(
         this.banner = banner
         banner.id = viewId
 
-        methodHandler = BannerMethodHandler(flutterId, this, banner, bridgeProvider).also {
+        methodHandler = BannerMethodHandler(flutterId, this, banner).also {
             it.onAttachedToFlutter(flutterPluginBinding)
         }
         eventHandler = BannerEventHandler(flutterId).also {

@@ -27,7 +27,7 @@ class ManagerBuilderMethodHandler: MethodHandler {
 
     private func withTestAdMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let args = call.arguments as? Dictionary<String, Any>,
-           let enabled = args["enabled"] as? Bool {
+           let enabled = args["isEnabled"] as? Bool {
             CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().withTestMode(enable: enabled)
             result(nil)
         } else {

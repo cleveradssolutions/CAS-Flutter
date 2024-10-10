@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> implements AdLoadCallback {
     // Initialize SDK
     _manager = CAS
         .buildManager()
-        .withCasId("demo")
+        .withCasId("example")
         .withTestMode(true)
         .withAdTypes(AdTypeFlags.Banner |
             AdTypeFlags.Interstitial |
@@ -131,6 +131,7 @@ class _MyAppState extends State<MyApp> implements AdLoadCallback {
     });
 
     _manager?.setAdLoadCallback(this);
+
     final String sdkVersion = await CAS.getSDKVersion();
     setState(() {
       _sdkVersion = sdkVersion;

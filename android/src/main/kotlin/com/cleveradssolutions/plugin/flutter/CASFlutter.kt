@@ -27,14 +27,19 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         val activityProvider = { activity }
         val casBridgeProvider = { casBridge }
         val consentFlowMethodHandler = ConsentFlowMethodHandler(activityProvider)
+        val mediationManagerMethodHandler = MediationManagerMethodHandler(casBridgeProvider)
 
         methodHandlers = setOf(
             consentFlowMethodHandler,
             AdSizeMethodHandler(),
             AdsSettingsMethodHandler(),
             CASMethodHandler(activityProvider),
-            ManagerBuilderMethodHandler(consentFlowMethodHandler, activityProvider) { casBridge = it },
-            MediationManagerMethodHandler(casBridgeProvider),
+            ManagerBuilderMethodHandler(
+                consentFlowMethodHandler,
+                mediationManagerMethodHandler,
+                activityProvider
+            ) { casBridge = it },
+            mediationManagerMethodHandler,
             TargetingOptionsMethodHandler()
         )
 

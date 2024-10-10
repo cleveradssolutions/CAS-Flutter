@@ -47,17 +47,22 @@ inline fun <T, T2> MethodCall.getArgAndReturnResult(
  * Try get argument from call, do action with it and return null(void).
  */
 inline fun <T> MethodCall.getArgAndReturn(name: String, result: Result, action: (T) -> Unit) =
-    getArgAndReturnResult(name, result, action)
+    getArgAndReturnResult<T>(name, result) { action(it); null }
 
-inline fun <T, T2> MethodCall.getArgAndReturn(name1: String, name2: String, result: Result, action: (T, T2) -> Unit) =
-    getArgAndReturnResult(name1, name2, result, action)
+inline fun <T, T2> MethodCall.getArgAndReturn(
+    name1: String,
+    name2: String,
+    result: Result,
+    action: (T, T2) -> Unit
+) = getArgAndReturnResult<T, T2>(name1, name2, result) { v1, v2 -> action(v1, v2); null }
 
 inline fun Result.success() = success(null)
 
 inline fun Result.error(call: MethodCall, message: String) = error(
     "MethodCallError",
     "Method: '${call.method}', error: $message",
-    null)
+    null
+)
 
 inline fun Result.errorArgNull(call: MethodCall, name: String) = error(
     "MethodCallArgumentNull",

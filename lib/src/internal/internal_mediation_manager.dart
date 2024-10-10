@@ -6,10 +6,10 @@ import '../ad_callback.dart';
 import '../ad_load_callback.dart';
 import '../ad_size.dart';
 import '../ad_type.dart';
-import '../banner_widget.dart';
 import '../cas_banner_view.dart';
 import '../mediation_manager.dart';
 import 'ad_listener.dart';
+import 'internal_cas_banner_view.dart';
 import 'internal_listener_container.dart';
 
 class InternalMediationManager extends AdListener implements MediationManager {
@@ -37,8 +37,8 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnInterstitialAdFailedToLoad':
-          _adLoadCallback?.onAdFailedToLoad(
-              AdType.Interstitial, call.arguments?["message"]);
+        _adLoadCallback?.onAdFailedToLoad(
+            AdType.Interstitial, call.arguments?["message"]);
         break;
 
       case 'OnInterstitialAdShown':
@@ -244,12 +244,12 @@ class InternalMediationManager extends AdListener implements MediationManager {
         sizeId = 5;
         break;
       default:
-        sizeId = 0;
+        sizeId = 1;
         break;
     }
 
     _channel.invokeMethod("createBannerView", {"sizeId": sizeId});
-    return BannerWidget(size: size, listener: _listenerContainer);
+    return InternalCASBannerView(_channel, _listenerContainer, sizeId);
   }
 
   @override

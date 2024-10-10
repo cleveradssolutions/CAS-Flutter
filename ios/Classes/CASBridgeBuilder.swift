@@ -55,8 +55,8 @@ public class CASBridgeBuilder : FlutterCaller {
         consent.withCompletionHandler(consentHandler)
     }
     
-    func withTestMode(enable: Bool) {
-        managerBuilder.withTestAdMode(enable)
+    func withTestMode(isEnabled: Bool) {
+        managerBuilder.withTestAdMode(isEnabled)
     }
     
     func setUserId(id: String) {
