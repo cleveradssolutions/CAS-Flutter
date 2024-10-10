@@ -6,9 +6,10 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.EventChannel
 
 abstract class EventHandler(
-    private val channelName: String
+    channelName: String
 ) : EventChannel.StreamHandler {
 
+    private val channelName = "$channelName.events"
     private var channel: EventChannel? = null
     private var eventSink: EventChannel.EventSink? = null
 

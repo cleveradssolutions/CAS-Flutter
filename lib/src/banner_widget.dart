@@ -116,7 +116,7 @@ class _BannerWidgetState extends BannerWidgetState {
     final String channelName =
         "com.cleveradssolutions.plugin.flutter/banner.$_id";
     _channel = MethodChannel(channelName);
-    _subscription = EventChannel(channelName)
+    _subscription = EventChannel("$channelName.events")
         .receiveBroadcastStream()
         .listen((dynamic event) {
       if (event is Map && event["id"] == _id) {
@@ -201,11 +201,6 @@ class _BannerWidgetState extends BannerWidgetState {
         height: _size.height.toDouble(),
         child: widget);
   }
-
-  // void _onPlatformViewCreated(int id) {
-  //   final String channelName =
-  //       "com.cleveradssolutions.plugin.flutter/banner.$_id";
-  // }
 
   @override
   Future<void> dispose() {
