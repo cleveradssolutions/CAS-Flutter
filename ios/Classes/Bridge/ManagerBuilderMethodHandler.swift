@@ -26,45 +26,29 @@ class ManagerBuilderMethodHandler: MethodHandler {
     }
 
     private func withTestAdMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let enabled = args["isEnabled"] as? Bool {
-            CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().withTestMode(enable: enabled)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
+        call.getArgAndReturn("isEnabled", result) { isEnabled in
+            CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().withTestMode(isEnabled: isEnabled)
         }
     }
 
     private func withUserId(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let id = args["userId"] as? String {
-            CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().setUserId(id: id)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
+        call.getArgAndReturn("userId", result) { userId in
+            CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().setUserId(id: userId)
         }
     }
 
     private func withMediationExtras(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let key = args["key"] as? String,
-           let value = args["value"] as? String {
+        call.getArgAndReturn("key", "value", result) { key, value in
             CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().addExtras(keyString: key, valueString: value)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
         }
     }
 
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let casId = args["id"] as? String,
-           let formats = args["formats"] as? Int,
-           let version = args["version"] as? String {
+        if let casId: String = call.getArgAndCheckNil("id", result),
+           let formats: Int = call.getArgAndCheckNil("formats", result),
+           let version: String = call.getArgAndCheckNil("version", result) {
             CASFlutter.cleverAdsSolutions.buildBridge(id: casId, flutterVersion: version, formats: formats)
             result(nil)
-        } else {
-            result(call.errorArgNil("id"))
         }
     }
 }

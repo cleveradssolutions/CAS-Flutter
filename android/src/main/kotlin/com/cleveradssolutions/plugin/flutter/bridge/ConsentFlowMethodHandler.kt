@@ -31,10 +31,8 @@ class ConsentFlowMethodHandler(
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "withPrivacyPolicy" -> withPrivacyPolicy(call, result)
-            // disable in native
-            "disableConsentFlow" -> disableConsentFlow(result)
-            // show in native
-            "showConsentFlow" -> showConsentFlow(call, result)
+            "disable" -> disable(result)
+            "show" -> show(call, result)
             else -> super.onMethodCall(call, result)
         }
     }
@@ -52,12 +50,12 @@ class ConsentFlowMethodHandler(
         }
     }
 
-    private fun disableConsentFlow(result: MethodChannel.Result) {
+    private fun disable(result: MethodChannel.Result) {
         getConsentFlow().isEnabled = false
         result.success()
     }
 
-    private fun showConsentFlow(call: MethodCall, result: MethodChannel.Result) {
+    private fun show(call: MethodCall, result: MethodChannel.Result) {
         call.getArgAndReturn<Boolean>("force", result) { force ->
             getConsentFlow().let {
                 if (force) it.show() else it.showIfRequired()

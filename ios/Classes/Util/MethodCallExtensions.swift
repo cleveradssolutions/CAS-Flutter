@@ -47,7 +47,12 @@ extension FlutterMethodCall {
 
     /// Try get argument from call, do action with it and return null.
     func getArgAndReturn<T>(_ name: String, _ result: @escaping FlutterResult, _ action: (T) -> Void) {
-        getArgAndReturnResult(name, result, action)
+        getArgAndReturnResult(name, result) { value in action(value); return nil }
+    }
+
+    /// Try get argument from call, do action with it and return null.
+    func getArgAndReturn<T, T2>(_ name1: String, _ name2: String, _ result: @escaping FlutterResult, _ action: (T, T2) -> Void) {
+        getArgAndReturnResult(name1, name2, result) { v1, v2 in action(v1, v2); return nil }
     }
 
     func error(_ message: String) -> FlutterError {
@@ -62,6 +67,14 @@ extension FlutterMethodCall {
         return FlutterError(
             code: "MethodCallArgumentNull",
             message: "\(logTag) Method: '\(method)', error: argument '\(name)' is nil",
+            details: nil
+        )
+    }
+
+    func errorFieldNil(_ name: String) -> FlutterError {
+        return FlutterError(
+            code: "MethodCallArgumentNull",
+            message: "\(logTag) Method: '\(method)', error: field '\(name)' is nil",
             details: nil
         )
     }

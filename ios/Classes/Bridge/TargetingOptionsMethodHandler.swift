@@ -40,7 +40,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setGender(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("gender", result) { gender in
+        call.getArgAndReturn("gender", result) { gender in
             CAS.targetingOptions.gender = gender
         }
     }
@@ -50,7 +50,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setAge(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("age", result) { age in
+        call.getArgAndReturn("age", result) { age in
             CAS.targetingOptions.age = age
         }
     }
@@ -60,7 +60,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setLocationLatitude(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("latitude", result) { latitude in
+        call.getArgAndReturn("latitude", result) { latitude in
             CAS.targetingOptions.locationLatitude = latitude
         }
     }
@@ -70,7 +70,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setLocationLongitude(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("longitude", result) { longitude in
+        call.getArgAndReturn("longitude", result) { longitude in
             CAS.targetingOptions.locationLongitude = longitude
         }
     }
@@ -80,7 +80,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setLocationCollectionEnabled(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("isEnabled", result) { isEnabled in
+        call.getArgAndReturn("isEnabled", result) { isEnabled in
             CAS.targetingOptions.locationCollectionEnabled = isEnabled
         }
     }
@@ -90,7 +90,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setKeywords(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("keywords", result) { keywords in
+        call.getArgAndReturn("keywords", result) { keywords in
             CAS.targetingOptions.keywords = keywords
         }
     }
@@ -100,7 +100,7 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setContentUrl(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("contentUrl", result) { contentUrl in
+        call.getArgAndReturn("contentUrl", result) { contentUrl in
             CAS.targetingOptions.contentUrl = contentUrl
         }
     }

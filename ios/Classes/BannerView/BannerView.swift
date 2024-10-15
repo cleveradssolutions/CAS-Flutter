@@ -26,7 +26,6 @@ class BannerView: NSObject, FlutterPlatformView {
         flutterId = args?["id"] as? String ?? ""
 
         super.init()
-
         let manager = bridgeProvider()?.mediationManager
         let banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
         self.banner = banner

@@ -15,7 +15,7 @@ public class CASFlutter: NSObject, FlutterPlugin {
             CASMethodHandler(),
             ConsentFlowMethodHandler(),
             ManagerBuilderMethodHandler(),
-            MediationManagerMethodHandler(),
+            MediationManagerMethodHandler(bridgeProvider: CASFlutter.cleverAdsSolutions.getCasBridge),
             TargetingOptionsMethodHandler(),
         ]
 

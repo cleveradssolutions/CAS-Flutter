@@ -18,30 +18,24 @@ class ConsentFlowMethodHandler: MethodHandler {
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "withPrivacyPolicy": withPrivacyPolicy(call, result)
-        // disable in native
-        case "disableConsentFlow": disableConsentFlow(call, result)
-        // show in native
-        case "showConsentFlow": showConsentFlow(call, result)
+        case "disable": disable(result)
+        case "show": show(result)
         default: super.onMethodCall(call, result)
         }
     }
 
     private func withPrivacyPolicy(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let url = args["url"] as? String {
+        call.getArgAndReturn("url", result) { url in
             CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().enableConsentFlow(url: url)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
         }
     }
 
-    private func disableConsentFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func disable(_ result: @escaping FlutterResult) {
         CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().disableConsentFlow()
         result(nil)
     }
 
-    private func showConsentFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func show(_ result: @escaping FlutterResult) {
         CASFlutter.cleverAdsSolutions.getCasBridgeBuilder().showConsentFlow()
         result(nil)
     }

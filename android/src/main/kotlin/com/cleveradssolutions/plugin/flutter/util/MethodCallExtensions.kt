@@ -70,6 +70,12 @@ inline fun Result.errorArgNull(call: MethodCall, name: String) = error(
     null
 )
 
+inline fun Result.errorFieldNull(call: MethodCall, name: String) = error(
+    "MethodCallArgumentNull",
+    "Method: '${call.method}', error: field '$name' is null",
+    null
+)
+
 inline fun Result.errorInvalidArg(call: MethodCall, name: String) = error(
     "MethodCallInvalidArgument",
     "Method: '${call.method}', error: argument '$name' is invalid",

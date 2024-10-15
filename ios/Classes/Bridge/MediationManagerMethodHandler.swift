@@ -11,42 +11,47 @@ import Flutter
 private let channelName = "com.cleveradssolutions.plugin.flutter/mediation_manager"
 
 class MediationManagerMethodHandler: MethodHandler {
-    init() {
+    private let bridgeProvider: () -> CASBridge?
+
+    init(bridgeProvider: @escaping () -> CASBridge?) {
+        self.bridgeProvider = bridgeProvider
         super.init(channelName: channelName)
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
-        case "setLastPageContent": setLastPageContent(call, result)
+//        case "setLastPageContent": setLastPageContent(call, result)
         case "loadAd": loadAd(call, result)
         case "isReadyAd": isReadyAd(call, result)
         case "showAd": showAd(call, result)
         case "enableAppReturn": enableAppReturn(call, result)
-        case "skipNextAppReturnAds": skipNextAppReturnAds(result)
+        case "skipNextAppReturnAds": skipNextAppReturnAds(call, result)
         case "setEnabled": setEnabled(call, result)
         case "isEnabled": isEnabled(call, result)
+
+        case "createBannerView": showBanner(call, result)
+        case "showBanner": showBanner(call, result)
+        case "hideBanner": hideBanner(call, result)
+        case "setBannerPosition": setBannerPosition(call, result)
         default: super.onMethodCall(call, result)
         }
     }
 
-    private func setLastPageContent(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
-           let json = args["lastPageJson"] as? String {
-            CASFlutter.cleverAdsSolutions.getCasBridge()?.setLastPageContent(json: json)
-            result(nil)
-        } else {
-            result(FlutterError(code: "", message: "Bad argument", details: nil))
-        }
-    }
+//    private func setLastPageContent(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+//        call.getArgAndReturn("lastPageJson", result) { json in
+//            CASFlutter.cleverAdsSolutions.getCasBridge()?.setLastPageContent(json: json)
+//        }
+//    }
 
     private func loadAd(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
+        if let bridge = getBridgeAndCheckNil(call, result),
+           let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int {
             if adType == 1 {
-                CASFlutter.cleverAdsSolutions.getCasBridge()?.loadInterstitial()
+                bridge.loadInterstitial()
                 result(nil)
             } else if adType == 2 {
-                CASFlutter.cleverAdsSolutions.getCasBridge()?.loadRewarded()
+                bridge.loadRewarded()
                 result(nil)
             } else {
                 result(FlutterError(code: "", message: "AdType is not supported", details: nil))
@@ -57,13 +62,14 @@ class MediationManagerMethodHandler: MethodHandler {
     }
 
     private func isReadyAd(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
+        if let bridge = getBridgeAndCheckNil(call, result),
+           let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int {
             if adType == 1 {
-                let ready = CASFlutter.cleverAdsSolutions.getCasBridge()?.isInterstitialReady() ?? false
+                let ready = bridge.isInterstitialReady()
                 result(Bool(ready))
             } else if adType == 2 {
-                let ready = CASFlutter.cleverAdsSolutions.getCasBridge()?.isRewardedAdReady() ?? false
+                let ready = bridge.isRewardedAdReady()
                 result(Bool(ready))
             } else {
                 result(FlutterError(code: "", message: "AdType is not supported", details: nil))
@@ -74,13 +80,14 @@ class MediationManagerMethodHandler: MethodHandler {
     }
 
     private func showAd(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
+        if let bridge = getBridgeAndCheckNil(call, result),
+           let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int {
             if adType == 1 {
-                CASFlutter.cleverAdsSolutions.getCasBridge()?.showInterstitial()
+                bridge.showInterstitial()
                 result(nil)
             } else if adType == 2 {
-                CASFlutter.cleverAdsSolutions.getCasBridge()?.showRewarded()
+                bridge.showRewarded()
                 result(nil)
             } else {
                 result(FlutterError(code: "", message: "AdType is not supported", details: nil))
@@ -91,12 +98,13 @@ class MediationManagerMethodHandler: MethodHandler {
     }
 
     private func enableAppReturn(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
+        if let bridge = getBridgeAndCheckNil(call, result),
+           let args = call.arguments as? Dictionary<String, Any>,
            let enable = args["enable"] as? Bool {
             if enable {
-                CASFlutter.cleverAdsSolutions.getCasBridge()?.enableReturnAds()
+                bridge.enableReturnAds()
             } else {
-                CASFlutter.cleverAdsSolutions.getCasBridge()?.disableReturnAds()
+                bridge.disableReturnAds()
             }
             result(nil)
         } else {
@@ -104,19 +112,22 @@ class MediationManagerMethodHandler: MethodHandler {
         }
     }
 
-    private func skipNextAppReturnAds(_ result: @escaping FlutterResult) {
-        CASFlutter.cleverAdsSolutions.getCasBridge()?.skipNextReturnAds()
-        result(nil)
+    private func skipNextAppReturnAds(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        if let bridge = getBridgeAndCheckNil(call, result) {
+            bridge.skipNextReturnAds()
+            result(nil)
+        }
     }
 
     private func setEnabled(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
+        if let bridge = getBridgeAndCheckNil(call, result),
+           let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int,
            let enabled = args["enable"] as? Bool {
             if adType < 0 || adType > 2 {
                 result(FlutterError(code: "", message: "AdType is not correct", details: nil))
             } else {
-                CASFlutter.cleverAdsSolutions.getCasBridge()?.setEnabled(type: adType, enable: enabled)
+                bridge.setEnabled(type: adType, enable: enabled)
                 result(nil)
             }
         } else {
@@ -125,15 +136,49 @@ class MediationManagerMethodHandler: MethodHandler {
     }
 
     private func isEnabled(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let args = call.arguments as? Dictionary<String, Any>,
+        if let bridge = getBridgeAndCheckNil(call, result),
+           let args = call.arguments as? Dictionary<String, Any>,
            let adType = args["adType"] as? Int {
             if adType < 0 || adType > 2 {
                 result(FlutterError(code: "", message: "AdType is not correct", details: nil))
             } else {
-                result(CASFlutter.cleverAdsSolutions.getCasBridge()?.isEnabled(type: adType))
+                result(bridge.isEnabled(type: adType))
             }
         } else {
             result(FlutterError(code: "", message: "Bad argument", details: nil))
         }
+    }
+
+    private func showBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        if let bridge = getBridgeAndCheckNil(call, result),
+           let sizeId: Int = call.getArgAndCheckNil("sizeId", result) {
+            bridge.showGlobalBannerAd(sizeId: sizeId)
+            result(nil)
+        }
+    }
+
+    private func hideBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        if let bridge = getBridgeAndCheckNil(call, result),
+           let sizeId: Int = call.getArgAndCheckNil("sizeId", result) {
+            bridge.hideBanner(sizeId: sizeId)
+            result(nil)
+        }
+    }
+
+    private func setBannerPosition(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        if let bridge = getBridgeAndCheckNil(call, result),
+           let sizeId: Int = call.getArgAndCheckNil("sizeId", result),
+           let positionId: Int = call.getArgAndCheckNil("positionId", result),
+           let xOffset: Int = call.getArgAndCheckNil("x", result),
+           let yOffset: Int = call.getArgAndCheckNil("y", result) {
+            bridge.setBannerPosition(sizeId: sizeId, positionId: positionId, x: xOffset, y: yOffset)
+            result(nil)
+        }
+    }
+
+    private func getBridgeAndCheckNil(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) -> CASBridge? {
+        let bridge = bridgeProvider()
+        if bridge == nil { result(call.errorFieldNil("CASBridge")) }
+        return bridge
     }
 }

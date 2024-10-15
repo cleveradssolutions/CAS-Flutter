@@ -32,9 +32,9 @@ class AdSizeMethodHandler: MethodHandler {
     }
 
     private func getAdaptiveBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult<Int, Int>("maxWidthDp", "orientation", result) { (maxWidthDp: Int, orientation: Int) in
-             CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidthDp)).toMap()
-         }
+        call.getArgAndReturnResult<Int, Int>("maxWidthDp", "orientation", result) { (maxWidthDp: Int, _: Int) in
+            CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidthDp)).toMap()
+        }
     }
 
     private func getAdaptiveBannerInScreen(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -48,18 +48,14 @@ class AdSizeMethodHandler: MethodHandler {
 
 extension CASSize {
     func toMap() -> [String: Int] {
+        let mode: Int
+        if isAdaptive { mode = 2 }
+        else if isInline { mode = 3 }
+        else { mode = 0 }
         return [
-//            "width": width, // px instead dp..
-//            "height": height,
-            "mode": {
-                if isAdaptive {
-                    return 2
-                } else if isInline {
-                    return 3
-                } else {
-                    return 0
-                }
-            }()
+            "width": Int(width),
+            "height": Int(height),
+            "mode": mode,
         ]
     }
 }

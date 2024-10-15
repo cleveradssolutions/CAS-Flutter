@@ -101,7 +101,7 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setMutedAdSounds(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("muted", result) { value in
+        call.getArgAndReturn("muted", result) { value in
             CAS.settings.mutedAdSounds = value
         }
     }
@@ -111,19 +111,19 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setDebugMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("enable", result) { value in
+        call.getArgAndReturn("enable", result) { value in
             CAS.settings.debugMode = value
         }
     }
 
     private func setTestDeviceId(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("deviceId", result) { deviceId in
+        call.getArgAndReturn("deviceId", result) { deviceId in
             CAS.settings.setTestDevice(ids: [deviceId])
         }
     }
 
     private func setTestDeviceIds(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("deviceIds", result) { deviceIds in
+        call.getArgAndReturn("deviceIds", result) { deviceIds in
             CAS.settings.setTestDevice(ids: deviceIds)
         }
     }
@@ -138,7 +138,7 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setTrialAdFreeInterval(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("interval", result) { interval in
+        call.getArgAndReturn("interval", result) { interval in
             CAS.settings.trialAdFreeInterval = interval
         }
     }
@@ -148,7 +148,7 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setBannerRefreshDelay(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("delay", result) { delay in
+        call.getArgAndReturn("delay", result) { delay in
             CAS.settings.bannerRefreshInterval = delay
         }
     }
@@ -158,7 +158,7 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setInterstitialInterval(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("delay", result) { delay in
+        call.getArgAndReturn("delay", result) { delay in
             CAS.settings.interstitialInterval = delay
         }
     }
@@ -173,7 +173,7 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func allowInterstitialAdsWhenVideoCostAreLower(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("enable", result) { enable in
+        call.getArgAndReturn("enable", result) { enable in
             CAS.settings.setInterstitialAdsWhenVideoCostAreLower(allow: enable)
         }
     }
@@ -183,7 +183,7 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setLoadingMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult("loadingMode", result) { loadingMode in
+        call.getArgAndReturn("loadingMode", result) { loadingMode in
             CAS.settings.setLoading(mode: loadingMode)
         }
     }

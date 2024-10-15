@@ -5,7 +5,7 @@ import com.cleveradssolutions.plugin.flutter.CASCallback
 import com.cleveradssolutions.plugin.flutter.CASViewWrapper
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.error
-import com.cleveradssolutions.plugin.flutter.util.errorArgNull
+import com.cleveradssolutions.plugin.flutter.util.errorFieldNull
 import com.cleveradssolutions.plugin.flutter.util.errorInvalidArg
 import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -42,7 +42,11 @@ class MediationManagerMethodHandler(
             "skipNextAppReturnAds" -> skipNextAppReturnAds(call, result)
             "setEnabled" -> setEnabled(call, result)
             "isEnabled" -> isEnabled(call, result)
+
             "createBannerView" -> createBannerView(call, result)
+            "showBanner" -> showBanner(call, result)
+            "hideBanner" -> hideBanner(call, result)
+            "setBannerPosition" -> setBannerPosition(call, result)
         }
     }
 
@@ -129,28 +133,71 @@ class MediationManagerMethodHandler(
     }
 
 
-
     private val banners = mutableMapOf<Int, CASViewWrapper?>()
 
     private fun createBannerView(call: MethodCall, result: MethodChannel.Result) {
-        val sizeId = call.argument<Int>("sizeId") ?: return result.errorArgNull(call, "sizeId")
+        val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
 
         if (!banners.containsKey(sizeId)) {
-            val name = when (sizeId) {
-                2 -> "adaptive"
-                3 -> "smart"
-                4 -> "leader"
-                5 -> "mrec"
-                else -> "standard"
-            }
-            val casBridge = bridgeProvider() ?: return result.errorArgNull(call, "casBridge")
-            banners[sizeId] = casBridge.createAdView(createListener(name), sizeId)
+            val casBridge = getBridgeAndCheckNull(call, result) ?: return
+
+            banners[sizeId] = casBridge.createAdView(createListener(sizeId), sizeId)
         }
 
         result.success()
     }
 
-    private fun createListener(name: String): CASCallback {
+    private fun showBanner(call: MethodCall, result: MethodChannel.Result) {
+        val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
+        val banner = banners[sizeId]
+            ?: return result.errorFieldNull(call, "banners[${getBannerName(sizeId)}]")
+
+        banner.show()
+
+        result.success()
+    }
+
+    private fun hideBanner(call: MethodCall, result: MethodChannel.Result) {
+        val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
+        val banner = banners[sizeId]
+            ?: return result.errorFieldNull(call, "banners[${getBannerName(sizeId)}]")
+
+        banner.hide()
+
+        result.success()
+    }
+
+    private fun setBannerPosition(call: MethodCall, result: MethodChannel.Result) {
+        val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
+        val banner = banners[sizeId]
+            ?: return result.errorFieldNull(call, "banners[${getBannerName(sizeId)}]")
+        val positionId = call.getArgAndCheckNull<Int>("positionId", result) ?: return
+        val x = call.getArgAndCheckNull<Int>("x", result) ?: return
+        val y = call.getArgAndCheckNull<Int>("y", result) ?: return
+
+        banner.setPosition(positionId, x, y)
+
+        result.success()
+    }
+
+    private fun getBridgeAndCheckNull(call: MethodCall, result: MethodChannel.Result): CASBridge? {
+        val bridge = bridgeProvider()
+        if (bridge == null) result.errorFieldNull(call, "CASBridge")
+        return bridge
+    }
+
+    private fun getBannerName(sizeId: Int): String {
+        return when (sizeId) {
+            2 -> "adaptive"
+            3 -> "smart"
+            4 -> "leader"
+            5 -> "mrec"
+            else -> "standard"
+        }
+    }
+
+    private fun createListener(sizeId: Int): CASCallback {
+        val name = getBannerName(sizeId)
         return object : CASCallback {
             override fun onLoaded() {
                 invokeMethod("OnBannerAdLoaded", mapOf("banner" to name))
@@ -326,12 +373,6 @@ class MediationManagerMethodHandler(
 
             override fun onRect(x: Int, y: Int, width: Int, height: Int) {}
         }
-    }
-
-    private fun getBridgeAndCheckNull(call: MethodCall, result: MethodChannel.Result): CASBridge? {
-        val bridge = bridgeProvider()
-        if (bridge == null) result.errorArgNull(call, "CASBridge")
-        return bridge
     }
 
 }
