@@ -45,17 +45,19 @@ class BannerView(
                     }
                 }
             } else {
-                val width = size["width"]
-                val height = size["height"]
-                val mode = size["mode"]
+                val width = size["width"] as Int
+                val height = size["height"] as Int
+                val mode = size["mode"] as Int
 
-                val adSizeClass = Class.forName("com.cleversolutions.ads.AdSize")
-                val intClass = Int::class.java
-                val constructor = adSizeClass.getDeclaredConstructor(intClass, intClass, intClass)
-                constructor.isAccessible = true
-                val adSize = constructor.newInstance(width, height, mode) as AdSize
-
-                banner.size = adSize
+                banner.size = when (mode) {
+                    2 -> AdSize.getAdaptiveBanner(context, width)
+                    3 -> AdSize.getInlineBanner(width, height)
+                    else -> when (width) {
+                        300 -> AdSize.MEDIUM_RECTANGLE
+                        728 -> AdSize.LEADERBOARD
+                        else -> AdSize.BANNER
+                    }
+                }
             }
         }
 

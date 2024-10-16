@@ -8,5 +8,5 @@
 import Foundation
 
 protocol CASInitCallback : FlutterCaller {
-    func onCASInitialized(error: String, countryCode: String, isConsentRequired: Bool, isTestMode: Bool)
+    func onCASInitialized(error: String?, countryCode: String?, isConsentRequired: Bool, isTestMode: Bool)
 }

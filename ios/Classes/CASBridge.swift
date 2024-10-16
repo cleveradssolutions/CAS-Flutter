@@ -32,12 +32,9 @@ public class CASBridge: CASLoadDelegate {
 
         manager = builder.managerBuilder
             .withCompletionHandler({ initialConfig in
-                let error = initialConfig.error != nil ? initialConfig.error! : ""
-                let countryCode = initialConfig.countryCode != nil ? initialConfig.countryCode! : ""
-
                 builder.initCallback.onCASInitialized(
-                    error: error,
-                    countryCode: countryCode,
+                    error: initialConfig.error,
+                    countryCode: initialConfig.countryCode,
                     isConsentRequired: initialConfig.isConsentRequired,
                     isTestMode: initialConfig.manager.isDemoAdMode)
             })
@@ -119,7 +116,10 @@ public class CASBridge: CASLoadDelegate {
         }
     }
 
-    public func showGlobalBannerAd(sizeId: Int) {
+    func showGlobalBannerAd(
+        mediationManagerMethodHandler: MediationManagerMethodHandler,
+        sizeId: Int
+    ) {
         if banners[sizeId] != nil {
             banners[sizeId]?.showBanner()
             return
@@ -146,11 +146,7 @@ public class CASBridge: CASLoadDelegate {
 
         let globalBannerView = CASBannerView(adSize: casSize, manager: manager)
         let flutterCallback = FlutterBannerCallback(sizeId: sizeId)
-
-        if let call = builder.flutterCaller {
-            flutterCallback.setFlutterCaller(caller: call)
-        }
-
+        flutterCallback.setFlutterCaller(caller: mediationManagerMethodHandler.invokeMethod)
         let view = CASView(bannerView: globalBannerView, view: builder.rootViewController, callback: flutterCallback)
 
         banners[sizeId] = view
@@ -172,11 +168,14 @@ public class CASBridge: CASLoadDelegate {
         }
     }
 
-    func showBanner(sizeId: Int) {
+    func showBanner(
+        mediationManagerMethodHandler: MediationManagerMethodHandler,
+        sizeId: Int
+    ) {
         if let banner = banners[sizeId] {
             banner.showBanner()
         } else {
-            showGlobalBannerAd(sizeId: sizeId)
+            showGlobalBannerAd(mediationManagerMethodHandler: mediationManagerMethodHandler, sizeId: sizeId)
         }
     }
 

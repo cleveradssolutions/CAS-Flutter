@@ -72,7 +72,13 @@ class ManagerBuilderMethodHandler: MethodHandler {
            let casId: String = call.getArgAndCheckNil("id", result),
            let formats: Int = call.getArgAndCheckNil("formats", result),
            let version: String = call.getArgAndCheckNil("version", result) {
-            let casBridge = builder.build(id: casId, flutterVersion: casId, formats: CASTypeFlags(rawValue: UInt(formats)), mediationManagerMethodHandler: mediationManagerMethodHandler)
+            let casBridge = builder.build(
+                id: casId,
+                flutterVersion: version,
+                formats: CASTypeFlags(rawValue: UInt(formats)),
+                consentFlow: consentFlowMethodHandler.getConsentFlow(),
+                mediationManagerMethodHandler: mediationManagerMethodHandler
+            )
             onManagerBuilt(casBridge)
 
             casBridgeBuilder = nil
@@ -89,7 +95,9 @@ class ManagerBuilderMethodHandler: MethodHandler {
 
     private func createCASBridgeBuilder(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) -> CASBridgeBuilder? {
         if let rootViewController = rootViewControllerProvider() {
-            casBridgeBuilder = CASBridgeBuilder(rootViewController, FlutterInitCallback())
+            let initCallback = FlutterInitCallback()
+            initCallback.flutterCaller = self.invokeMethod
+            casBridgeBuilder = CASBridgeBuilder(rootViewController, initCallback)
             return casBridgeBuilder
         } else {
             result(call.error("Failed to create CASBridgeBuilder because rootViewController is nil"))

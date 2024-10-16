@@ -38,7 +38,6 @@ class BannerView: NSObject, FlutterPlatformView {
         eventHandler!.onAttachedToFlutter(registrar)
         banner.adDelegate = eventHandler
 
-
         if let isAutoloadEnabled = args?["isAutoloadEnabled"] as? Bool {
             banner.isAutoloadEnabled = isAutoloadEnabled
         }
@@ -77,14 +76,18 @@ class BannerView: NSObject, FlutterPlatformView {
                     return CASSize.getAdaptiveBanner(forMaxWidth: frame.width)
                 }
             } else {
-                let width = size["width"]
-                let height = size["height"]
-                let mode = size["mode"]
+                let width = size["width"] as? CGFloat ?? 0
+                let height = size["height"] as? CGFloat ?? 0
+                let mode = size["mode"] as? CGFloat ?? 0
 
-                let selector = NSSelectorFromString("init")
-                if let myClassType = NSClassFromString("CASSize") as? NSObject.Type,
-                   let instance = myClassType.perform(selector)?.takeUnretainedValue() as? CASSize {
-                    return instance
+                switch mode {
+                case 2: return CASSize.getAdaptiveBanner(forMaxWidth: width)
+                case 3: return CASSize.getInlineBanner(width: width, maxHeight: height)
+                default: switch width {
+                    case 300: return CASSize.mediumRectangle
+                    case 728: return CASSize.leaderboard
+                    default: return CASSize.banner
+                    }
                 }
             }
         }

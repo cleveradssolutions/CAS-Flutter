@@ -5,25 +5,24 @@
 //  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
-import Foundation
 import CleverAdsSolutions
+import Foundation
 
-public class CASBridgeBuilder/* : FlutterCaller*/ {
-    
+public class CASBridgeBuilder /* : FlutterCaller*/ {
 //    var flutterCaller: completion?
-    
+
     let rootViewController: UIViewController
-    
+
     let managerBuilder: CASManagerBuilder
 
     let initCallback: CASInitCallback
 
     init(_ rootViewController: UIViewController, _ initCallback: CASInitCallback) {
         self.rootViewController = rootViewController
-        
+
 //        consent = CASConsentFlow()
 //            .withViewControllerToPresent(rootViewController)
-        managerBuilder = CAS.buildManager()//.withConsentFlow(consent)
+        managerBuilder = CAS.buildManager() // .withConsentFlow(consent)
 
         self.initCallback = initCallback
     }
@@ -37,27 +36,39 @@ public class CASBridgeBuilder/* : FlutterCaller*/ {
 //        }
 //        consent.withCompletionHandler(consentHandler)
 //    }
-    
+
     func withTestMode(isEnabled: Bool) {
         managerBuilder.withTestAdMode(isEnabled)
     }
-    
+
     func setUserId(id: String) {
         managerBuilder.withUserID(id)
     }
-    
+
     func addExtras(keyString: String, valueString: String) {
-        managerBuilder.withMediationExtras(valueString, forKey: keyString )
+        managerBuilder.withMediationExtras(valueString, forKey: keyString)
     }
-    
-    func build(id: String, flutterVersion: String, formats: CASTypeFlags, mediationManagerMethodHandler: MediationManagerMethodHandler) -> CASBridge {
-        return self.buildInternal(id: id, flutterVersion: flutterVersion, formats: formats, mediationManagerMethodHandler: mediationManagerMethodHandler)
+
+    func build(
+        id: String,
+        flutterVersion: String,
+        formats: CASTypeFlags,
+        consentFlow: CASConsentFlow,
+        mediationManagerMethodHandler: MediationManagerMethodHandler
+    ) -> CASBridge {
+        return buildInternal(id: id, flutterVersion: flutterVersion, formats: formats, consentFlow: consentFlow, mediationManagerMethodHandler: mediationManagerMethodHandler)
     }
-    
-    func buildInternal(id: String, flutterVersion: String, formats: CASTypeFlags, mediationManagerMethodHandler: MediationManagerMethodHandler) -> CASBridge {
+
+    func buildInternal(
+        id: String,
+        flutterVersion: String,
+        formats: CASTypeFlags,
+        consentFlow: CASConsentFlow,
+        mediationManagerMethodHandler: MediationManagerMethodHandler
+    ) -> CASBridge {
         managerBuilder.withAdFlags(formats)
         managerBuilder.withFramework("Flutter", version: flutterVersion)
-        
+
         let bridge = CASBridge(builder: self, casID: id, mediationManagerMethodHandler: mediationManagerMethodHandler)
         bridge.getManager().adLoadDelegate = bridge
         return bridge

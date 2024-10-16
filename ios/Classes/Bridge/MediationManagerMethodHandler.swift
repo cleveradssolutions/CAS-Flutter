@@ -21,6 +21,9 @@ class MediationManagerMethodHandler: MethodHandler {
         self.bridgeProvider = bridgeProvider
         flutterAppReturnListener = FlutterAppReturnCallback(viewController: rootViewController)
         super.init(channelName: channelName)
+        flutterInterstitialListener.setFlutterCaller(caller: self.invokeMethod)
+        flutterRewardedListener.setFlutterCaller(caller: self.invokeMethod)
+        flutterAppReturnListener.setFlutterCaller(caller: self.invokeMethod)
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -157,7 +160,7 @@ class MediationManagerMethodHandler: MethodHandler {
     private func showBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let bridge = getBridgeAndCheckNil(call, result),
            let sizeId: Int = call.getArgAndCheckNil("sizeId", result) {
-            bridge.showGlobalBannerAd(sizeId: sizeId)
+            bridge.showGlobalBannerAd(mediationManagerMethodHandler: self, sizeId: sizeId)
             result(nil)
         }
     }
