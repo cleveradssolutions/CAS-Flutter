@@ -15,9 +15,10 @@ public final class CASBridgeBuilder {
     final Activity activity;
     CASInitCallback initCallback;
 
-    public CASBridgeBuilder(Activity activity) {
+    public CASBridgeBuilder(Activity activity, CASInitCallback initCallback) {
         this.activity = activity;
         builder = CAS.buildManager();
+        this.initCallback = initCallback;
     }
 
     public void withTestMode(boolean isEnabled) {
@@ -38,10 +39,6 @@ public final class CASBridgeBuilder {
 
     public void addExtras(String key, String value) {
         builder.withMediationExtras(key, value);
-    }
-
-    public void setInitializationListener(CASInitCallback initCallback) {
-        this.initCallback = initCallback;
     }
 
     @NonNull

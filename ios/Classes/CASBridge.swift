@@ -12,14 +12,24 @@ public class CASBridge: CASLoadDelegate {
     private let manager: CASMediationManager
     private let interstitialAdListener: AdCallbackWrapper
     private let rewardedListener: AdCallbackWrapper
+    private let appReturnListener: CASAppReturnDelegate
     private let builder: CASBridgeBuilder
 
     var mediationManager: CASMediationManager { manager }
 
     var banners = [Int: CASView]()
 
-    init(builder: CASBridgeBuilder, casID: String) {
+    init(
+        builder: CASBridgeBuilder,
+        casID: String,
+        mediationManagerMethodHandler: MediationManagerMethodHandler
+    ) {
         self.builder = builder
+
+        interstitialAdListener = AdCallbackWrapper(flutterCallback: mediationManagerMethodHandler.flutterInterstitialListener, withComplete: false)
+        rewardedListener = AdCallbackWrapper(flutterCallback: mediationManagerMethodHandler.flutterRewardedListener, withComplete: true)
+        appReturnListener = mediationManagerMethodHandler.flutterAppReturnListener
+
         manager = builder.managerBuilder
             .withCompletionHandler({ initialConfig in
                 let error = initialConfig.error != nil ? initialConfig.error! : ""
@@ -32,9 +42,6 @@ public class CASBridge: CASLoadDelegate {
                     isTestMode: initialConfig.manager.isDemoAdMode)
             })
             .create(withCasId: casID)
-
-        interstitialAdListener = AdCallbackWrapper(flutterCallback: builder.interListener, withComplete: false)
-        rewardedListener = AdCallbackWrapper(flutterCallback: builder.rewardListener, withComplete: true)
     }
 
     func getManager() -> CASMediationManager {
@@ -42,7 +49,7 @@ public class CASBridge: CASLoadDelegate {
     }
 
     func enableReturnAds() {
-        manager.enableAppReturnAds(with: builder.appReturnListener)
+        manager.enableAppReturnAds(with: appReturnListener)
     }
 
     func disableReturnAds() {

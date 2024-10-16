@@ -2,20 +2,28 @@ import CleverAdsSolutions
 import Flutter
 
 public class CASFlutter: NSObject, FlutterPlugin {
-    public static let cleverAdsSolutions: CleverAds = CleverAds(
-        rootViewController: UIApplication.shared.delegate!.window!!.rootViewController!
-    )
+    private var methodHandlers: [MethodHandler] = []
 
-    private var methodHandlers: [MethodHandler]
+    private var casBridge: CASBridge?
 
     init(with registrar: FlutterPluginRegistrar) {
+        super.init()
+        let rootViewControllerProvider: () -> UIViewController? = { UIApplication.shared.delegate?.window??.rootViewController }
+        let bridgeProvider: () -> CASBridge? = { self.casBridge }
+        let consentFlowMethodHandler = ConsentFlowMethodHandler(rootViewControllerProvider)
+        let mediationManagerMethodHandler = MediationManagerMethodHandler(rootViewControllerProvider()!, bridgeProvider)
+
         methodHandlers = [
             AdSizeMethodHandler(),
             AdsSettingsMethodHandler(),
             CASMethodHandler(),
-            ConsentFlowMethodHandler(),
-            ManagerBuilderMethodHandler(),
-            MediationManagerMethodHandler(bridgeProvider: CASFlutter.cleverAdsSolutions.getCasBridge),
+            consentFlowMethodHandler,
+            ManagerBuilderMethodHandler(
+                consentFlowMethodHandler,
+                mediationManagerMethodHandler,
+                rootViewControllerProvider
+            ) { casBridge in self.casBridge = casBridge },
+            mediationManagerMethodHandler,
             TargetingOptionsMethodHandler(),
         ]
 
@@ -23,7 +31,7 @@ public class CASFlutter: NSObject, FlutterPlugin {
             handler.onAttachedToFlutter(registrar)
         }
 
-        registrar.register(BannerViewFactory(registrar: registrar, bridgeProvider: CASFlutter.cleverAdsSolutions.getCasBridge), withId: "<cas-banner-view>")
+        registrar.register(BannerViewFactory(registrar: registrar, bridgeProvider: bridgeProvider), withId: "<cas-banner-view>")
     }
 
     public static func register(with registrar: any FlutterPluginRegistrar) {

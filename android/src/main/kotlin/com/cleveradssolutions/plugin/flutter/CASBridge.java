@@ -32,7 +32,6 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
 
     @Nullable
     private CASInitCallback initCallback;
-
     public CASBridge(
             Activity activity,
             CASBridgeBuilder builder,
@@ -40,15 +39,13 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
     ) {
         this.activity = activity;
         this.initCallback = builder.initCallback;
-        manager = builder.builder.withCompletionListener(this)
-                .initialize(activity);
-        manager.getOnAdLoadEvent().add(this);
-
-        this.initCallback = builder.initCallback;
         this.interstitialAdListener =
                 new AdCallbackWrapper(mediationManagerMethodHandler.getInterstitialCallbackWrapper(), false);
         this.rewardedListener =
                 new AdCallbackWrapper(mediationManagerMethodHandler.getRewardedCallbackWrapper(), true);
+        manager = builder.builder.withCompletionListener(this)
+                .initialize(activity);
+        manager.getOnAdLoadEvent().add(this);
     }
 
     public MediationManager getMediationManager() {

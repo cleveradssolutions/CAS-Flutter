@@ -30,10 +30,10 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         val mediationManagerMethodHandler = MediationManagerMethodHandler(casBridgeProvider)
 
         methodHandlers = setOf(
-            consentFlowMethodHandler,
             AdSizeMethodHandler(),
             AdsSettingsMethodHandler(),
             CASMethodHandler(activityProvider),
+            consentFlowMethodHandler,
             ManagerBuilderMethodHandler(
                 consentFlowMethodHandler,
                 mediationManagerMethodHandler,

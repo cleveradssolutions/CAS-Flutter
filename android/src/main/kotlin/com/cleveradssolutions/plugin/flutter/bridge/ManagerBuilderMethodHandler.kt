@@ -22,14 +22,8 @@ class ManagerBuilderMethodHandler(
     private val onManagerBuilt: (CASBridge) -> Unit
 ) : MethodHandler(CHANNEL_NAME) {
 
-    private var initializationCallbackWrapper: CASInitCallback? = null
-
+    @Volatile
     private var casBridgeBuilder: CASBridgeBuilder? = null
-
-    override fun onAttachedToFlutter(flutterPluginBinding: FlutterPluginBinding) {
-        super.onAttachedToFlutter(flutterPluginBinding)
-        initializationCallbackWrapper = createInitializationCallback()
-    }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -84,6 +78,32 @@ class ManagerBuilderMethodHandler(
         result.success()
     }
 
+    private fun getCASBridgeBuilder(
+        call: MethodCall,
+        result: MethodChannel.Result
+    ): CASBridgeBuilder? {
+        return casBridgeBuilder ?: synchronized(this) {
+            casBridgeBuilder ?: createCASBridgeBuilder(call, result)
+        }
+    }
+
+    private fun createCASBridgeBuilder(
+        call: MethodCall,
+        result: MethodChannel.Result
+    ): CASBridgeBuilder? {
+        val activity = activityProvider()
+        if (activity != null) {
+            casBridgeBuilder = CASBridgeBuilder(activity, createInitializationCallback())
+            return casBridgeBuilder
+        } else {
+            result.error(
+                call,
+                "Failed to create CASBridgeBuilder because activity is null"
+            )
+            return null
+        }
+    }
+
     private fun createInitializationCallback(): CASInitCallback {
         return CASInitCallback { error, countryCode, isConsentRequired, isTestMode ->
             invokeMethod(
@@ -96,27 +116,6 @@ class ManagerBuilderMethodHandler(
                 )
             )
         }
-    }
-
-    private fun getCASBridgeBuilder(
-        call: MethodCall,
-        result: MethodChannel.Result
-    ): CASBridgeBuilder? {
-        var builder = casBridgeBuilder
-        if (builder == null) {
-            val activity = activityProvider()
-            if (activity != null) {
-                builder = CASBridgeBuilder(activity)
-                builder.setInitializationListener(initializationCallbackWrapper)
-                casBridgeBuilder = builder
-            } else {
-                result.error(
-                    call,
-                    "Failed to create CASBridgeBuilder because activity is null"
-                )
-            }
-        }
-        return builder
     }
 
 }

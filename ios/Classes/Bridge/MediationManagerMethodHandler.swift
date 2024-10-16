@@ -13,8 +13,13 @@ private let channelName = "com.cleveradssolutions.plugin.flutter/mediation_manag
 class MediationManagerMethodHandler: MethodHandler {
     private let bridgeProvider: () -> CASBridge?
 
-    init(bridgeProvider: @escaping () -> CASBridge?) {
+    let flutterInterstitialListener : CASFlutterCallback = FlutterInterstitialCallback()
+    let flutterRewardedListener : CASFlutterCallback = FlutterRewardedCallback()
+    let flutterAppReturnListener : FlutterAppReturnCallback
+
+    init(_ rootViewController: UIViewController, _ bridgeProvider: @escaping () -> CASBridge?) {
         self.bridgeProvider = bridgeProvider
+        flutterAppReturnListener = FlutterAppReturnCallback(viewController: rootViewController)
         super.init(channelName: channelName)
     }
 
