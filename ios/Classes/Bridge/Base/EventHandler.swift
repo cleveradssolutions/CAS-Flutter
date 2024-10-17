@@ -13,7 +13,7 @@ class EventHandler: NSObject, FlutterStreamHandler {
     private var eventSink: FlutterEventSink?
 
     init(channelName: String) {
-        self.channelName = channelName
+        self.channelName = channelName + ".events"
     }
 
     open func onAttachedToFlutter(_ registrar: FlutterPluginRegistrar) {

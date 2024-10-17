@@ -106,7 +106,6 @@ class _BannerWidgetState extends BannerWidgetState {
   void initState() {
     super.initState();
     _id = widget._id;
-    print("!BannerViewState: initState $_id");
     _listener = widget.listener;
     _size = widget.size;
     _isAutoloadEnabled = widget.isAutoloadEnabled;
@@ -118,17 +117,16 @@ class _BannerWidgetState extends BannerWidgetState {
     _channel = MethodChannel(channelName);
     _subscription = EventChannel("$channelName.events")
         .receiveBroadcastStream()
-        .listen((dynamic event) {
-      if (event is Map && event["id"] == _id) {
-        final eventName = event["event"] as String?;
-        if (eventName != null) {
-          handleEvent(eventName, event["data"]);
-        }
-      }
-    });
+        .listen(handleEvent);
   }
 
-  void handleEvent(String eventName, dynamic data) {
+  void handleEvent(dynamic event) {
+    if (event is! Map) {
+      return;
+    }
+    final eventName = event["event"] as String?;
+    final data = event["data"];
+
     switch (eventName) {
       case "onAdViewLoaded":
         _listener?.onLoaded();
@@ -158,7 +156,6 @@ class _BannerWidgetState extends BannerWidgetState {
 
   @override
   Widget build(BuildContext context) {
-    print("!BannerViewState: build $_id");
     var shortestSide = MediaQuery.of(context).size.shortestSide;
     final bool isTablet = shortestSide > 600;
     final AdSize size = _size == AdSize.Smart
@@ -204,7 +201,6 @@ class _BannerWidgetState extends BannerWidgetState {
 
   @override
   Future<void> dispose() {
-    print("!BannerViewState: dispose $_id");
     _subscription.cancel();
     super.dispose();
     return _channel.invokeMethod("dispose");
