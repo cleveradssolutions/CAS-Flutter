@@ -1,27 +1,34 @@
 package com.cleveradssolutions.plugin.flutter;
 
 import android.app.Activity;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler;
 import com.cleversolutions.ads.ConsentFlow;
 import com.cleversolutions.ads.android.CAS;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import kotlin.jvm.functions.Function0;
+
 public final class CASBridgeBuilder {
     final CAS.ManagerBuilder builder;
-    final Activity activity;
-    CASInitCallback initCallback;
-    CASCallback interListener;
-    CASCallback rewardListener;
+    final @NotNull Function0<Activity> activityProvider;
+    final @NotNull CASInitCallback initCallback;
 
-    public CASBridgeBuilder(Activity activity) {
-        this.activity = activity;
+    public CASBridgeBuilder(
+            @NotNull Function0<Activity> activityProvider,
+            @NotNull CASInitCallback initCallback
+    ) {
+        this.activityProvider = activityProvider;
         builder = CAS.buildManager();
+        this.initCallback = initCallback;
     }
 
-    public void withTestMode(boolean enable) {
-        builder.withTestAdMode(enable);
+    public void withTestMode(boolean isEnabled) {
+        builder.withTestAdMode(isEnabled);
     }
 
     public void setUserId(String id) {
@@ -32,44 +39,39 @@ public final class CASBridgeBuilder {
         builder.withConsentFlow(new ConsentFlow(false));
     }
 
-    public void enableConsentFlow(String privacyUrl) {
-        builder.withConsentFlow(new ConsentFlow().withPrivacyPolicy(privacyUrl));
+    public void enableConsentFlow(String url) {
+        builder.withConsentFlow(new ConsentFlow().withPrivacyPolicy(url));
     }
 
     public void addExtras(String key, String value) {
         builder.withMediationExtras(key, value);
     }
 
-    public void setCallbacks(CASInitCallback initCallback,
-                             CASCallback interListener,
-                             CASCallback rewardListener) {
-        this.initCallback = initCallback;
-        this.interListener = interListener;
-        this.rewardListener = rewardListener;
+    @NonNull
+    @Contract("_, _, _, _, _ -> new")
+    public CASBridge build(
+            @NonNull String id,
+            @NonNull String flutterVersion,
+            int formats,
+            ConsentFlow flow,
+            MediationManagerMethodHandler mediationManagerMethodHandler
+    ) {
+        return buildInternal(id, flutterVersion, formats, flow, mediationManagerMethodHandler);
     }
 
-    public CASBridge build(@NonNull String id, @NonNull String flutterVersion, int formats, CASConsentFlow flow) {
-        try {
-            return buildInternal(id, flutterVersion, formats, flow);
-        } catch (Throwable e) {
-            Log.e("CAS.dart", "Initialize Flutter Bridge failed", e);
-            return null;
-        }
-    }
-
-    public CASBridge buildInternal(@NonNull String id, @NonNull String flutterVersion, int formats, CASConsentFlow flow){
-        //noinspection deprecation
-        builder.withEnabledAdTypes(formats);
-
-        builder.withCasId(id)
-                .withFramework("Flutter", flutterVersion);
-
-        if (flow != null)
-            builder.withConsentFlow(flow.flow);
-        else
-            builder.withConsentFlow(new ConsentFlow()
-                    .withUIContext(activity));
-
-        return new CASBridge(activity, this);
+    @NonNull
+    @Contract("_, _, _, _, _ -> new")
+    public CASBridge buildInternal(
+            @NonNull String id,
+            @NonNull String flutterVersion,
+            int formats,
+            ConsentFlow flow,
+            MediationManagerMethodHandler mediationManagerMethodHandler
+    ) {
+        builder.withEnabledAdTypes(formats)
+                .withCasId(id)
+                .withFramework("Flutter", flutterVersion)
+                .withConsentFlow(flow);
+        return new CASBridge(activityProvider, this, mediationManagerMethodHandler);
     }
 }

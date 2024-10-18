@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.cleveradssolutions.mediation.ContextService;
+import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler;
 import com.cleveradssolutions.sdk.base.CASHandler;
 import com.cleversolutions.ads.AdError;
 import com.cleversolutions.ads.AdLoadCallback;
@@ -18,13 +19,17 @@ import com.cleversolutions.ads.InitialConfiguration;
 import com.cleversolutions.ads.InitializationListener;
 import com.cleversolutions.ads.MediationManager;
 
+import org.jetbrains.annotations.NotNull;
+
+import kotlin.jvm.functions.Function0;
+
 public final class CASBridge implements ContextService, AdLoadCallback, InitializationListener {
     private static final int AD_TYPE_BANNER = 0;
     private static final int AD_TYPE_INTER = 1;
     private static final int AD_TYPE_REWARD = 2;
     private static final int AD_TYPE_NATIVE = 3;
 
-    private final Activity activity;
+    final @NotNull Function0<Activity> activityProvider;
     private final MediationManager manager;
     private final AdCallbackWrapper interstitialAdListener;
     private final AdCallbackWrapper rewardedListener;
@@ -32,26 +37,32 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
     @Nullable
     private CASInitCallback initCallback;
 
-    public CASBridge(Activity activity, CASBridgeBuilder builder) {
-        this.activity = activity;
+    public CASBridge(
+            @NotNull Function0<Activity> activityProvider,
+            CASBridgeBuilder builder,
+            MediationManagerMethodHandler mediationManagerMethodHandler
+    ) {
+        this.activityProvider = activityProvider;
         this.initCallback = builder.initCallback;
+        this.interstitialAdListener =
+                new AdCallbackWrapper(mediationManagerMethodHandler.getInterstitialCallbackWrapper(), false);
+        this.rewardedListener =
+                new AdCallbackWrapper(mediationManagerMethodHandler.getRewardedCallbackWrapper(), true);
         manager = builder.builder.withCompletionListener(this)
-                .initialize(activity);
+                .initialize(this);
         manager.getOnAdLoadEvent().add(this);
-
-        this.initCallback = builder.initCallback;
-        this.interstitialAdListener = new AdCallbackWrapper(builder.interListener, false);
-        this.rewardedListener = new AdCallbackWrapper(builder.rewardListener, true);
     }
 
-    public MediationManager getMediationManager() { return manager; }
+    public MediationManager getMediationManager() {
+        return manager;
+    }
 
     public boolean isTestAdModeEnabled() {
         return manager.isDemoAdMode();
     }
 
     public CASViewWrapper createAdView(final CASCallback listener, final int sizeCode) {
-        final CASViewWrapper view = new CASViewWrapper(activity);
+        final CASViewWrapper view = new CASViewWrapper(getActivity());
         CASHandler.INSTANCE.main(() -> {
             view.createView(manager, listener, sizeCode);
         });
@@ -88,11 +99,11 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
     }
 
     public void showInterstitial() {
-        manager.showInterstitial(activity, interstitialAdListener);
+        manager.showInterstitial(getActivity(), interstitialAdListener);
     }
 
     public void showRewarded() {
-        manager.showRewardedAd(activity, rewardedListener);
+        manager.showRewardedAd(getActivity(), rewardedListener);
     }
 
     public boolean isInterstitialAdReady() {
@@ -118,41 +129,41 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
     @Override
     public void onCASInitialized(@NonNull InitialConfiguration config) {
         if (initCallback != null) {
-            final String error = config.getError() == null ? "" : config.getError();
-            final boolean isTestMode = config.getManager().isDemoAdMode();
-
-            initCallback.onCASInitialized(error, config.getCountryCode(), config.isConsentRequired(), isTestMode);
-
+            initCallback.onCASInitialized(
+                    config.getError(),
+                    config.getCountryCode(),
+                    config.isConsentRequired(),
+                    config.getManager().isDemoAdMode());
             initCallback = null;
         }
     }
 
     @Override
     public Activity getActivityOrNull() {
-        return activity;
+        return activityProvider.invoke();
     }
 
     @Override
     public Context getContextOrNull() {
-        return activity;
+        return activityProvider.invoke();
     }
 
     @NonNull
     @Override
     public Activity getActivity() throws ActivityNotFoundException {
-        return activity;
+        return activityProvider.invoke();
     }
 
     @NonNull
     @Override
     public Context getContext() throws ActivityNotFoundException {
-        return activity;
+        return activityProvider.invoke();
     }
 
     @NonNull
     @Override
     public Application getApplication() throws ActivityNotFoundException {
-        return activity.getApplication();
+        return activityProvider.invoke().getApplication();
     }
 
     @Override

@@ -12,7 +12,7 @@ extension CASImpression {
         dict["versionInfo"] = self.versionInfo
         dict["identifier"] = self.identifier
         dict["impressionDepth"] = self.impressionDepth
-        dict["lifeTimeRevenue"] = self.lifetimeRevenue
+        dict["lifetimeRevenue"] = self.lifetimeRevenue
         dict["creativeIdentifier"] = self.creativeIdentifier
         
         return dict

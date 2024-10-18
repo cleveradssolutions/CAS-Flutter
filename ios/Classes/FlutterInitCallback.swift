@@ -9,8 +9,8 @@ public class FlutterInitCallback : CASInitCallback {
         flutterCaller = caller
     }
     
-    func onCASInitialized(error: String, countryCode: String, isConsentRequired: Bool, isTestMode: Bool) {
-        var args = [String: Any]()
+    func onCASInitialized(error: String?, countryCode: String?, isConsentRequired: Bool, isTestMode: Bool) {
+        var args = [String: Any?]()
         args["error"] = error
         args["countryCode"] = countryCode
         args["isConsentRequired"] = isConsentRequired

@@ -1,6 +1,6 @@
 class InitConfig {
-  String error;
-  String countryCode;
+  String? error;
+  String? countryCode;
   bool isConsentRequired;
   bool isTestMode;
 
