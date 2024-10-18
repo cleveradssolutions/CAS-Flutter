@@ -5,7 +5,6 @@ import com.cleveradssolutions.plugin.flutter.CASBridge
 import com.cleveradssolutions.plugin.flutter.CASBridgeBuilder
 import com.cleveradssolutions.plugin.flutter.CASInitCallback
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
-import com.cleveradssolutions.plugin.flutter.util.error
 import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -16,11 +15,12 @@ import io.flutter.plugin.common.MethodChannel
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/manager_builder"
 
 class ManagerBuilderMethodHandler(
+    binding: FlutterPluginBinding,
     private val consentFlowMethodHandler: ConsentFlowMethodHandler,
     private val mediationManagerMethodHandler: MediationManagerMethodHandler,
     private val activityProvider: () -> Activity?,
     private val onManagerBuilt: (CASBridge) -> Unit
-) : MethodHandler(CHANNEL_NAME) {
+) : MethodHandler(binding, CHANNEL_NAME) {
 
     @Volatile
     private var casBridgeBuilder: CASBridgeBuilder? = null
@@ -36,41 +36,34 @@ class ManagerBuilderMethodHandler(
     }
 
     private fun withTestAdMode(call: MethodCall, result: MethodChannel.Result) {
-        val builder = getCASBridgeBuilder(call, result) ?: return
-
         call.getArgAndReturn<Boolean>("isEnabled", result) {
-            builder.withTestMode(it)
+            getCASBridgeBuilder().withTestMode(it)
         }
     }
 
     private fun setUserId(call: MethodCall, result: MethodChannel.Result) {
-        val builder = getCASBridgeBuilder(call, result) ?: return
 
         call.getArgAndReturn<String>("userId", result) {
-            builder.setUserId(it)
+            getCASBridgeBuilder().setUserId(it)
         }
     }
 
     private fun withMediationExtras(call: MethodCall, result: MethodChannel.Result) {
-        val builder = getCASBridgeBuilder(call, result) ?: return
 
         call.getArgAndReturn<String, String>("key", "value", result) { key, value ->
-            builder.addExtras(key, value)
+            getCASBridgeBuilder().addExtras(key, value)
         }
     }
 
     private fun build(call: MethodCall, result: MethodChannel.Result) {
-        val builder = getCASBridgeBuilder(call, result) ?: return
-
         val id = call.getArgAndCheckNull<String>("id", result) ?: return
         val formats = call.getArgAndCheckNull<Int>("formats", result) ?: return
         val version = call.getArgAndCheckNull<String>("version", result) ?: return
 
-        val casBridge =
-            builder.build(
-                id, version, formats, consentFlowMethodHandler.getConsentFlow(),
-                mediationManagerMethodHandler
-            )
+        val casBridge = getCASBridgeBuilder().build(
+            id, version, formats, consentFlowMethodHandler.getConsentFlow(),
+            mediationManagerMethodHandler
+        )
         onManagerBuilt(casBridge)
 
         casBridgeBuilder = null
@@ -78,34 +71,14 @@ class ManagerBuilderMethodHandler(
         result.success()
     }
 
-    private fun getCASBridgeBuilder(
-        call: MethodCall,
-        result: MethodChannel.Result
-    ): CASBridgeBuilder? {
+    private fun getCASBridgeBuilder(): CASBridgeBuilder {
         return casBridgeBuilder ?: synchronized(this) {
-            casBridgeBuilder ?: createCASBridgeBuilder(call, result)
+            casBridgeBuilder ?: createCASBridgeBuilder()
         }
     }
 
-    private fun createCASBridgeBuilder(
-        call: MethodCall,
-        result: MethodChannel.Result
-    ): CASBridgeBuilder? {
-        val activity = activityProvider()
-        if (activity != null) {
-            casBridgeBuilder = CASBridgeBuilder(activity, createInitializationCallback())
-            return casBridgeBuilder
-        } else {
-            result.error(
-                call,
-                "Failed to create CASBridgeBuilder because activity is null"
-            )
-            return null
-        }
-    }
-
-    private fun createInitializationCallback(): CASInitCallback {
-        return CASInitCallback { error, countryCode, isConsentRequired, isTestMode ->
+    private fun createCASBridgeBuilder(): CASBridgeBuilder {
+        val listener = CASInitCallback { error, countryCode, isConsentRequired, isTestMode ->
             invokeMethod(
                 "onCASInitialized",
                 mapOf(
@@ -116,6 +89,8 @@ class ManagerBuilderMethodHandler(
                 )
             )
         }
+        casBridgeBuilder = CASBridgeBuilder(activityProvider, listener)
+        return casBridgeBuilder!!
     }
 
 }

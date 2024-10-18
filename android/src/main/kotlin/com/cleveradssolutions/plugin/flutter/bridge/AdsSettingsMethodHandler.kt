@@ -5,12 +5,15 @@ import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturnResult
 import com.cleveradssolutions.plugin.flutter.util.success
 import com.cleversolutions.ads.android.CAS
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/ads_settings"
 
-class AdsSettingsMethodHandler : MethodHandler(CHANNEL_NAME) {
+class AdsSettingsMethodHandler(
+    binding: FlutterPluginBinding
+) : MethodHandler(binding, CHANNEL_NAME) {
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -37,8 +40,15 @@ class AdsSettingsMethodHandler : MethodHandler(CHANNEL_NAME) {
             "getInterstitialInterval" -> getInterstitialInterval(result)
             "setInterstitialInterval" -> setInterstitialInterval(call, result)
             "restartInterstitialInterval" -> restartInterstitialInterval(result)
-            "isAllowInterstitialAdsWhenVideoCostAreLower" -> isAllowInterstitialAdsWhenVideoCostAreLower(result)
-            "allowInterstitialAdsWhenVideoCostAreLower" -> allowInterstitialAdsWhenVideoCostAreLower(call, result)
+            "isAllowInterstitialAdsWhenVideoCostAreLower" -> isAllowInterstitialAdsWhenVideoCostAreLower(
+                result
+            )
+
+            "allowInterstitialAdsWhenVideoCostAreLower" -> allowInterstitialAdsWhenVideoCostAreLower(
+                call,
+                result
+            )
+
             "getLoadingMode" -> getLoadingMode(result)
             "setLoadingMode" -> setLoadingMode(call, result)
             else -> super.onMethodCall(call, result)
@@ -169,7 +179,10 @@ class AdsSettingsMethodHandler : MethodHandler(CHANNEL_NAME) {
         result.success(CAS.settings.allowInterstitialAdsWhenVideoCostAreLower)
     }
 
-    private fun allowInterstitialAdsWhenVideoCostAreLower(call: MethodCall, result: MethodChannel.Result) {
+    private fun allowInterstitialAdsWhenVideoCostAreLower(
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
         call.getArgAndReturn<Boolean>("enable", result) {
             CAS.settings.allowInterstitialAdsWhenVideoCostAreLower = it
         }

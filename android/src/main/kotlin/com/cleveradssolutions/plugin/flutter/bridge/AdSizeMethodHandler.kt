@@ -2,7 +2,6 @@ package com.cleveradssolutions.plugin.flutter.bridge
 
 import android.content.Context
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
-import com.cleveradssolutions.plugin.flutter.util.errorArgNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturnResult
 import com.cleversolutions.ads.AdSize
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
@@ -11,26 +10,18 @@ import io.flutter.plugin.common.MethodChannel
 
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/ad_size"
 
-class AdSizeMethodHandler : MethodHandler(CHANNEL_NAME) {
+class AdSizeMethodHandler(
+    binding: FlutterPluginBinding
+) : MethodHandler(binding, CHANNEL_NAME) {
 
-    private var context: Context? = null
-
-    override fun onAttachedToFlutter(flutterPluginBinding: FlutterPluginBinding) {
-        super.onAttachedToFlutter(flutterPluginBinding)
-        context = flutterPluginBinding.applicationContext
-    }
-
-    override fun onDetachedFromFlutter() {
-        super.onDetachedFromFlutter()
-        context = null
-    }
+    private val context: Context = binding.applicationContext
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "getInlineBanner" -> getInlineBanner(call, result)
             "getAdaptiveBanner" -> getAdaptiveBanner(call, result)
-            "getAdaptiveBannerInScreen" -> getAdaptiveBannerInScreen(call, result)
-            "getSmartBanner" -> getSmartBanner(call, result)
+            "getAdaptiveBannerInScreen" -> getAdaptiveBannerInScreen(result)
+            "getSmartBanner" -> getSmartBanner(result)
             else -> super.onMethodCall(call, result)
         }
     }
@@ -42,33 +33,23 @@ class AdSizeMethodHandler : MethodHandler(CHANNEL_NAME) {
     }
 
     private fun getAdaptiveBanner(call: MethodCall, result: MethodChannel.Result) {
-        val context = getContextAndCheckNull(call, result) ?: return
-
-        call.getArgAndReturnResult<Int, Int>("maxWidthDp", "orientation", result) { maxWidthDp, orientation ->
+        call.getArgAndReturnResult<Int, Int>(
+            "maxWidthDp", "orientation", result
+        ) { maxWidthDp, orientation ->
             AdSize.getAdaptiveBanner(context, maxWidthDp, orientation).toMap()
         }
     }
 
-    private fun getAdaptiveBannerInScreen(call: MethodCall, result: MethodChannel.Result) {
-        val context = getContextAndCheckNull(call, result) ?: return
-
+    private fun getAdaptiveBannerInScreen(result: MethodChannel.Result) {
         result.success(
             AdSize.getAdaptiveBannerInScreen(context).toMap()
         )
     }
 
-    private fun getSmartBanner(call: MethodCall, result: MethodChannel.Result) {
-        val context = getContextAndCheckNull(call, result) ?: return
-
+    private fun getSmartBanner(result: MethodChannel.Result) {
         result.success(
             AdSize.getSmartBanner(context).toMap()
         )
-    }
-
-    private fun getContextAndCheckNull(call: MethodCall, result: MethodChannel.Result): Context? {
-        val context = context
-        if (context == null) result.errorArgNull(call, "context")
-        return context
     }
 
     private fun AdSize.toMap(): Map<String, Int> {

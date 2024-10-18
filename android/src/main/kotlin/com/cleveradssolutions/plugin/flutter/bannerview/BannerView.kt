@@ -11,15 +11,14 @@ class BannerView(
     context: Context,
     viewId: Int,
     args: Map<*, *>?,
-    flutterPluginBinding: FlutterPluginBinding,
+    binding: FlutterPluginBinding,
     bridgeProvider: () -> CASBridge?
 ) : PlatformView {
 
     private val flutterId = args?.get("id") as? String ?: ""
 
     private var banner: CASBannerView
-    private var methodHandler: BannerMethodHandler? = null
-    private var eventHandler: BannerEventHandler? = null
+    private var methodHandler: BannerMethodHandler
 
     init {
         val manager = bridgeProvider()?.mediationManager
@@ -27,13 +26,8 @@ class BannerView(
         this.banner = banner
         banner.id = viewId
 
-        methodHandler = BannerMethodHandler(flutterId, this, banner).also {
-            it.onAttachedToFlutter(flutterPluginBinding)
-        }
-        eventHandler = BannerEventHandler(flutterId).also {
-            it.onAttachedToFlutter(flutterPluginBinding)
-        }
-        banner.adListener = eventHandler
+        methodHandler = BannerMethodHandler(binding, flutterId, this, banner)
+        banner.adListener = methodHandler
 
         (args?.get("size") as? Map<*, *>)?.let { size ->
             if (size["isAdaptive"] == true) {
@@ -75,14 +69,6 @@ class BannerView(
     }
 
     override fun dispose() {
-        methodHandler?.let {
-            it.onDetachedFromFlutter()
-            methodHandler = null
-        }
-        eventHandler?.let {
-            it.onDetachedFromFlutter()
-            eventHandler = null
-        }
         banner.destroy()
     }
 

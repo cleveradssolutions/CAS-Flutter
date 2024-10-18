@@ -170,7 +170,7 @@ class _MyAppState extends State<MyApp> implements AdLoadCallback {
 }
 
 class AdListener extends AdCallback {
-  String? _name;
+  final String? _name;
 
   AdListener(this._name);
 
@@ -206,7 +206,7 @@ class AdListener extends AdCallback {
 }
 
 class BannerListener extends AdViewListener {
-  String? _name;
+  final String? _name;
 
   BannerListener(this._name);
 

@@ -115,27 +115,20 @@ class _BannerWidgetState extends BannerWidgetState {
     final String channelName =
         "com.cleveradssolutions.plugin.flutter/banner.$_id";
     _channel = MethodChannel(channelName);
-    _subscription = EventChannel("$channelName.events")
-        .receiveBroadcastStream()
-        .listen(handleEvent);
+    _channel.setMethodCallHandler(handleMethodCall);
   }
 
-  void handleEvent(dynamic event) {
-    if (event is! Map) {
-      return;
-    }
-    final eventName = event["event"] as String?;
-    final data = event["data"];
-
-    switch (eventName) {
+  Future<dynamic> handleMethodCall(MethodCall call) async {
+    switch (call.method) {
       case "onAdViewLoaded":
         _listener?.onLoaded();
         break;
       case "onAdViewFailed":
-        _listener?.onFailed(data);
+        _listener?.onFailed(call.arguments);
         break;
       case "onAdViewPresented":
         _listener?.onAdViewPresented();
+        final data = call.arguments;
         _listener?.onImpression(AdImpression(
           data["adType"] as int,
           data["cpm"] as double,

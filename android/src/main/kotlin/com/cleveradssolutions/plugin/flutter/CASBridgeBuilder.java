@@ -9,14 +9,20 @@ import com.cleversolutions.ads.ConsentFlow;
 import com.cleversolutions.ads.android.CAS;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import kotlin.jvm.functions.Function0;
 
 public final class CASBridgeBuilder {
     final CAS.ManagerBuilder builder;
-    final Activity activity;
-    CASInitCallback initCallback;
+    final @NotNull Function0<Activity> activityProvider;
+    final @NotNull CASInitCallback initCallback;
 
-    public CASBridgeBuilder(Activity activity, CASInitCallback initCallback) {
-        this.activity = activity;
+    public CASBridgeBuilder(
+            @NotNull Function0<Activity> activityProvider,
+            @NotNull CASInitCallback initCallback
+    ) {
+        this.activityProvider = activityProvider;
         builder = CAS.buildManager();
         this.initCallback = initCallback;
     }
@@ -65,8 +71,7 @@ public final class CASBridgeBuilder {
         builder.withEnabledAdTypes(formats)
                 .withCasId(id)
                 .withFramework("Flutter", flutterVersion)
-//                .withUIContext(activity)
                 .withConsentFlow(flow);
-        return new CASBridge(activity, this, mediationManagerMethodHandler);
+        return new CASBridge(activityProvider, this, mediationManagerMethodHandler);
     }
 }

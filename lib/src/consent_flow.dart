@@ -100,7 +100,7 @@ class ConsentFlow {
 
   void _show(bool force) {
     if (!isEnabled || !isEnable) {
-      _channel.invokeMethod('disableConsentFlow');
+      _channel.invokeMethod('disable');
     } else {
       if (privacyPolicy.isNotEmpty) {
         _channel.invokeMethod('withPrivacyPolicy', {'url': privacyPolicy});
@@ -109,7 +109,7 @@ class ConsentFlow {
         _channel.invokeMethod('withPrivacyPolicy', {'url': privacyPolicyUrl});
       }
 
-      _channel.invokeMethod('showConsentFlow');
+      _channel.invokeMethod('show');
     }
   }
 }

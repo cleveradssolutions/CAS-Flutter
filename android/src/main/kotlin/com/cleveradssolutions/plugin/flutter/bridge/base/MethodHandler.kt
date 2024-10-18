@@ -4,8 +4,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.AnyThread
-import androidx.annotation.CallSuper
-import androidx.annotation.MainThread
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -13,26 +11,15 @@ import io.flutter.plugin.common.MethodChannel
 private const val LOG_TAG = "MethodHandler"
 
 abstract class MethodHandler(
+    binding: FlutterPluginBinding,
     private val channelName: String
 ) : MethodChannel.MethodCallHandler {
 
-    private var channel: MethodChannel? = null
+    private val channel = MethodChannel(binding.binaryMessenger, channelName)
 
-    @CallSuper
-    @MainThread
-    open fun onAttachedToFlutter(flutterPluginBinding: FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, channelName).also {
-            it.setMethodCallHandler(this)
-        }
-    }
-
-    @CallSuper
-    @MainThread
-    open fun onDetachedFromFlutter() {
-        channel?.let {
-            it.setMethodCallHandler(null)
-            channel = null
-        }
+    init {
+        @Suppress("LeakingThis")
+        channel.setMethodCallHandler(this)
     }
 
     @AnyThread
@@ -41,22 +28,9 @@ abstract class MethodHandler(
         result.notImplemented()
     }
 
-    fun invokeMethod(methodName: String, args: Map<String, Any?>? = null) {
+    fun invokeMethod(methodName: String, args: Any? = null) {
         Handler(Looper.getMainLooper()).post {
-            channel?.invokeMethod(methodName, args, object : MethodChannel.Result {
-                override fun success(result: Any?) {}
-
-                override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
-                    Log.e(
-                        LOG_TAG,
-                        "Error: invokeMethod '$methodName' failed, errorCode: $errorCode, message: $errorMessage, details: $errorDetails"
-                    )
-                }
-
-                override fun notImplemented() {
-                    Log.e(LOG_TAG, "Critical Error: invokeMethod '$methodName' notImplemented")
-                }
-            })
+            channel.invokeMethod(methodName, args, null)
         }
     }
 

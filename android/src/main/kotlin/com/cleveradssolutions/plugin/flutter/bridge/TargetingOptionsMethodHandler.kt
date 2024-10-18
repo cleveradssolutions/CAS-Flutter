@@ -4,12 +4,15 @@ import android.location.Location
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleversolutions.ads.android.CAS
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/targeting_options"
 
-class TargetingOptionsMethodHandler : MethodHandler(CHANNEL_NAME) {
+class TargetingOptionsMethodHandler(
+    binding: FlutterPluginBinding
+) : MethodHandler(binding, CHANNEL_NAME) {
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {

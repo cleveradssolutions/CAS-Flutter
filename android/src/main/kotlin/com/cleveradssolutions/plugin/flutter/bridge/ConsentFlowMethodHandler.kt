@@ -12,21 +12,11 @@ import io.flutter.plugin.common.MethodChannel
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/consent_flow"
 
 class ConsentFlowMethodHandler(
+    binding: FlutterPluginBinding,
     private val activityProvider: () -> Activity?
-) : MethodHandler(CHANNEL_NAME) {
+) : MethodHandler(binding, CHANNEL_NAME) {
 
     private var consentFlow: ConsentFlow? = null
-    private var consentFlowDismissListener: ConsentFlow.OnDismissListener? = null
-
-    override fun onAttachedToFlutter(flutterPluginBinding: FlutterPluginBinding) {
-        super.onAttachedToFlutter(flutterPluginBinding)
-        consentFlowDismissListener = ConsentFlow.OnDismissListener { status ->
-            invokeMethod(
-                "OnDismissListener",
-                mapOf("status" to status)
-            )
-        }
-    }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -40,7 +30,7 @@ class ConsentFlowMethodHandler(
     fun getConsentFlow(): ConsentFlow {
         return consentFlow ?: ConsentFlow()
             .withUIContext(activityProvider())
-            .withDismissListener(consentFlowDismissListener)
+            .withDismissListener(createDismissListener())
             .also { consentFlow = it }
     }
 
@@ -60,6 +50,15 @@ class ConsentFlowMethodHandler(
             getConsentFlow().let {
                 if (force) it.show() else it.showIfRequired()
             }
+        }
+    }
+
+    private fun createDismissListener(): ConsentFlow.OnDismissListener {
+        return ConsentFlow.OnDismissListener { status ->
+            invokeMethod(
+                "OnDismissListener",
+                mapOf("status" to status)
+            )
         }
     }
 

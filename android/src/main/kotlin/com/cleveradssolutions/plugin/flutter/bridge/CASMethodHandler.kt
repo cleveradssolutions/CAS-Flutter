@@ -5,14 +5,16 @@ import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.errorArgNull
 import com.cleveradssolutions.plugin.flutter.util.success
 import com.cleversolutions.ads.android.CAS
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/cas"
 
 class CASMethodHandler(
+    binding: FlutterPluginBinding,
     private val activityProvider: () -> Activity?
-) : MethodHandler(CHANNEL_NAME) {
+) : MethodHandler(binding, CHANNEL_NAME) {
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {

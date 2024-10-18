@@ -19,15 +19,15 @@ import io.flutter.plugin.common.MethodChannel
 private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/mediation_manager"
 
 class MediationManagerMethodHandler(
+    binding: FlutterPluginBinding,
     private val bridgeProvider: () -> CASBridge?
-) : MethodHandler(CHANNEL_NAME) {
+) : MethodHandler(binding, CHANNEL_NAME) {
 
     var interstitialCallbackWrapper: CASCallback? = null
     var rewardedCallbackWrapper: CASCallback? = null
     private var appReturnCallbackWrapper: CASCallback? = null
 
-    override fun onAttachedToFlutter(flutterPluginBinding: FlutterPluginBinding) {
-        super.onAttachedToFlutter(flutterPluginBinding)
+    init {
         appReturnCallbackWrapper = createAppReturnCallback()
         interstitialCallbackWrapper = createInterstitialCallback()
         rewardedCallbackWrapper = createRewardedCallback()
