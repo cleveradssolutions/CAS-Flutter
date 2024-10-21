@@ -17,7 +17,6 @@ private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/banner."
 class BannerMethodHandler(
     binding: FlutterPluginBinding,
     flutterId: String,
-    private val platformView: BannerView,
     private val bannerView: CASBannerView
 ) : MethodHandler(binding, CHANNEL_NAME + flutterId), AdViewListener {
 
@@ -69,7 +68,7 @@ class BannerMethodHandler(
     }
 
     private fun dispose(result: MethodChannel.Result) {
-        platformView.dispose()
+        bannerView.destroy()
         result.success()
     }
 

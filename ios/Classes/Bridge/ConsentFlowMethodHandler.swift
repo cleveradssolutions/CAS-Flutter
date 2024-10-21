@@ -14,15 +14,8 @@ class ConsentFlowMethodHandler: MethodHandler {
     private var consentFlow: CASConsentFlow?
     private var consentFlowDismissListener: CASConsentCompletionHandler?
 
-    private let rootViewControllerProvider: () -> UIViewController?
-
-    init(_ rootViewControllerProvider: @escaping () -> UIViewController?) {
-        self.rootViewControllerProvider = rootViewControllerProvider
-        super.init(channelName: channelName)
-    }
-
-    override func onAttachedToFlutter(_ registrar: any FlutterPluginRegistrar) {
-        super.onAttachedToFlutter(registrar)
+    init(with registrar: FlutterPluginRegistrar) {
+        super.init(with: registrar, on: channelName)
         consentFlowDismissListener = { status in
             self.invokeMethod(
                 methodName: "OnDismissListener",
@@ -44,7 +37,7 @@ class ConsentFlowMethodHandler: MethodHandler {
         if let consentFlow = consentFlow { return consentFlow }
 
         consentFlow = CASConsentFlow()
-            .withViewControllerToPresent(rootViewControllerProvider())
+            .withViewControllerToPresent(Util.findRootViewController())
             .withCompletionHandler(consentFlowDismissListener)
 
         return consentFlow!
@@ -54,13 +47,11 @@ class ConsentFlowMethodHandler: MethodHandler {
         call.getArgAndReturn("url", result) { url in
             getConsentFlow().withPrivacyPolicy(url)
         }
-        // managerBuilder.withConsentFlow(consent)
     }
 
     private func disable(_ result: @escaping FlutterResult) {
         consentFlow = CASConsentFlow(isEnabled: false)
             .withCompletionHandler(consentFlowDismissListener)
-        // managerBuilder.withConsentFlow(consent)
         result(nil)
     }
 

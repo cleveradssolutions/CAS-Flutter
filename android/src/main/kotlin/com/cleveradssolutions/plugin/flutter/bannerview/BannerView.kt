@@ -15,18 +15,16 @@ class BannerView(
     bridgeProvider: () -> CASBridge?
 ) : PlatformView {
 
-    private val flutterId = args?.get("id") as? String ?: ""
-
     private var banner: CASBannerView
     private var methodHandler: BannerMethodHandler
 
     init {
         val manager = bridgeProvider()?.mediationManager
-        val banner = CASBannerView(context, manager)
-        this.banner = banner
+        banner = CASBannerView(context, manager)
         banner.id = viewId
 
-        methodHandler = BannerMethodHandler(binding, flutterId, this, banner)
+        val flutterId = args?.get("id") as? String ?: ""
+        methodHandler = BannerMethodHandler(binding, flutterId, banner)
         banner.adListener = methodHandler
 
         (args?.get("size") as? Map<*, *>)?.let { size ->

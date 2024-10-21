@@ -10,11 +10,8 @@ import Flutter
 import Foundation
 
 class BannerView: NSObject, FlutterPlatformView {
-    private let flutterId: String
-
-    private var banner: CASBannerView?
-    private var methodHandler: BannerMethodHandler?
-    private var eventHandler: BannerEventHandler?
+    private var banner: CASBannerView
+    private var methodHandler: BannerMethodHandler
 
     init(
         frame: CGRect,
@@ -23,20 +20,13 @@ class BannerView: NSObject, FlutterPlatformView {
         registrar: FlutterPluginRegistrar,
         bridgeProvider: @escaping () -> CASBridge?
     ) {
-        flutterId = args?["id"] as? String ?? ""
-
-        super.init()
         let manager = bridgeProvider()?.mediationManager
-        let banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
-        self.banner = banner
+        banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
         banner.tag = Int(viewId)
 
-        methodHandler = BannerMethodHandler(flutterId, banner, bridgeProvider, dispose)
-        methodHandler!.onAttachedToFlutter(registrar)
-
-        eventHandler = BannerEventHandler(flutterId)
-        eventHandler!.onAttachedToFlutter(registrar)
-        banner.adDelegate = eventHandler
+        let flutterId = args?["id"] as? String ?? ""
+        methodHandler = BannerMethodHandler(with: registrar, flutterId, banner)
+        banner.adDelegate = methodHandler
 
         if let isAutoloadEnabled = args?["isAutoloadEnabled"] as? Bool {
             banner.isAutoloadEnabled = isAutoloadEnabled
@@ -48,22 +38,11 @@ class BannerView: NSObject, FlutterPlatformView {
     }
 
     func view() -> UIView {
-        return banner!
+        return banner
     }
 
     func dispose() {
-        if let methodHandler = methodHandler {
-            methodHandler.onDetachedFromFlutter()
-            self.methodHandler = nil
-        }
-        if let eventHandler = eventHandler {
-            eventHandler.onDetachedFromFlutter()
-            self.eventHandler = nil
-        }
-        if let banner = banner {
-            banner.destroy()
-            self.banner = nil
-        }
+        banner.destroy()
     }
 
     private static func getAdSize(_ args: [String: Any?]?, _ frame: CGRect) -> CASSize {

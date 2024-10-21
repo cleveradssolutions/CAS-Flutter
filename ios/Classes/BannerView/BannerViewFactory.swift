@@ -13,7 +13,7 @@ class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
     private var registrar: FlutterPluginRegistrar
     private var bridgeProvider: () -> CASBridge?
 
-    init(registrar: FlutterPluginRegistrar, bridgeProvider: @escaping () -> CASBridge?) {
+    init(with registrar: FlutterPluginRegistrar, bridgeProvider: @escaping () -> CASBridge?) {
         self.registrar = registrar
         self.bridgeProvider = bridgeProvider
     }

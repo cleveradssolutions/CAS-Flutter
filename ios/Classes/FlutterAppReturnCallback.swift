@@ -2,13 +2,7 @@ import Foundation
 import CleverAdsSolutions
 
 public class FlutterAppReturnCallback : CASAppReturnDelegate, FlutterCaller {
-    
-    private let viewController: UIViewController
     var flutterCaller: completion?
-    
-    init(viewController: UIViewController) {
-        self.viewController = viewController
-    }
     
     func setFlutterCaller(caller: @escaping(completion)) {
         flutterCaller = caller
@@ -53,6 +47,6 @@ public class FlutterAppReturnCallback : CASAppReturnDelegate, FlutterCaller {
     }
     
     public func viewControllerForPresentingAppReturnAd() -> UIViewController {
-        return viewController
+        return Util.findRootViewController()!
     }
 }

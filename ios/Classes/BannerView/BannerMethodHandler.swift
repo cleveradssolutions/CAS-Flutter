@@ -12,16 +12,16 @@ import Foundation
 private let logTag = "BannerMethodHandler"
 private let channelName = "com.cleveradssolutions.plugin.flutter/banner."
 
-class BannerMethodHandler: MethodHandler {
+class BannerMethodHandler: MethodHandler, CASBannerDelegate {
     private let bannerView: CASBannerView
-    private let bridgeProvider: () -> CASBridge?
-    private let disposeBanner: () -> Void
 
-    init(_ flutterId: String, _ bannerView: CASBannerView, _ bridgeProvider: @escaping () -> CASBridge?, _ disposeBanner: @escaping () -> Void) {
+    init(
+        with registrar: FlutterPluginRegistrar,
+        _ flutterId: String,
+        _ bannerView: CASBannerView
+    ) {
         self.bannerView = bannerView
-        self.bridgeProvider = bridgeProvider
-        self.disposeBanner = disposeBanner
-        super.init(channelName: channelName + flutterId)
+        super.init(with: registrar, on: channelName + flutterId)
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -33,6 +33,22 @@ class BannerMethodHandler: MethodHandler {
         case "dispose": dispose(call, result)
         default: super.onMethodCall(call, result)
         }
+    }
+
+    func bannerAdViewDidLoad(_ view: CASBannerView) {
+        invokeMethod(methodName: "onAdViewLoaded")
+    }
+
+    func bannerAdView(_ adView: CASBannerView, didFailWith error: CASError) {
+        invokeMethod(methodName: "onAdViewFailed", args: error.message)
+    }
+
+    func bannerAdView(_ adView: CASBannerView, willPresent impression: CASImpression) {
+        invokeMethod(methodName: "onAdViewPresented", args: impression.toDict())
+    }
+
+    func bannerAdViewDidRecordClick(_ adView: CASBannerView) {
+        invokeMethod(methodName: "onAdViewClicked")
     }
 
     private func isAdReady(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -56,7 +72,7 @@ class BannerMethodHandler: MethodHandler {
     }
 
     private func dispose(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        disposeBanner()
+        bannerView.destroy()
         result(nil)
     }
 }

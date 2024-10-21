@@ -14,23 +14,21 @@ class ManagerBuilderMethodHandler: MethodHandler {
     private let consentFlowMethodHandler: ConsentFlowMethodHandler
     private let mediationManagerMethodHandler: MediationManagerMethodHandler
 
-    private let rootViewControllerProvider: () -> UIViewController?
     private let onManagerBuilt: (CASBridge) -> Void
 
     private var casBridgeBuilder: CASBridgeBuilder?
     private let queue = DispatchQueue(label: "com.cleveradssolutions.plugin.flutter/manager_builder.casBridgeBuilder")
 
     init(
+        with registrar: FlutterPluginRegistrar,
         _ consentFlowMethodHandler: ConsentFlowMethodHandler,
         _ mediationManagerMethodHandler: MediationManagerMethodHandler,
-        _ rootViewControllerProvider: @escaping () -> UIViewController?,
         _ onManagerBuilt: @escaping (CASBridge) -> Void
     ) {
         self.consentFlowMethodHandler = consentFlowMethodHandler
         self.mediationManagerMethodHandler = mediationManagerMethodHandler
-        self.rootViewControllerProvider = rootViewControllerProvider
         self.onManagerBuilt = onManagerBuilt
-        super.init(channelName: channelName)
+        super.init(with: registrar, on: channelName)
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -94,9 +92,9 @@ class ManagerBuilderMethodHandler: MethodHandler {
     }
 
     private func createCASBridgeBuilder(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) -> CASBridgeBuilder? {
-        if let rootViewController = rootViewControllerProvider() {
+        if let rootViewController = Util.findRootViewController() {
             let initCallback = FlutterInitCallback()
-            initCallback.flutterCaller = self.invokeMethod
+            initCallback.flutterCaller = invokeMethod
             casBridgeBuilder = CASBridgeBuilder(rootViewController, initCallback)
             return casBridgeBuilder
         } else {

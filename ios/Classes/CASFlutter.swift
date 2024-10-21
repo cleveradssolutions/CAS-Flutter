@@ -2,47 +2,29 @@ import CleverAdsSolutions
 import Flutter
 
 public class CASFlutter: NSObject, FlutterPlugin {
-    private var methodHandlers: [MethodHandler] = []
-
     private var casBridge: CASBridge?
 
     init(with registrar: FlutterPluginRegistrar) {
         super.init()
-        let rootViewControllerProvider: () -> UIViewController? = { UIApplication.shared.delegate?.window??.rootViewController }
         let bridgeProvider: () -> CASBridge? = { self.casBridge }
-        let consentFlowMethodHandler = ConsentFlowMethodHandler(rootViewControllerProvider)
-        let mediationManagerMethodHandler = MediationManagerMethodHandler(rootViewControllerProvider()!, bridgeProvider)
+        let consentFlowMethodHandler = ConsentFlowMethodHandler(with: registrar)
+        let mediationManagerMethodHandler = MediationManagerMethodHandler(with: registrar, bridgeProvider)
 
-        methodHandlers = [
-            AdSizeMethodHandler(),
-            AdsSettingsMethodHandler(),
-            CASMethodHandler(),
+        AdSizeMethodHandler(with: registrar)
+        AdsSettingsMethodHandler(with: registrar)
+        CASMethodHandler(with: registrar)
+        ManagerBuilderMethodHandler(
+            with: registrar,
             consentFlowMethodHandler,
-            ManagerBuilderMethodHandler(
-                consentFlowMethodHandler,
-                mediationManagerMethodHandler,
-                rootViewControllerProvider
-            ) { casBridge in self.casBridge = casBridge },
-            mediationManagerMethodHandler,
-            TargetingOptionsMethodHandler(),
-        ]
+            mediationManagerMethodHandler
+        ) { casBridge in self.casBridge = casBridge }
+        TargetingOptionsMethodHandler(with: registrar)
 
-        methodHandlers.forEach { handler in
-            handler.onAttachedToFlutter(registrar)
-        }
-
-        registrar.register(BannerViewFactory(registrar: registrar, bridgeProvider: bridgeProvider), withId: "<cas-banner-view>")
+        registrar.register(BannerViewFactory(with: registrar, bridgeProvider: bridgeProvider), withId: "<cas-banner-view>")
     }
 
     public static func register(with registrar: any FlutterPluginRegistrar) {
         let instance = CASFlutter(with: registrar)
         registrar.publish(instance)
-    }
-
-    public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-        methodHandlers.forEach { handler in
-            handler.onDetachedFromFlutter()
-        }
-        methodHandlers = []
     }
 }

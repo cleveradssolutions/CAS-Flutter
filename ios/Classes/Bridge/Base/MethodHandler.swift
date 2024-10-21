@@ -11,21 +11,13 @@ private let logTag = "[MethodHandler]"
 
 class MethodHandler {
     private var channelName: String
-    private var channel: FlutterMethodChannel?
+    private var channel: FlutterMethodChannel
 
-    init(channelName: String) {
+    init(with registrar: FlutterPluginRegistrar, on channelName: String) {
         self.channelName = channelName
-    }
-
-    open func onAttachedToFlutter(_ registrar: FlutterPluginRegistrar) {
         let binaryMessenger = registrar.messenger()
         channel = FlutterMethodChannel(name: channelName, binaryMessenger: binaryMessenger)
-        channel!.setMethodCallHandler(onMethodCall)
-    }
-
-    open func onDetachedFromFlutter() {
-        channel?.setMethodCallHandler(nil)
-        channel = nil
+        channel.setMethodCallHandler(onMethodCall)
     }
 
     open func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -33,15 +25,9 @@ class MethodHandler {
         result(FlutterMethodNotImplemented)
     }
 
-    func invokeMethod(methodName: String, args: [String: Any?]? = nil) {
+    func invokeMethod(methodName: String, args: Any? = nil) {
         DispatchQueue.main.async { [weak self] in
-            self?.channel?.invokeMethod(methodName, arguments: args, result: { (result: Any?) in
-                if let error = result as? FlutterError {
-                    print("\(logTag) Error: invokeMethod '\(methodName)' failed, errorCode: \(error.code), message: \(error.message ?? ""), details: \(String(describing: error.details))")
-                } else if FlutterMethodNotImplemented.isEqual(result) {
-                    print("\(logTag) Critical Error: invokeMethod '\(methodName)' notImplemented")
-                }
-            })
+            self?.channel.invokeMethod(methodName, arguments: args, result: nil)
         }
     }
 }

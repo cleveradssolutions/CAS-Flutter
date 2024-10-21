@@ -13,17 +13,17 @@ private let channelName = "com.cleveradssolutions.plugin.flutter/mediation_manag
 class MediationManagerMethodHandler: MethodHandler {
     private let bridgeProvider: () -> CASBridge?
 
-    let flutterInterstitialListener : CASFlutterCallback = FlutterInterstitialCallback()
-    let flutterRewardedListener : CASFlutterCallback = FlutterRewardedCallback()
-    let flutterAppReturnListener : FlutterAppReturnCallback
+    let flutterInterstitialListener: CASFlutterCallback = FlutterInterstitialCallback()
+    let flutterRewardedListener: CASFlutterCallback = FlutterRewardedCallback()
+    let flutterAppReturnListener: FlutterAppReturnCallback
 
-    init(_ rootViewController: UIViewController, _ bridgeProvider: @escaping () -> CASBridge?) {
+    init(with registrar: FlutterPluginRegistrar, _ bridgeProvider: @escaping () -> CASBridge?) {
         self.bridgeProvider = bridgeProvider
-        flutterAppReturnListener = FlutterAppReturnCallback(viewController: rootViewController)
-        super.init(channelName: channelName)
-        flutterInterstitialListener.setFlutterCaller(caller: self.invokeMethod)
-        flutterRewardedListener.setFlutterCaller(caller: self.invokeMethod)
-        flutterAppReturnListener.setFlutterCaller(caller: self.invokeMethod)
+        flutterAppReturnListener = FlutterAppReturnCallback()
+        super.init(with: registrar, on: channelName)
+        flutterInterstitialListener.setFlutterCaller(caller: invokeMethod)
+        flutterRewardedListener.setFlutterCaller(caller: invokeMethod)
+        flutterAppReturnListener.setFlutterCaller(caller: invokeMethod)
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
