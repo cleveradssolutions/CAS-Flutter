@@ -1,36 +1,37 @@
-import Foundation
 import CleverAdsSolutions
+import Foundation
 
-public class FlutterBannerCallback : CASBannerDelegate, FlutterCaller {
-    
-    private var sizeId = 0;
-    
+public class FlutterBannerCallback: CASBannerDelegate, FlutterCaller {
+    private var sizeId = 0
+
     init(sizeId: Int) {
         self.sizeId = sizeId
     }
-    
+
     var flutterCaller: completion?
-    
-    func setFlutterCaller(caller: @escaping(completion)) {
+
+    func setFlutterCaller(caller: @escaping (completion)) {
         flutterCaller = caller
     }
-    
+
     public func bannerAdViewDidLoad(_ view: CleverAdsSolutions.CASBannerView) {
-        flutterCaller?(String(sizeId) + "OnBannerAdLoaded", nil)
+        let args = ["name": "banner"]
+        flutterCaller?("OnBannerAdLoaded", args)
     }
 
     public func bannerAdView(_ adView: CleverAdsSolutions.CASBannerView, didFailWith error: CleverAdsSolutions.CASError) {
-        var args = [String: Any]()
-        args["message"] = error.message
-        flutterCaller?(String(sizeId) + "OnBannerAdFailedToLoad", args)
+        let args = ["name": "banner", "message": error.message]
+        flutterCaller?("OnBannerAdFailedToLoad", args)
     }
 
     public func bannerAdView(_ adView: CleverAdsSolutions.CASBannerView, willPresent impression: CleverAdsSolutions.CASImpression) {
-        flutterCaller?(String(sizeId) + "OnBannerAdShown", nil)
-        flutterCaller?(String(sizeId) + "OnBannerAdImpression", impression.toDict())
+        let args: [String: Any?] = ["name": "banner"]
+        flutterCaller?("OnBannerAdShown", args)
+        flutterCaller?("OnBannerAdImpression", args.merging(impression.toDict()) { current, _ in current })
     }
 
     public func bannerAdViewDidRecordClick(_ adView: CleverAdsSolutions.CASBannerView) {
-        flutterCaller?(String(sizeId) + "OnBannerAdClicked", nil)
+        let args = ["name": "banner"]
+        flutterCaller?("OnBannerAdClicked", args)
     }
 }

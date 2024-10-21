@@ -74,7 +74,7 @@ class InternalCASBannerView extends CASBannerView {
   void setAdListener(AdViewListener listener) {
     switch (_sizeId) {
       case 1:
-        _listenerContainer.standartBannerListener = listener;
+        _listenerContainer.standardBannerListener = listener;
         break;
 
       case 2:
