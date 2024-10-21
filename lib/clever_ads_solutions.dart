@@ -20,5 +20,6 @@ export 'src/initialization_listener.dart';
 export 'src/loading_manager_mode.dart';
 export 'src/manager_builder.dart';
 export 'src/mediation_manager.dart';
+export 'src/on_dismiss_listener.dart';
 export 'src/price_accuracy.dart';
 export 'src/targeting_options.dart';

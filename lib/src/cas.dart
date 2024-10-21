@@ -7,6 +7,7 @@ import 'consent_flow.dart';
 import 'consent_status.dart';
 import 'gender.dart';
 import 'internal/ads_settings_impl.dart';
+import 'internal/internal_cas_consent_flow.dart';
 import 'internal/internal_manager_builder.dart';
 import 'internal/targeting_options_impl.dart';
 import 'loading_manager_mode.dart';
@@ -35,9 +36,8 @@ class CAS {
   @Deprecated("This method is no longer maintained and should not be used")
   static setFlutterVersion(String flutterVersion) {}
 
-  @Deprecated("Use ConsentFlow() instead")
   static ConsentFlow buildConsentFlow() {
-    return ConsentFlow();
+    return InternalCASConsentFlow();
   }
 
   /// Create [MediationManager] builder.

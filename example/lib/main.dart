@@ -14,7 +14,8 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> implements AdLoadCallback {
+class _MyAppState extends State<MyApp>
+    implements AdLoadCallback, OnDismissListener {
   final GlobalKey<BannerWidgetState> _bannerKey = GlobalKey();
   MediationManager? _manager;
 
@@ -112,8 +113,7 @@ class _MyAppState extends State<MyApp> implements AdLoadCallback {
         .withAdTypes(AdTypeFlags.Banner |
             AdTypeFlags.Interstitial |
             AdTypeFlags.Rewarded)
-        .withConsentFlow(ConsentFlow(isEnabled: true)
-            .withDismissListener(_onConsentFlowDismiss))
+        .withConsentFlow(CAS.buildConsentFlow().withDismissListener(this))
         .withCompletionListener(_onCASInitialized)
         .build();
   }
@@ -139,6 +139,11 @@ class _MyAppState extends State<MyApp> implements AdLoadCallback {
   }
 
   @override
+  void onConsentFlowDismissed(int status) {
+    logDebug("Consent flow dismissed");
+  }
+
+  @override
   void onAdLoaded(AdType adType) {
     if (adType == AdType.Interstitial) {
       setState(() {
@@ -154,10 +159,6 @@ class _MyAppState extends State<MyApp> implements AdLoadCallback {
   @override
   void onAdFailedToLoad(AdType adType, String? error) {
     logDebug("Ad ${adType.name} failed to load: ${error}");
-  }
-
-  void _onConsentFlowDismiss(Status status) {
-    logDebug("Consent flow dismissed");
   }
 
   void _showInterstitial() {
