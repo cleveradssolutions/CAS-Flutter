@@ -4,7 +4,7 @@ import '../ads_settings.dart';
 import '../audience.dart';
 import '../ccpa_status.dart';
 import '../consent_status.dart';
-import '../loading_manager_mode.dart';
+import '../loading_mode.dart';
 
 class AdsSettingsImpl extends AdsSettings {
   static const MethodChannel _channel =
@@ -195,15 +195,13 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<LoadingManagerMode> getLoadingMode() async {
+  Future<LoadingMode> getLoadingMode() async {
     final int? index = await _channel.invokeMethod<int>("getLoadingMode");
-    return index == null
-        ? LoadingManagerMode.optimal
-        : LoadingManagerMode.values[index];
+    return index == null ? LoadingMode.Optimal : LoadingMode.values[index];
   }
 
   @override
-  Future<void> setLoadingMode(LoadingManagerMode loadingMode) {
+  Future<void> setLoadingMode(LoadingMode loadingMode) {
     return _channel.invokeMethod(
       "setLoadingMode",
       {"loadingMode": loadingMode.index},

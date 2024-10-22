@@ -1,4 +1,3 @@
-@Deprecated("Use LoadingManagerMode instead")
 enum LoadingMode {
   FastestRequests,
   FastRequests,

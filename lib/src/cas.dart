@@ -10,7 +10,6 @@ import 'internal/ads_settings_impl.dart';
 import 'internal/internal_cas_consent_flow.dart';
 import 'internal/internal_manager_builder.dart';
 import 'internal/targeting_options_impl.dart';
-import 'loading_manager_mode.dart';
 import 'loading_mode.dart';
 import 'manager_builder.dart';
 import 'targeting_options.dart';
@@ -117,11 +116,9 @@ class CAS {
   }
 
   @Deprecated(
-      "Use CAS.settings.setLoadingMode(LoadingManagerMode loadingManagerMode) instead")
+      "Use CAS.settings.setLoadingMode(LoadingMode loadingMode) instead")
   static Future<void> setLoadingMode(LoadingMode loadingMode) {
-    final LoadingManagerMode converted =
-        LoadingManagerMode.values[loadingMode.index];
-    return CAS.settings.setLoadingMode(converted);
+    return CAS.settings.setLoadingMode(loadingMode);
   }
 
   @Deprecated(

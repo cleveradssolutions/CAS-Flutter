@@ -1,7 +1,8 @@
+import 'package:clever_ads_solutions/src/loading_mode.dart';
+
 import 'audience.dart';
 import 'ccpa_status.dart';
 import 'consent_status.dart';
-import 'loading_manager_mode.dart';
 
 abstract class AdsSettings {
   /// Ad filters by Audience
@@ -138,10 +139,10 @@ abstract class AdsSettings {
 
   /// Mediation waterfall loading mode.
   ///
-  /// Default: [LoadingManagerMode.Optimal]
-  /// See [LoadingManagerMode]
-  Future<LoadingManagerMode> getLoadingMode();
+  /// Default: [LoadingMode.Optimal]
+  /// See [LoadingMode]
+  Future<LoadingMode> getLoadingMode();
 
   /// See [getLoadingMode]
-  Future<void> setLoadingMode(LoadingManagerMode loadingMode);
+  Future<void> setLoadingMode(LoadingMode loadingMode);
 }
