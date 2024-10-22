@@ -20,7 +20,7 @@ CAS.AI plugin for Flutter.
   s.static_framework = true
 
   s.dependency 'Flutter'
-  s.dependency 'CleverAdsSolutions-Base', '~> 3.9.4'
+  s.dependency 'CleverAdsSolutions-Base', '~> 3.9.5'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
