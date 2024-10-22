@@ -422,11 +422,14 @@ public final class CASViewWrapper implements AdViewListener {
     }
 
     private DisplayMetrics getScreenMetrics() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        Activity activity = contextService.getActivityOrNull();
+        if (activity == null)
+            return displayMetrics;
         WindowManager windowManager = activity.getWindowManager();
         Display display = windowManager.getDefaultDisplay();
         // Point size = new Point();
         // display.getRealSize(size); // Get screen with cutout size
-        DisplayMetrics displayMetrics = new DisplayMetrics();
         display.getMetrics(displayMetrics); // Get screen without cutout size
         return displayMetrics;
     }
