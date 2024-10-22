@@ -1,6 +1,7 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
 import android.app.Activity
+import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -13,7 +14,7 @@ private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/consent_
 
 class ConsentFlowMethodHandler(
     binding: FlutterPluginBinding,
-    private val activityProvider: () -> Activity?
+    private val contextService: CASFlutterContext
 ) : MethodHandler(binding, CHANNEL_NAME) {
 
     private var consentFlow: ConsentFlow? = null
@@ -29,7 +30,7 @@ class ConsentFlowMethodHandler(
 
     fun getConsentFlow(): ConsentFlow {
         return consentFlow ?: ConsentFlow()
-            .withUIContext(activityProvider())
+            .withUIContext(contextService.getActivityOrNull())
             .withDismissListener(createDismissListener())
             .also { consentFlow = it }
     }

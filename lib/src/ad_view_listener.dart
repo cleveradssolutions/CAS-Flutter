@@ -28,21 +28,17 @@ class AdViewAdListener extends AdViewListener {
 
   @override
   void onClicked() {
-    // TODO: implement onClicked
   }
 
   @override
   void onFailed(String? message) {
-    // TODO: implement onFailed
   }
 
   @override
   void onImpression(AdImpression? adImpression) {
-    // TODO: implement onImpression
   }
 
   @override
   void onLoaded() {
-    // TODO: implement onLoaded
   }
 }*/

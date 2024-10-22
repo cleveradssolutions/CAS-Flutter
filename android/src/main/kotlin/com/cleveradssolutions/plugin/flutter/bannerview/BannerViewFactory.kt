@@ -2,6 +2,7 @@ package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
 import com.cleveradssolutions.plugin.flutter.CASBridge
+import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
@@ -9,7 +10,7 @@ import io.flutter.plugin.platform.PlatformViewFactory
 
 class BannerViewFactory(
     private val binding: FlutterPluginBinding,
-    private val bridgeProvider: () -> CASBridge?
+    private val managerHandler: MediationManagerMethodHandler
 ) : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
@@ -19,7 +20,7 @@ class BannerViewFactory(
             viewId,
             creationParams,
             binding,
-            bridgeProvider
+            managerHandler
         )
     }
 

@@ -21,37 +21,28 @@ import com.cleversolutions.ads.InitialConfiguration;
 import com.cleversolutions.ads.InitializationListener;
 import com.cleversolutions.ads.MediationManager;
 
-import org.jetbrains.annotations.NotNull;
-
-import kotlin.jvm.functions.Function0;
-
-public final class CASBridge implements ContextService, AdLoadCallback, InitializationListener {
+public final class CASBridge implements AdLoadCallback {
     private static final int AD_TYPE_BANNER = 0;
     private static final int AD_TYPE_INTER = 1;
     private static final int AD_TYPE_REWARD = 2;
     private static final int AD_TYPE_NATIVE = 3;
 
-    final @NotNull Function0<Activity> activityProvider;
+    private final ContextService contextService;
     private final MediationManager manager;
     private final AdCallbackWrapper interstitialAdListener;
     private final AdCallbackWrapper rewardedListener;
 
-    @Nullable
-    private CASInitCallback initCallback;
-
     public CASBridge(
-            @NotNull Function0<Activity> activityProvider,
-            CASBridgeBuilder builder,
+            ContextService contextService,
+            MediationManager manager,
             MediationManagerMethodHandler mediationManagerMethodHandler
     ) {
-        this.activityProvider = activityProvider;
-        this.initCallback = builder.initCallback;
+        this.contextService = contextService;
         this.interstitialAdListener =
                 new AdCallbackWrapper(mediationManagerMethodHandler.getInterstitialCallbackWrapper(), false);
         this.rewardedListener =
                 new AdCallbackWrapper(mediationManagerMethodHandler.getRewardedCallbackWrapper(), true);
-        manager = builder.builder.withCompletionListener(this)
-                .initialize(this);
+        this.manager = manager;
         manager.getOnAdLoadEvent().add(this);
     }
 
@@ -63,21 +54,12 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
         return manager.isDemoAdMode();
     }
 
-    public CASViewWrapper createAdView(final CASCallback listener, final int sizeCode) {
-        final CASViewWrapper view = new CASViewWrapper(getActivity());
+    public CASViewWrapper createAdView(final CASCallback listener, final int sizeCode, @NonNull ContextService contextService) {
+        final CASViewWrapper view = new CASViewWrapper(contextService);
         CASHandler.INSTANCE.main(() -> {
             view.createView(manager, listener, sizeCode);
         });
         return view;
-    }
-
-    public void freeManager() {
-        CASHandler.INSTANCE.post(() -> {
-            manager.setEnabled(AdType.Banner, false);
-            manager.setEnabled(AdType.Interstitial, false);
-            manager.setEnabled(AdType.Rewarded, false);
-            manager.disableAppReturnAds();
-        });
     }
 
     public void enableReturnAds(CASCallback returnAdListener) {
@@ -100,12 +82,12 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
         manager.loadRewardedAd();
     }
 
-    public void showInterstitial() {
-        manager.showInterstitial(getActivity(), interstitialAdListener);
+    public void showInterstitial(@NonNull Activity activity) {
+        manager.showInterstitial(activity, interstitialAdListener);
     }
 
-    public void showRewarded() {
-        manager.showRewardedAd(getActivity(), rewardedListener);
+    public void showRewarded(@NonNull Activity activity) {
+        manager.showRewardedAd(activity, rewardedListener);
     }
 
     public boolean isInterstitialAdReady() {
@@ -129,46 +111,6 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
     }
 
     @Override
-    public void onCASInitialized(@NonNull InitialConfiguration config) {
-        if (initCallback != null) {
-            initCallback.onCASInitialized(
-                    config.getError(),
-                    config.getCountryCode(),
-                    config.isConsentRequired(),
-                    config.getManager().isDemoAdMode());
-            initCallback = null;
-        }
-    }
-
-    @Override
-    public Activity getActivityOrNull() {
-        return activityProvider.invoke();
-    }
-
-    @Override
-    public Context getContextOrNull() {
-        return activityProvider.invoke();
-    }
-
-    @NonNull
-    @Override
-    public Activity getActivity() throws ActivityNotFoundException {
-        return activityProvider.invoke();
-    }
-
-    @NonNull
-    @Override
-    public Context getContext() throws ActivityNotFoundException {
-        return activityProvider.invoke();
-    }
-
-    @NonNull
-    @Override
-    public Application getApplication() throws ActivityNotFoundException {
-        return activityProvider.invoke().getApplication();
-    }
-
-    @Override
     public void onAdLoaded(@NonNull AdType type) {
         new Handler(Looper.getMainLooper()).post(() -> {
             if (type == AdType.Interstitial)
@@ -180,11 +122,12 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
 
     @Override
     public void onAdFailedToLoad(@NonNull AdType type, @Nullable String error) {
+        if (error == null) return;
         new Handler(Looper.getMainLooper()).post(() -> {
             if (type == AdType.Interstitial)
-                interstitialAdListener.onAdFailed(getErrorCodeFromString(error));
+                interstitialAdListener.onAdFailed(new AdError(error).getCode());
             else if (type == AdType.Rewarded)
-                rewardedListener.onAdFailed(getErrorCodeFromString(error));
+                rewardedListener.onAdFailed(new AdError(error).getCode());
         });
     }
 
@@ -204,33 +147,4 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
         }
     }
 
-    private int getErrorCodeFromString(@Nullable String error) {
-        if (error == null) {
-            return AdError.CODE_INTERNAL_ERROR;
-        }
-        switch (error) {
-            case "No internet connection detected":
-                return AdError.CODE_NO_CONNECTION;
-            case "No Fill":
-                return AdError.CODE_NO_FILL;
-            case "Invalid configuration":
-                return AdError.CODE_CONFIGURATION_ERROR;
-            case "Ad are not ready. You need to call Load ads or use one of the automatic cache mode.":
-                return AdError.CODE_NOT_READY;
-            case "Manager is disabled":
-                return AdError.CODE_MANAGER_IS_DISABLED;
-            case "Reached cap for user":
-                return AdError.CODE_REACHED_CAP;
-            case "The interval between impressions Ad has not yet passed.":
-                return AdError.CODE_INTERVAL_NOT_YET_PASSED;
-            case "Ad already displayed":
-                return AdError.CODE_ALREADY_DISPLAYED;
-            case "Application is paused":
-                return AdError.CODE_APP_IS_PAUSED;
-            case "Not enough space to display ads":
-                return AdError.CODE_NOT_ENOUGH_SPACE;
-            default:
-                return AdError.CODE_INTERNAL_ERROR;
-        }
-    }
 }

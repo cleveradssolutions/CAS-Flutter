@@ -2,6 +2,7 @@ package com.cleveradssolutions.plugin.flutter.bridge
 
 import com.cleveradssolutions.plugin.flutter.CASBridge
 import com.cleveradssolutions.plugin.flutter.CASCallback
+import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.CASViewWrapper
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.error
@@ -20,9 +21,10 @@ private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/mediatio
 
 class MediationManagerMethodHandler(
     binding: FlutterPluginBinding,
-    private val bridgeProvider: () -> CASBridge?
+    private val contextService: CASFlutterContext,
 ) : MethodHandler(binding, CHANNEL_NAME) {
 
+    var bridge: CASBridge? = null
     var interstitialCallbackWrapper: CASCallback? = null
     var rewardedCallbackWrapper: CASCallback? = null
     private var appReturnCallbackWrapper: CASCallback? = null
@@ -100,10 +102,11 @@ class MediationManagerMethodHandler(
     private fun showAd(call: MethodCall, result: MethodChannel.Result) {
         val casBridge = getBridgeAndCheckNull(call, result) ?: return
 
+        val activity = contextService.getActivityOrError(call, result) ?: return
         val adType = call.getArgAndCheckNull<Int>("adType", result) ?: return
         when (adType) {
-            1 -> casBridge.showInterstitial()
-            2 -> casBridge.showRewarded()
+            1 -> casBridge.showInterstitial(activity)
+            2 -> casBridge.showRewarded(activity)
             else -> return result.error(call, "AdType is not supported")
         }
 
@@ -141,7 +144,7 @@ class MediationManagerMethodHandler(
         if (!banners.containsKey(sizeId)) {
             val casBridge = getBridgeAndCheckNull(call, result) ?: return
 
-            banners[sizeId] = casBridge.createAdView(createListener(sizeId), sizeId)
+            banners[sizeId] = casBridge.createAdView(createListener(sizeId), sizeId, contextService)
         }
 
         result.success()
@@ -181,7 +184,6 @@ class MediationManagerMethodHandler(
     }
 
     private fun getBridgeAndCheckNull(call: MethodCall, result: MethodChannel.Result): CASBridge? {
-        val bridge = bridgeProvider()
         if (bridge == null) result.errorFieldNull(call, "CASBridge")
         return bridge
     }

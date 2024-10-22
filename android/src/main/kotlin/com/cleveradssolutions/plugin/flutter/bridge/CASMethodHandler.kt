@@ -1,6 +1,7 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
 import android.app.Activity
+import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.errorArgNull
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -13,7 +14,7 @@ private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/cas"
 
 class CASMethodHandler(
     binding: FlutterPluginBinding,
-    private val activityProvider: () -> Activity?
+    private val contextService: CASFlutterContext
 ) : MethodHandler(binding, CHANNEL_NAME) {
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -29,7 +30,7 @@ class CASMethodHandler(
     }
 
     private fun validateIntegration(call: MethodCall, result: MethodChannel.Result) {
-        val activity = activityProvider() ?: return result.errorArgNull(call, "activity")
+        val activity = contextService.getActivityOrError(call, result) ?: return
         CAS.validateIntegration(activity)
         result.success()
     }

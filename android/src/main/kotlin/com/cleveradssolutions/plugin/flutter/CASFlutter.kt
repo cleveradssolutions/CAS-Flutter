@@ -15,53 +15,50 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
 class CASFlutter : FlutterPlugin, ActivityAware {
-
-    private var activity: Activity? = null
-
-    private var casBridge: CASBridge? = null
+    private var contextService: CASFlutterContext? = null
 
     override fun onAttachedToEngine(binding: FlutterPluginBinding) {
-        val activityProvider = { activity }
-        val casBridgeProvider = { casBridge }
-        val consentFlowMethodHandler = ConsentFlowMethodHandler(binding, activityProvider)
-        val mediationManagerMethodHandler =
-            MediationManagerMethodHandler(binding, casBridgeProvider)
+        val context = CASFlutterContext(binding.applicationContext)
+        contextService = context
+
+        val consentFlowMethodHandler = ConsentFlowMethodHandler(binding, context)
+        val mediationManagerMethodHandler = MediationManagerMethodHandler(binding, context)
 
         AdSizeMethodHandler(binding)
         AdsSettingsMethodHandler(binding)
-        CASMethodHandler(binding, activityProvider)
+        CASMethodHandler(binding, context)
         ManagerBuilderMethodHandler(
             binding,
             consentFlowMethodHandler,
             mediationManagerMethodHandler,
-            activityProvider
-        ) { casBridge = it }
+            context
+        )
         TargetingOptionsMethodHandler(binding)
 
         binding
             .platformViewRegistry
             .registerViewFactory(
                 "<cas-banner-view>",
-                BannerViewFactory(binding, casBridgeProvider)
+                BannerViewFactory(binding, mediationManagerMethodHandler)
             )
     }
 
     override fun onDetachedFromEngine(binding: FlutterPluginBinding) {}
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        activity = binding.activity
+        contextService?.lastActivity = binding.activity
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        activity = null
+        onDetachedFromActivity()
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        activity = binding.activity
+        onAttachedToActivity(binding)
     }
 
     override fun onDetachedFromActivity() {
-        activity = null
+        contextService?.lastActivity = null
     }
 
 }

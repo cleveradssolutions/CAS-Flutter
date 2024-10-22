@@ -2,6 +2,7 @@ package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
 import com.cleveradssolutions.plugin.flutter.CASBridge
+import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler
 import com.cleversolutions.ads.AdSize
 import com.cleversolutions.ads.android.CASBannerView
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
@@ -12,14 +13,14 @@ class BannerView(
     viewId: Int,
     args: Map<*, *>?,
     binding: FlutterPluginBinding,
-    bridgeProvider: () -> CASBridge?
+    managerHandler: MediationManagerMethodHandler
 ) : PlatformView {
 
     private var banner: CASBannerView
     private var methodHandler: BannerMethodHandler
 
     init {
-        val manager = bridgeProvider()?.mediationManager
+        val manager = managerHandler.bridge?.mediationManager
         banner = CASBannerView(context, manager)
         banner.id = viewId
 
