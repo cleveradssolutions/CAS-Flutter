@@ -26,8 +26,6 @@ class MethodHandler {
     }
 
     func invokeMethod(methodName: String, args: Any? = nil) {
-        DispatchQueue.main.async { [weak self] in
-            self?.channel.invokeMethod(methodName, arguments: args, result: nil)
-        }
+        channel.invokeMethod(methodName, arguments: args, result: nil)
     }
 }

@@ -125,11 +125,6 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> clearTestDeviceIds() {
-    return _channel.invokeMethod("clearTestDeviceIds");
-  }
-
-  @override
   Future<int> getTrialAdFreeInterval() async {
     final int? interval =
         await _channel.invokeMethod<int>('getTrialAdFreeInterval');

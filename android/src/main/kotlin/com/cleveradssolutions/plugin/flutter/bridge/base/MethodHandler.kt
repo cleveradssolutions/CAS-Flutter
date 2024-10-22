@@ -1,7 +1,5 @@
 package com.cleveradssolutions.plugin.flutter.bridge.base
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.annotation.AnyThread
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
@@ -29,9 +27,7 @@ abstract class MethodHandler(
     }
 
     fun invokeMethod(methodName: String, args: Any? = null) {
-        Handler(Looper.getMainLooper()).post {
-            channel.invokeMethod(methodName, args, null)
-        }
+        channel.invokeMethod(methodName, args, null)
     }
 
 }

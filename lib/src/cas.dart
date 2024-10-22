@@ -132,12 +132,12 @@ class CAS {
     return CAS.settings.addTestDeviceId(deviceId);
   }
 
-  @Deprecated("Use CAS.settings.clearTestDeviceIds() instead")
+  @Deprecated("Use CAS.settings.setTestDeviceIds({}) instead")
   static Future<void> clearTestDeviceIds() {
-    return CAS.settings.clearTestDeviceIds();
+    return CAS.settings.setTestDeviceIds({});
   }
 
-  @Deprecated("Use CAS.settings.clearTestDeviceIds() instead")
+  @Deprecated("Use CAS.settings.setInterstitialInterval(delay) instead")
   static Future<void> setInterstitialInterval(int delay) {
     return CAS.settings.setInterstitialInterval(delay);
   }

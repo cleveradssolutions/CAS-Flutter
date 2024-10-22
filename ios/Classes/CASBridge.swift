@@ -101,18 +101,22 @@ public class CASBridge: CASLoadDelegate {
     }
 
     public func onAdLoaded(_ adType: CASType) {
-        if adType == CASType.interstitial {
-            interstitialAdListener.onAdLoaded()
-        } else if adType == CASType.rewarded {
-            rewardedListener.onAdLoaded()
+        DispatchQueue.main.async { [weak self] in
+            if adType == CASType.interstitial {
+                self?.interstitialAdListener.onAdLoaded()
+            } else if adType == CASType.rewarded {
+                self?.rewardedListener.onAdLoaded()
+            }
         }
     }
 
     public func onAdFailedToLoad(_ adType: CASType, withError error: String?) {
-        if adType == CASType.interstitial {
-            interstitialAdListener.onAdFailedToLoad(withError: error)
-        } else if adType == CASType.rewarded {
-            rewardedListener.onAdFailedToLoad(withError: error)
+        DispatchQueue.main.async { [weak self] in
+            if adType == CASType.interstitial {
+                self?.interstitialAdListener.onAdFailedToLoad(withError: error)
+            } else if adType == CASType.rewarded {
+                self?.rewardedListener.onAdFailedToLoad(withError: error)
+            }
         }
     }
 

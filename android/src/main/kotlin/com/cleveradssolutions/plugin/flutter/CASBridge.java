@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -168,18 +170,22 @@ public final class CASBridge implements ContextService, AdLoadCallback, Initiali
 
     @Override
     public void onAdLoaded(@NonNull AdType type) {
-        if (type == AdType.Interstitial)
-            interstitialAdListener.onAdLoaded();
-        else if (type == AdType.Rewarded)
-            rewardedListener.onAdLoaded();
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (type == AdType.Interstitial)
+                interstitialAdListener.onAdLoaded();
+            else if (type == AdType.Rewarded)
+                rewardedListener.onAdLoaded();
+        });
     }
 
     @Override
     public void onAdFailedToLoad(@NonNull AdType type, @Nullable String error) {
-        if (type == AdType.Interstitial)
-            interstitialAdListener.onAdFailed(getErrorCodeFromString(error));
-        else if (type == AdType.Rewarded)
-            rewardedListener.onAdFailed(getErrorCodeFromString(error));
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (type == AdType.Interstitial)
+                interstitialAdListener.onAdFailed(getErrorCodeFromString(error));
+            else if (type == AdType.Rewarded)
+                rewardedListener.onAdFailed(getErrorCodeFromString(error));
+        });
     }
 
     private AdType getAdType(final int index, String method) {

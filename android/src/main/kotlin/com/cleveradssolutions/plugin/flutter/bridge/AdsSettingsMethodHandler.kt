@@ -32,7 +32,6 @@ class AdsSettingsMethodHandler(
             "addTestDeviceId" -> addTestDeviceId(call, result)
             "setTestDeviceId" -> setTestDeviceId(call, result)
             "setTestDeviceIds" -> setTestDeviceIds(call, result)
-            "clearTestDeviceIds" -> clearTestDeviceIds(result)
             "getTrialAdFreeInterval" -> getTrialAdFreeInterval(result)
             "setTrialAdFreeInterval" -> setTrialAdFreeInterval(call, result)
             "getBannerRefreshDelay" -> getBannerRefreshDelay(result)
@@ -133,11 +132,6 @@ class AdsSettingsMethodHandler(
         call.getArgAndReturn<Set<String>>("deviceIds", result) {
             CAS.settings.testDeviceIDs = it
         }
-    }
-
-    private fun clearTestDeviceIds(result: MethodChannel.Result) {
-        CAS.settings.testDeviceIDs = emptySet()
-        result.success()
     }
 
     private fun getTrialAdFreeInterval(result: MethodChannel.Result) {

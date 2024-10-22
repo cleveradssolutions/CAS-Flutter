@@ -32,7 +32,6 @@ class AdsSettingsMethodHandler: MethodHandler {
         case "addTestDeviceId": setTestDeviceId(call, result)
         case "setTestDeviceId": setTestDeviceId(call, result)
         case "setTestDeviceIds": setTestDeviceIds(call, result)
-        case "clearTestDeviceIds": clearTestDeviceIds(result)
         case "getTrialAdFreeInterval": getTrialAdFreeInterval(result)
         case "setTrialAdFreeInterval": setTrialAdFreeInterval(call, result)
         case "getBannerRefreshDelay": getBannerRefreshDelay(result)
@@ -126,11 +125,6 @@ class AdsSettingsMethodHandler: MethodHandler {
         call.getArgAndReturn("deviceIds", result) { deviceIds in
             CAS.settings.setTestDevice(ids: deviceIds)
         }
-    }
-
-    private func clearTestDeviceIds(_ result: @escaping FlutterResult) {
-        CAS.settings.setTestDevice(ids: [])
-        result(nil)
     }
 
     private func getTrialAdFreeInterval(_ result: @escaping FlutterResult) {

@@ -84,9 +84,6 @@ abstract class AdsSettings {
   /// See [setTestDeviceId]
   Future<void> setTestDeviceIds(Set<String> deviceIds);
 
-  /// See [setTestDeviceId]
-  Future<void> clearTestDeviceIds();
-
   /// Defines the time interval, in seconds, starting from the moment of the initial app installation,
   /// during which users can use the application without ads being displayed while still retaining
   /// access to the Rewarded Ads format.

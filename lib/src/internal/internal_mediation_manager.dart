@@ -146,13 +146,21 @@ class InternalMediationManager extends AdListener implements MediationManager {
   }
 
   @override
-  Future<void> loadInterstitial() {
-    return _channel.invokeMethod('loadAd', {'adType': 1});
+  Future<void> loadInterstitial() async {
+    final result = await _channel.invokeMethod('loadAd', {'adType': 1});
+    if (result is PlatformException) {
+      _adLoadCallback?.onAdFailedToLoad(AdType.Interstitial, result.message);
+    }
+    return result;
   }
 
   @override
-  Future<void> loadRewarded() {
-    return _channel.invokeMethod('loadAd', {'adType': 2});
+  Future<void> loadRewarded() async {
+    final result = await _channel.invokeMethod('loadAd', {'adType': 2});
+    if (result is PlatformException) {
+      _adLoadCallback?.onAdFailedToLoad(AdType.Rewarded, result.message);
+    }
+    return result;
   }
 
   @override
@@ -170,15 +178,23 @@ class InternalMediationManager extends AdListener implements MediationManager {
   }
 
   @override
-  Future<void> showInterstitial(AdCallback? callback) {
+  Future<void> showInterstitial(AdCallback? callback) async {
     _interstitialListener = callback;
-    return _channel.invokeMethod("showAd", {"adType": 1});
+    final result = await _channel.invokeMethod("showAd", {"adType": 1});
+    if (result is PlatformException) {
+      _interstitialListener?.onShowFailed(result.message);
+    }
+    return result;
   }
 
   @override
-  Future<void> showRewarded(AdCallback? callback) {
+  Future<void> showRewarded(AdCallback? callback) async {
     _rewardedListener = callback;
-    return _channel.invokeMethod("showAd", {"adType": 2});
+    final result = await _channel.invokeMethod("showAd", {"adType": 2});
+    if (result is PlatformException) {
+      _rewardedListener?.onShowFailed(result.message);
+    }
+    return result;
   }
 
   @override
