@@ -43,8 +43,7 @@ class BannerWidget extends StatefulWidget {
 @Deprecated("Use BannerWidgetState instead")
 typedef BannerViewState = BannerWidgetState;
 
-abstract class BannerWidgetState extends State<BannerWidget>
-    implements CASBannerView {
+abstract class BannerWidgetState extends State<BannerWidget> {
   /// Through the use of single advanced [AdViewListener], you can listen for ads load events.
   /// Repeats the behavior of [loadCallback] and [contentCallback]
   /// and brings the description of callbacks to a more understandable form.
@@ -247,58 +246,6 @@ class _BannerWidgetState extends BannerWidgetState {
   @override
   Future<void> loadNextAd() {
     return _channel.invokeMethod("loadNextAd");
-  }
-
-  @override
-  @Deprecated("Use BannerWidgetState.loadNextAd() instead")
-  Future<void> loadBanner() {
-    return loadNextAd();
-  }
-
-  @override
-  @Deprecated("Use BannerWidgetState.isAdReady() instead")
-  Future<bool> isBannerReady() {
-    return isAdReady();
-  }
-
-  @override
-  Future<void> setBannerPosition(AdPosition position) {
-    return setBannerPositionWithOffset(position, 0, 0);
-  }
-
-  @override
-  Future<void> setBannerPositionWithOffset(
-      AdPosition position, int xOffsetInDP, int yOffsetInDP) {
-    return _channel.invokeMethod("setBannerPosition",
-        {"positionId": position.index, "x": xOffsetInDP, "y": yOffsetInDP});
-  }
-
-  @override
-  @Deprecated("Use BannerWidgetState.setRefreshInterval(int interval) instead")
-  Future<void> setBannerAdRefreshRate(int refresh) {
-    return setRefreshInterval(refresh);
-  }
-
-  @override
-  @Deprecated("Use BannerWidgetState.disableAdRefresh() instead")
-  Future<void> disableBannerRefresh() {
-    return disableAdRefresh();
-  }
-
-  @override
-  Future<void> showBanner() {
-    return _channel.invokeMethod("showBanner");
-  }
-
-  @override
-  Future<void> hideBanner() {
-    return _channel.invokeMethod("hideBanner");
-  }
-
-  @override
-  @Deprecated("Use BannerWidgetState.dispose() instead")
-  Future<void> disposeBanner() {
-    return dispose();
   }
 
   Map<String, dynamic> _sizeToMap(AdSize size, int? maxWidthDpi) {

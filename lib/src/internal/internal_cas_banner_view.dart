@@ -50,8 +50,9 @@ class InternalCASBannerView extends CASBannerView {
 
   @override
   Future<void> setBannerPosition(AdPosition position) {
+    final index = position.index % 9;
     return _channel.invokeMethod('setBannerPosition',
-        {"positionId": position.index, "sizeId": _sizeId, "x": 0, "y": 0});
+        {"positionId": index, "sizeId": _sizeId, "x": 0, "y": 0});
   }
 
   @override
@@ -60,8 +61,7 @@ class InternalCASBannerView extends CASBannerView {
   }
 
   @override
-  Future<void> setBannerPositionWithOffset(
-      AdPosition position, int xOffsetInDP, int yOffsetInDP) {
+  Future<void> setBannerPositionWithOffset(int xOffsetInDP, int yOffsetInDP) {
     return _channel.invokeMethod('setBannerPosition', {
       "positionId": AdPosition.TopLeft.index,
       "sizeId": _sizeId,
