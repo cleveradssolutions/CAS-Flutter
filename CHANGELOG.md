@@ -19,11 +19,11 @@
   - `getAdaptiveBannerInScreen()` replaces deprecated `AdSize.Adaptive`.
 ### Bug Fixes
 - Fixed error: `channel sent a message from native to Flutter on a non-platform thread`.
-- [iOS] Fixed the display of the required CASExchange version in the adapter integration
-  information.
-- [iOS] Fixed crash if NSUserTrackingUsageDescription is set but empty in Info.plist.
-- [iOS] Fixed build warnings from ModuleCache.noindex.
-- [iOS] Fixed URL construction to App-ads.txt of the application for verification in Test Ads mode.
+### Update Adapters
+> Below are important changes in the adapters that should be noted. Please refer to the native SDKs release notes for a complete overview of all adapter updates.
+- [Android] Yandex Ads
+  - ⚠️ [SDK] The minimum AppMetrica version is now 7.2.0 [(Flutter plugin 3.1.0)](https://github.com/appmetrica/appmetrica-flutter-plugin/releases). This is only important if your project already has the AppMetrica Flutter Plugin integrated. You can skip the integration if you are not using it.
+  - ⚠️ [SDK] The minimum Android Gradle plugin version is now 7.0.
 
 ## 0.5.1
 - Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.2 SDK
