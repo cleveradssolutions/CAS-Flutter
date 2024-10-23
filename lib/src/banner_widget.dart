@@ -5,10 +5,8 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
 import "ad_impression.dart";
-import "ad_position.dart";
 import "ad_size.dart";
 import "ad_view_listener.dart";
-import "cas_banner_view.dart";
 
 const String _viewType = "<cas-banner-view>";
 
