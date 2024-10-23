@@ -2,6 +2,8 @@ import CleverAdsSolutions
 import Flutter
 
 public class CASFlutter: NSObject, FlutterPlugin {
+    private var methodHandlers: [MethodHandler] = []
+
     private var casBridge: CASBridge?
 
     init(with registrar: FlutterPluginRegistrar) {
@@ -10,15 +12,19 @@ public class CASFlutter: NSObject, FlutterPlugin {
         let consentFlowMethodHandler = ConsentFlowMethodHandler(with: registrar)
         let mediationManagerMethodHandler = MediationManagerMethodHandler(with: registrar, bridgeProvider)
 
-        AdSizeMethodHandler(with: registrar)
-        AdsSettingsMethodHandler(with: registrar)
-        CASMethodHandler(with: registrar)
-        ManagerBuilderMethodHandler(
-            with: registrar,
+        methodHandlers = [
+            AdSizeMethodHandler(with: registrar),
+            AdsSettingsMethodHandler(with: registrar),
+            CASMethodHandler(with: registrar),
             consentFlowMethodHandler,
-            mediationManagerMethodHandler
-        ) { casBridge in self.casBridge = casBridge }
-        TargetingOptionsMethodHandler(with: registrar)
+            ManagerBuilderMethodHandler(
+                with: registrar,
+                consentFlowMethodHandler,
+                mediationManagerMethodHandler
+            ) { casBridge in self.casBridge = casBridge },
+            mediationManagerMethodHandler,
+            TargetingOptionsMethodHandler(with: registrar)
+        ]
 
         registrar.register(BannerViewFactory(with: registrar, bridgeProvider: bridgeProvider), withId: "<cas-banner-view>")
     }
@@ -26,5 +32,9 @@ public class CASFlutter: NSObject, FlutterPlugin {
     public static func register(with registrar: any FlutterPluginRegistrar) {
         let instance = CASFlutter(with: registrar)
         registrar.publish(instance)
+    }
+
+    public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+        methodHandlers = []
     }
 }
