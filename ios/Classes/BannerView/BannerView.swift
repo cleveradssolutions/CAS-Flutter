@@ -2,7 +2,7 @@
 //  BannerView.swift
 //  clever_ads_solutions
 //
-//  Created by MacMini on 2.04.24.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import CleverAdsSolutions
@@ -10,81 +10,66 @@ import Flutter
 import Foundation
 
 class BannerView: NSObject, FlutterPlatformView {
-    private var banner: CASBannerView!
-    private let channel: FlutterMethodChannel
-    private let flutterId: String
+    private var banner: CASBannerView
+    private var methodHandler: BannerMethodHandler
+
+    init(
+        frame: CGRect,
+        viewId: Int64,
+        args: [String: Any?]?,
+        registrar: FlutterPluginRegistrar,
+        bridgeProvider: @escaping () -> CASBridge?
+    ) {
+        let manager = bridgeProvider()?.mediationManager
+        banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
+        banner.tag = Int(viewId)
+
+        let flutterId = args?["id"] as? String ?? ""
+        methodHandler = BannerMethodHandler(with: registrar, flutterId, banner)
+        banner.adDelegate = methodHandler
+
+        if let isAutoloadEnabled = args?["isAutoloadEnabled"] as? Bool {
+            banner.isAutoloadEnabled = isAutoloadEnabled
+        }
+
+        if let refreshInterval = args?["refreshInterval"] as? Int {
+            banner.refreshInterval = refreshInterval
+        }
+    }
 
     func view() -> UIView {
         return banner
     }
 
-    init(
-        frame: CGRect,
-        viewIdentifier viewId: Int64,
-        arguments args: Any?,
-        binaryMessenger messenger: FlutterBinaryMessenger?,
-        bridgeFactory factory: () -> CASBridge?,
-        listener: BannerViewEventListener
-    ) {
-        let args = args as? NSDictionary ?? [:]
+    func dispose() {
+        banner.destroy()
+    }
 
-        flutterId = args["id"] as? String ?? ""
-        channel = FlutterMethodChannel(name: "com.cleveradssolutions.cas.ads.flutter.bannerview.\(flutterId)", binaryMessenger: messenger!)
-
-        super.init()
-
-        channel.setMethodCallHandler(handle)
-
-        let bridge = factory()
-        if bridge == nil {
-            print("No bridge module!")
-        }
-
-        var adSize = CASSize.banner
-        if let sizeMap = args["size"] as? NSDictionary {
-            let serializedSize = sizeMap["size"] as? Int ?? 0
-            let isAdaptive = sizeMap["isAdaptive"] as? Bool
-
-            if isAdaptive == true {
-                if let maxWidth = sizeMap["maxWidthDpi"] as? Int {
-                    adSize = maxWidth == 0 ? CASSize.getAdaptiveBanner(forMaxWidth: frame.width)
-                        : CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidth))
+    private static func getAdSize(_ args: [String: Any?]?, _ frame: CGRect) -> CASSize {
+        if let size = args?["size"] as? [String: Any?] {
+            if size["isAdaptive"] as? Bool == true {
+                if let maxWidth = size["maxWidthDpi"] as? Int,
+                   maxWidth != 0 {
+                    return CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidth))
+                } else {
+                    return CASSize.getAdaptiveBanner(forMaxWidth: frame.width)
                 }
             } else {
-                switch serializedSize {
-                case 1: adSize = CASSize.banner
-                case 3: adSize = CASSize.getSmartBanner()
-                case 4: adSize = CASSize.leaderboard
-                case 5: adSize = CASSize.mediumRectangle
-                default: print("Unknown CAS BannerView size")
+                let width = size["width"] as? CGFloat ?? 0
+                let height = size["height"] as? CGFloat ?? 0
+                let mode = size["mode"] as? CGFloat ?? 0
+
+                switch mode {
+                case 2: return CASSize.getAdaptiveBanner(forMaxWidth: width)
+                case 3: return CASSize.getInlineBanner(width: width, maxHeight: height)
+                default: switch width {
+                    case 300: return CASSize.mediumRectangle
+                    case 728: return CASSize.leaderboard
+                    default: return CASSize.banner
+                    }
                 }
             }
         }
-
-        banner = CASBannerView(adSize: adSize, manager: bridge?.getManager())
-        banner.tag = Int(viewId)
-
-        banner.adDelegate = listener
-        listener.flutterIds[banner.tag] = flutterId
-
-        if let isAutoloadEnabled = args["isAutoloadEnabled"] as? Bool {
-            banner.isAutoloadEnabled = isAutoloadEnabled
-        }
-
-        if let refreshInterval = args["refreshInterval"] as? Int {
-            banner.refreshInterval = refreshInterval
-        }
-    }
-
-    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        switch call.method {
-        case "isAdReady":
-            result(banner.isAdReady)
-        case "loadNextAd":
-            banner.loadNextAd()
-        default:
-            print("Unknown method: \(call.method)")
-            result(FlutterError(code: "UNAVAILABLE", message: "Unknown method: \(call.method)", details: nil))
-        }
+        return CASSize.banner
     }
 }

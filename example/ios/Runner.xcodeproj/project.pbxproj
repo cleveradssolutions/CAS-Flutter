@@ -12,25 +12,6 @@
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		3C2926AE5145B10CC5A0CD97 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D61BB766F47912C7AB4A363F /* Pods_RunnerTests.framework */; };
-		4CF854622C462C9E0096445F /* CASBridgeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8544E2C462C9E0096445F /* CASBridgeBuilder.swift */; };
-		4CF854632C462C9E0096445F /* BannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8544F2C462C9E0096445F /* BannerView.swift */; };
-		4CF854642C462C9E0096445F /* BannerViewEventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854502C462C9E0096445F /* BannerViewEventListener.swift */; };
-		4CF854652C462C9E0096445F /* BannerViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854512C462C9E0096445F /* BannerViewFactory.swift */; };
-		4CF854662C462C9E0096445F /* CASSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854532C462C9E0096445F /* CASSettings.swift */; };
-		4CF854672C462C9E0096445F /* CASFlutterSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854542C462C9E0096445F /* CASFlutterSwift.swift */; };
-		4CF854682C462C9E0096445F /* CASInitCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854552C462C9E0096445F /* CASInitCallback.swift */; };
-		4CF854692C462C9E0096445F /* FlutterBannerCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854562C462C9E0096445F /* FlutterBannerCallback.swift */; };
-		4CF8546A2C462C9E0096445F /* FlutterCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854572C462C9E0096445F /* FlutterCaller.swift */; };
-		4CF8546B2C462C9E0096445F /* FlutterInitCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854582C462C9E0096445F /* FlutterInitCallback.swift */; };
-		4CF8546C2C462C9E0096445F /* FlutterInterstitialCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854592C462C9E0096445F /* FlutterInterstitialCallback.swift */; };
-		4CF8546D2C462C9E0096445F /* FlutterRewardedCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8545A2C462C9E0096445F /* FlutterRewardedCallback.swift */; };
-		4CF8546E2C462C9E0096445F /* CleverAds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8545B2C462C9E0096445F /* CleverAds.swift */; };
-		4CF8546F2C462C9E0096445F /* CASImpressionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8545C2C462C9E0096445F /* CASImpressionExtension.swift */; };
-		4CF854702C462C9E0096445F /* CASView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8545D2C462C9E0096445F /* CASView.swift */; };
-		4CF854712C462C9E0096445F /* CASBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8545E2C462C9E0096445F /* CASBridge.swift */; };
-		4CF854722C462C9E0096445F /* AdCallbackWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8545F2C462C9E0096445F /* AdCallbackWrapper.swift */; };
-		4CF854732C462C9E0096445F /* FlutterAppReturnCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854602C462C9E0096445F /* FlutterAppReturnCallback.swift */; };
-		4CF854742C462C9E0096445F /* CASFlutterCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF854612C462C9E0096445F /* CASFlutterCallback.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -68,25 +49,6 @@
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		4CF8544E2C462C9E0096445F /* CASBridgeBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CASBridgeBuilder.swift; path = ../../../ios/Classes/CASBridgeBuilder.swift; sourceTree = "<group>"; };
-		4CF8544F2C462C9E0096445F /* BannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerView.swift; sourceTree = "<group>"; };
-		4CF854502C462C9E0096445F /* BannerViewEventListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerViewEventListener.swift; sourceTree = "<group>"; };
-		4CF854512C462C9E0096445F /* BannerViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerViewFactory.swift; sourceTree = "<group>"; };
-		4CF854532C462C9E0096445F /* CASSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CASSettings.swift; path = ../../../ios/Classes/CASSettings.swift; sourceTree = "<group>"; };
-		4CF854542C462C9E0096445F /* CASFlutterSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CASFlutterSwift.swift; path = ../../../ios/Classes/CASFlutterSwift.swift; sourceTree = "<group>"; };
-		4CF854552C462C9E0096445F /* CASInitCallback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CASInitCallback.swift; path = ../../../ios/Classes/CASInitCallback.swift; sourceTree = "<group>"; };
-		4CF854562C462C9E0096445F /* FlutterBannerCallback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlutterBannerCallback.swift; path = ../../../ios/Classes/FlutterBannerCallback.swift; sourceTree = "<group>"; };
-		4CF854572C462C9E0096445F /* FlutterCaller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlutterCaller.swift; path = ../../../ios/Classes/FlutterCaller.swift; sourceTree = "<group>"; };
-		4CF854582C462C9E0096445F /* FlutterInitCallback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlutterInitCallback.swift; path = ../../../ios/Classes/FlutterInitCallback.swift; sourceTree = "<group>"; };
-		4CF854592C462C9E0096445F /* FlutterInterstitialCallback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlutterInterstitialCallback.swift; path = ../../../ios/Classes/FlutterInterstitialCallback.swift; sourceTree = "<group>"; };
-		4CF8545A2C462C9E0096445F /* FlutterRewardedCallback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlutterRewardedCallback.swift; path = ../../../ios/Classes/FlutterRewardedCallback.swift; sourceTree = "<group>"; };
-		4CF8545B2C462C9E0096445F /* CleverAds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CleverAds.swift; path = ../../../ios/Classes/CleverAds.swift; sourceTree = "<group>"; };
-		4CF8545C2C462C9E0096445F /* CASImpressionExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CASImpressionExtension.swift; path = ../../../ios/Classes/CASImpressionExtension.swift; sourceTree = "<group>"; };
-		4CF8545D2C462C9E0096445F /* CASView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CASView.swift; path = ../../../ios/Classes/CASView.swift; sourceTree = "<group>"; };
-		4CF8545E2C462C9E0096445F /* CASBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CASBridge.swift; path = ../../../ios/Classes/CASBridge.swift; sourceTree = "<group>"; };
-		4CF8545F2C462C9E0096445F /* AdCallbackWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdCallbackWrapper.swift; path = ../../../ios/Classes/AdCallbackWrapper.swift; sourceTree = "<group>"; };
-		4CF854602C462C9E0096445F /* FlutterAppReturnCallback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlutterAppReturnCallback.swift; path = ../../../ios/Classes/FlutterAppReturnCallback.swift; sourceTree = "<group>"; };
-		4CF854612C462C9E0096445F /* CASFlutterCallback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CASFlutterCallback.swift; path = ../../../ios/Classes/CASFlutterCallback.swift; sourceTree = "<group>"; };
 		6E23A2B31B0F89815A99AB84 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -146,41 +108,6 @@
 			path = RunnerTests;
 			sourceTree = "<group>";
 		};
-		4CF8544D2C462C6A0096445F /* CleverAdsSolutions */ = {
-			isa = PBXGroup;
-			children = (
-				4CF8545F2C462C9E0096445F /* AdCallbackWrapper.swift */,
-				4CF854522C462C9E0096445F /* BannerView */,
-				4CF8545E2C462C9E0096445F /* CASBridge.swift */,
-				4CF8544E2C462C9E0096445F /* CASBridgeBuilder.swift */,
-				4CF854612C462C9E0096445F /* CASFlutterCallback.swift */,
-				4CF854542C462C9E0096445F /* CASFlutterSwift.swift */,
-				4CF8545C2C462C9E0096445F /* CASImpressionExtension.swift */,
-				4CF854552C462C9E0096445F /* CASInitCallback.swift */,
-				4CF854532C462C9E0096445F /* CASSettings.swift */,
-				4CF8545D2C462C9E0096445F /* CASView.swift */,
-				4CF8545B2C462C9E0096445F /* CleverAds.swift */,
-				4CF854602C462C9E0096445F /* FlutterAppReturnCallback.swift */,
-				4CF854562C462C9E0096445F /* FlutterBannerCallback.swift */,
-				4CF854572C462C9E0096445F /* FlutterCaller.swift */,
-				4CF854582C462C9E0096445F /* FlutterInitCallback.swift */,
-				4CF854592C462C9E0096445F /* FlutterInterstitialCallback.swift */,
-				4CF8545A2C462C9E0096445F /* FlutterRewardedCallback.swift */,
-			);
-			path = CleverAdsSolutions;
-			sourceTree = "<group>";
-		};
-		4CF854522C462C9E0096445F /* BannerView */ = {
-			isa = PBXGroup;
-			children = (
-				4CF8544F2C462C9E0096445F /* BannerView.swift */,
-				4CF854502C462C9E0096445F /* BannerViewEventListener.swift */,
-				4CF854512C462C9E0096445F /* BannerViewFactory.swift */,
-			);
-			name = BannerView;
-			path = ../../../ios/Classes/BannerView;
-			sourceTree = "<group>";
-		};
 		8FB8EB29244CB6E8A3F32F4A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -204,7 +131,6 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
-				4CF8544D2C462C6A0096445F /* CleverAdsSolutions */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
@@ -272,7 +198,6 @@
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				06413C926451BF2F32C42F1D /* [CP] Copy Pods Resources */,
-				19B9811DCD4F9FAB8299DE80 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -360,23 +285,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		19B9811DCD4F9FAB8299DE80 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -391,7 +299,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\n";
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -406,7 +314,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
 		B05BE27A8D7D651572C405C1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -467,27 +375,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CF854702C462C9E0096445F /* CASView.swift in Sources */,
-				4CF854632C462C9E0096445F /* BannerView.swift in Sources */,
-				4CF854642C462C9E0096445F /* BannerViewEventListener.swift in Sources */,
-				4CF8546A2C462C9E0096445F /* FlutterCaller.swift in Sources */,
-				4CF854712C462C9E0096445F /* CASBridge.swift in Sources */,
-				4CF8546E2C462C9E0096445F /* CleverAds.swift in Sources */,
-				4CF8546F2C462C9E0096445F /* CASImpressionExtension.swift in Sources */,
-				4CF8546B2C462C9E0096445F /* FlutterInitCallback.swift in Sources */,
-				4CF8546C2C462C9E0096445F /* FlutterInterstitialCallback.swift in Sources */,
-				4CF854742C462C9E0096445F /* CASFlutterCallback.swift in Sources */,
-				4CF854672C462C9E0096445F /* CASFlutterSwift.swift in Sources */,
-				4CF854682C462C9E0096445F /* CASInitCallback.swift in Sources */,
-				4CF854662C462C9E0096445F /* CASSettings.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
-				4CF854732C462C9E0096445F /* FlutterAppReturnCallback.swift in Sources */,
-				4CF8546D2C462C9E0096445F /* FlutterRewardedCallback.swift in Sources */,
-				4CF854622C462C9E0096445F /* CASBridgeBuilder.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
-				4CF854652C462C9E0096445F /* BannerViewFactory.swift in Sources */,
-				4CF854692C462C9E0096445F /* FlutterBannerCallback.swift in Sources */,
-				4CF854722C462C9E0096445F /* AdCallbackWrapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,7 +467,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = CR29UDMXTC;
+				DEVELOPMENT_TEAM = CG78EM8VXT;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -586,7 +475,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.example.cas.ai;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cleveradssolutions.plugin.flutter.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -758,7 +647,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = CR29UDMXTC;
+				DEVELOPMENT_TEAM = CG78EM8VXT;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -766,7 +655,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.example.cas.ai;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cleveradssolutions.plugin.flutter.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -782,7 +671,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = CR29UDMXTC;
+				DEVELOPMENT_TEAM = CG78EM8VXT;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -790,7 +679,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.example.cas.ai;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cleveradssolutions.plugin.flutter.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

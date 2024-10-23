@@ -1,42 +1,53 @@
 import 'package:flutter/services.dart';
 
+import 'ads_settings.dart';
 import 'audience.dart';
 import 'ccpa_status.dart';
 import 'consent_flow.dart';
+import 'consent_status.dart';
+import 'gender.dart';
+import 'internal/ads_settings_impl.dart';
 import 'internal/internal_cas_consent_flow.dart';
-import 'internal/internal_listener_container.dart';
 import 'internal/internal_manager_builder.dart';
+import 'internal/targeting_options_impl.dart';
 import 'loading_mode.dart';
 import 'manager_builder.dart';
 import 'targeting_options.dart';
 import 'user_consent.dart';
 
+/// Represents the CAS.AI SDK.
 class CAS {
-  static const String _pluginVersion = "0.5.1";
+  static const String _pluginVersion = "0.6.0";
 
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.cas.ads.flutter");
+      MethodChannel("com.cleveradssolutions.plugin.flutter/cas");
 
-  static final InternalListenerContainer _listenerContainer =
-      InternalListenerContainer(_channel);
+  /// Get singleton instance for configure all mediation managers
+  static final AdsSettings settings = AdsSettingsImpl();
 
-  @Deprecated("This method is no longer maintained and should not be used.")
+  /// You can now easily tailor the way you serve your ads to fit a specific audience!
+  /// You’ll need to inform our servers of the users’ details
+  /// so the SDK will know to serve ads according to the segment the user belongs to.
+  ///
+  /// - **Attention:** Must be set before initializing the SDK.
+  static final TargetingOptions targetingOptions = TargetingOptionsImpl();
+
+  @Deprecated("This method is no longer maintained and should not be used")
   static setFlutterVersion(String flutterVersion) {}
 
   static ConsentFlow buildConsentFlow() {
-    return InternalCASConsentFlow(_channel, _listenerContainer);
+    return InternalCASConsentFlow();
   }
 
+  /// Create [MediationManager] builder.
+  /// Don't forget to call the [ManagerBuilder.build] method to create manager instance.
   static ManagerBuilder buildManager() {
-    return InternalManagerBuilder(_channel, _listenerContainer, _pluginVersion);
+    return InternalManagerBuilder(_pluginVersion);
   }
 
-  static Future<void> validateIntegration() async {
-    return _channel.invokeMethod('validateIntegration');
-  }
-
-  static Future<void> setDebugMode(bool isEnable) async {
-    return _channel.invokeMethod("setNativeDebug", {"enable": isEnable});
+  @Deprecated("Use CAS.settings.setDebugMode(bool isEnable) instead")
+  static Future<void> setDebugMode(bool isEnable) {
+    return settings.setDebugMode(isEnable);
   }
 
   static Future<String> getSDKVersion() async {
@@ -44,97 +55,107 @@ class CAS {
     return sdkVersion ?? "";
   }
 
-  static Future<void> setAge(int age) async {
-    return _channel.invokeMethod("setAge", {"age": age});
+  static String getPluginVersion() {
+    return _pluginVersion;
   }
 
-  static Future<void> setGender(Gender gender) async {
-    return _channel.invokeMethod("setGender", {"gender": gender.index});
+  /// Call Integration Helper and check current integration in logcat(Android) or console(iOS).
+  /// LOG TAG: CASIntegrationHelper
+  ///
+  /// Call Integration Helper and check current integration in console.
+  /// Log tag: [CASIntegrationHelper]
+  static Future<void> validateIntegration() {
+    return _channel.invokeMethod('validateIntegration');
   }
 
-  static Future<void> setUserConsentStatus(UserConsent consent) async {
-    return _channel
-        .invokeMethod("setUserConsentStatus", {"userConsent": consent.index});
+  @Deprecated("Use CAS.targetingOptions.setAge(int age) instead")
+  static Future<void> setAge(int age) {
+    return CAS.targetingOptions.setAge(age);
   }
 
+  @Deprecated("Use CAS.targetingOptions.setGender(Gender gender) instead")
+  static Future<void> setGender(Gender gender) {
+    return CAS.targetingOptions.setGender(gender);
+  }
+
+  @Deprecated("Use CAS.settings.setUserConsent(ConsentStatus consent) instead")
+  static Future<void> setUserConsent(UserConsent consent) {
+    final ConsentStatus converted = ConsentStatus.values[consent.index];
+    return CAS.settings.setUserConsent(converted);
+  }
+
+  @Deprecated("Use CAS.settings.getUserConsentStatus() instead")
   static Future<UserConsent> getUserConsentStatus() async {
-    int? consent = await _channel.invokeMethod<int>('getUserConsentStatus');
-
-    if (consent == null) {
-      return UserConsent.UNDEFINED;
-    } else {
-      return UserConsent.values[consent];
-    }
+    final ConsentStatus consent = await CAS.settings.getUserConsent();
+    return UserConsent.values[consent.index];
   }
 
-  static Future<void> setCCPAStatus(CCPAStatus status) async {
-    return _channel.invokeMethod("setCCPAStatus", {"ccpa": status.index});
+  @Deprecated("Use CAS.settings.setCCPAStatus(CCPAStatus status) instead")
+  static Future<void> setCCPAStatus(CCPAStatus status) {
+    return CAS.settings.setCCPAStatus(status);
   }
 
-  static Future<CCPAStatus> getCPPAStatus() async {
-    int? ccpa = await _channel.invokeMethod<int>('getCPPAStatus');
-
-    if (ccpa == null) {
-      return CCPAStatus.UNDEFINED;
-    } else {
-      return CCPAStatus.values[ccpa];
-    }
+  @Deprecated("Use CAS.settings.getCCPAStatus() instead")
+  static Future<CCPAStatus> getCPPAStatus() {
+    return CAS.settings.getCPPAStatus();
   }
 
-  static Future<void> setTaggedAudience(Audience audience) async {
-    return _channel
-        .invokeMethod("setTaggedAudience", {"taggedAudience": audience.index});
+  @Deprecated("Use CAS.settings.setTaggedAudience(Audience audience) instead")
+  static Future<void> setTaggedAudience(Audience audience) {
+    return CAS.settings.setTaggedAudience(audience);
   }
 
-  static Future<Audience> getTaggedAudience() async {
-    int? audience = await _channel.invokeMethod<int>('getTaggedAudience');
-
-    if (audience == null) {
-      return Audience.UNDEFINED;
-    } else {
-      return Audience.values[audience];
-    }
+  @Deprecated("Use CAS.settings.getTaggedAudience() instead")
+  static Future<Audience> getTaggedAudience() {
+    return CAS.settings.getTaggedAudience();
   }
 
-  static Future<void> setMutedAdSounds(bool mute) async {
-    return _channel.invokeMethod("setMutedAdSounds", {"muted": mute});
+  @Deprecated("Use CAS.settings.setMutedAdSounds(bool muted) instead")
+  static Future<void> setMutedAdSounds(bool mute) {
+    return CAS.settings.setMutedAdSounds(mute);
   }
 
-  static Future<void> setLoadingMode(LoadingMode loadingMode) async {
-    return _channel
-        .invokeMethod("setLoadingMode", {"loadingMode": loadingMode.index});
+  @Deprecated(
+      "Use CAS.settings.setLoadingMode(LoadingMode loadingMode) instead")
+  static Future<void> setLoadingMode(LoadingMode loadingMode) {
+    return CAS.settings.setLoadingMode(loadingMode);
   }
 
-  static Future<void> setTestDeviceIds(List<String> deviceIds) async {
-    return _channel.invokeMethod("addTestDeviceId", {"devices": deviceIds});
+  @Deprecated(
+      "Use CAS.settings.setTestDeviceIds(Set<String> deviceIds) instead")
+  static Future<void> setTestDeviceIds(List<String> deviceIds) {
+    return CAS.settings.setTestDeviceIds(deviceIds.toSet());
   }
 
-  static Future<void> addTestDeviceId(String deviceId) async {
-    return _channel.invokeMethod("addTestDeviceId", {"deviceId": deviceId});
+  @Deprecated("This method is no longer maintained and should not be used")
+  static Future<void> addTestDeviceId(String deviceId) {
+    return CAS.settings.addTestDeviceId(deviceId);
   }
 
-  static Future<void> clearTestDeviceIds() async {
-    return _channel.invokeMethod("clearTestDeviceIds");
+  @Deprecated("Use CAS.settings.setTestDeviceIds({}) instead")
+  static Future<void> clearTestDeviceIds() {
+    return CAS.settings.setTestDeviceIds({});
   }
 
-  static Future<void> setInterstitialInterval(int delay) async {
-    return _channel
-        .invokeMethod("setInterstitialInterval", {"interval": delay});
+  @Deprecated("Use CAS.settings.setInterstitialInterval(delay) instead")
+  static Future<void> setInterstitialInterval(int delay) {
+    return CAS.settings.setInterstitialInterval(delay);
   }
 
-  static Future<int> getInterstitialInterval() async {
-    final interval =
-        await _channel.invokeMethod<int>('getInterstitialInterval');
-    return interval ?? 0;
+  @Deprecated("Use CAS.settings.getInterstitialInterval() instead")
+  static Future<int> getInterstitialInterval() {
+    return CAS.settings.getInterstitialInterval();
   }
 
-  static Future<void> restartInterstitialInterval() async {
-    return _channel.invokeMethod("restartInterstitialInterval");
+  @Deprecated("Use CAS.settings.restartInterstitialInterval() instead")
+  static Future<void> restartInterstitialInterval() {
+    return CAS.settings.restartInterstitialInterval();
   }
 
+  @Deprecated(
+      "Use CAS.settings.allowInterstitialAdsWhenVideoCostAreLower(bool isAllow) instead")
   static Future<void> allowInterstitialAdsWhenVideoCostAreLower(
-      final bool isAllow) async {
-    return _channel.invokeMethod(
-        'allowInterstitialAdsWhenVideoCostAreLower', {'enable': isAllow});
+      final bool isAllow) {
+    return CAS.settings.allowInterstitialAdsWhenVideoCostAreLower(isAllow);
   }
 }

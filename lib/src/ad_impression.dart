@@ -10,7 +10,7 @@ class AdImpression {
   String? creativeIdentifier;
   String identifier;
   int impressionDepth;
-  double lifeTimeRevenue;
+  double lifetimeRevenue;
 
   AdImpression(
       int adType,
@@ -21,7 +21,7 @@ class AdImpression {
       this.creativeIdentifier,
       this.identifier,
       this.impressionDepth,
-      this.lifeTimeRevenue)
+      this.lifetimeRevenue)
       : adType = AdType.values[adType],
         priceAccuracy = PriceAccuracy.values[priceAccuracy];
 }

@@ -1,8 +1,8 @@
 //
-//  CASBannerView.swift
+//  CASView.swift
 //  clever_ads_solutions
 //
-//  Created by Владислав Горик on 06.12.2023.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
 import Foundation

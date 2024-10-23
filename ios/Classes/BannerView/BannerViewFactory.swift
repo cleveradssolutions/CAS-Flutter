@@ -2,39 +2,35 @@
 //  BannerViewFactory.swift
 //  clever_ads_solutions
 //
-//  Created by MacMini on 2.04.24.
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
 //
 
-import Foundation
 import Flutter
+import Foundation
 
 class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
-    private var messenger: FlutterBinaryMessenger
-    private var bridge: () -> CASBridge?
-    private let listener: BannerViewEventListener
-    private let channel: FlutterEventChannel
 
-    init(bridge: @escaping () -> CASBridge?, messenger: FlutterBinaryMessenger) {
-        self.messenger = messenger
-        self.bridge = bridge
-        self.listener = BannerViewEventListener()
-        self.channel = FlutterEventChannel(name: "com.cleveradssolutions.cas.ads.flutter.bannerview", binaryMessenger: self.messenger)
-        self.channel.setStreamHandler(listener)
-        
-        super.init()
+    private var registrar: FlutterPluginRegistrar
+    private var bridgeProvider: () -> CASBridge?
+
+    init(with registrar: FlutterPluginRegistrar, bridgeProvider: @escaping () -> CASBridge?) {
+        self.registrar = registrar
+        self.bridgeProvider = bridgeProvider
     }
-    
+
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
+        let args = args as? [String: Any?]
         return BannerView(
-                    frame: frame,
-                    viewIdentifier: viewId,
-                    arguments: args,
-                    binaryMessenger: messenger,
-                    bridgeFactory: bridge,
-                    listener: listener)
+            frame: frame,
+            viewId: viewId,
+            args: args,
+            registrar: registrar,
+            bridgeProvider: bridgeProvider
+        )
     }
-    
+
     public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
         return FlutterStandardMessageCodec.sharedInstance()
     }
+
 }
