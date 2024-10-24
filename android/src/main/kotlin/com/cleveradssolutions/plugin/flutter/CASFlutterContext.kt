@@ -16,7 +16,7 @@ class CASFlutterContext(private val application: Context) : ContextService {
 
     fun getActivityOrError(call: MethodCall, result: MethodChannel.Result): Activity? {
         if (lastActivity == null)
-            result.errorFieldNull(call, "Activity")
+            result.errorFieldNull(call, "lastActivity")
         return lastActivity
     }
 

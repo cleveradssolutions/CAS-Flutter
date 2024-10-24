@@ -49,7 +49,7 @@ public final class CASViewWrapper implements AdViewListener {
     private final ContextService contextService;
 
     private CASBannerView view;
-    private CASCallback unityCallback;
+    private CASViewWrapperListener listener;
     private int activeSizeId = 0;
     public boolean isNeedSafeInsets = true;
 
@@ -129,7 +129,7 @@ public final class CASViewWrapper implements AdViewListener {
     }
 
     @MainThread
-    public void createView(MediationManager manager, CASCallback unityListener, int sizeCode) {
+    public void createView(MediationManager manager, CASViewWrapperListener listener, int sizeCode) {
         if (sizeCode == 0)
             return;
 
@@ -137,8 +137,8 @@ public final class CASViewWrapper implements AdViewListener {
         if (activity == null)
             return;
 
+        this.listener = listener;
         activeSizeId = sizeCode;
-        unityCallback = unityListener;
         view = new CASBannerView(activity, manager);
         view.setVisibility(View.GONE);
         view.setAdListener(this);
@@ -224,24 +224,24 @@ public final class CASViewWrapper implements AdViewListener {
 
     @Override
     public void onAdViewLoaded(@NonNull CASBannerView view) {
-        unityCallback.onLoaded();
+        listener.onLoaded();
     }
 
     @Override
     public void onAdViewFailed(@NonNull CASBannerView view, @NonNull AdError error) {
-        unityCallback.onFailed(error.getCode());
+        listener.onFailed(error.getCode());
     }
 
     @Override
     public void onAdViewPresented(@NonNull CASBannerView view, @NonNull AdStatusHandler info) {
         refreshViewPosition(view);
-        unityCallback.onShown();
-        unityCallback.onImpression(info);
+        listener.onShown();
+        listener.onImpression(info);
     }
 
     @Override
     public void onAdViewClicked(@NonNull CASBannerView view) {
-        unityCallback.onClicked();
+        listener.onClicked();
     }
 
     @MainThread
@@ -346,7 +346,7 @@ public final class CASViewWrapper implements AdViewListener {
         }
 
         view.setLayoutParams(adParams);
-        unityCallback.onRect(offsetXPx, offsetYPx, adWidthPx, adHeightPx);
+        listener.onRect(offsetXPx, offsetYPx, adWidthPx, adHeightPx);
     }
 
     private AdSize getSizeByCode(final int sizeId) {

@@ -1,6 +1,5 @@
 package com.cleveradssolutions.plugin.flutter
 
-import android.app.Activity
 import com.cleveradssolutions.plugin.flutter.bannerview.BannerViewFactory
 import com.cleveradssolutions.plugin.flutter.bridge.AdSizeMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.AdsSettingsMethodHandler

@@ -1,6 +1,5 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
-import com.cleveradssolutions.plugin.flutter.CASBridge
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
@@ -81,8 +80,7 @@ class ManagerBuilderMethodHandler(
             }
             .initialize(contextService)
 
-        mediationManagerMethodHandler.bridge =
-            CASBridge(manager, mediationManagerMethodHandler)
+        mediationManagerMethodHandler.setManager(manager)
 
         builderField = null
 
