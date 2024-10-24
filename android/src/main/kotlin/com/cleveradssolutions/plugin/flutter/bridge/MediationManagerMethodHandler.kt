@@ -1,5 +1,6 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
+import com.cleveradssolutions.plugin.flutter.AdCallbackWrapper
 import com.cleveradssolutions.plugin.flutter.CASBridge
 import com.cleveradssolutions.plugin.flutter.CASCallback
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
@@ -25,15 +26,10 @@ class MediationManagerMethodHandler(
 ) : MethodHandler(binding, CHANNEL_NAME) {
 
     var bridge: CASBridge? = null
-    var interstitialCallbackWrapper: CASCallback? = null
-    var rewardedCallbackWrapper: CASCallback? = null
-    private var appReturnCallbackWrapper: CASCallback? = null
 
-    init {
-        appReturnCallbackWrapper = createAppReturnCallback()
-        interstitialCallbackWrapper = createInterstitialCallback()
-        rewardedCallbackWrapper = createRewardedCallback()
-    }
+    var interstitialCallbackWrapper: AdCallbackWrapper = createInterstitialCallback()
+    var rewardedCallbackWrapper: AdCallbackWrapper = createRewardedCallback()
+    private var appReturnCallbackWrapper: AdCallbackWrapper = createAppReturnCallback()
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -261,28 +257,28 @@ class MediationManagerMethodHandler(
         }
     }
 
-    private fun createInterstitialCallback(): CASCallback {
-        return object : CASCallback {
-            override fun onLoaded() {
+    private fun createInterstitialCallback(): AdCallbackWrapper {
+        return object : AdCallbackWrapper() {
+            override fun onAdLoaded() {
                 invokeMethod("OnInterstitialAdLoaded")
             }
 
-            override fun onFailed(error: Int) {
+            override fun onAdFailed(error: Int) {
                 invokeMethod(
                     "OnInterstitialAdFailedToLoad",
                     mapOf("message" to AdError(error).message)
                 )
             }
 
-            override fun onShown() {
+            override fun onShown(ad: AdStatusHandler) {
                 invokeMethod("OnInterstitialAdShown")
             }
 
-            override fun onImpression(impression: AdStatusHandler?) {
-                invokeMethod("OnInterstitialAdImpression", impression?.toMap())
+            override fun onAdRevenuePaid(ad: AdStatusHandler) {
+                invokeMethod("OnInterstitialAdImpression", ad.toMap())
             }
 
-            override fun onShowFailed(message: String?) {
+            override fun onShowFailed(message: String) {
                 invokeMethod("OnInterstitialAdFailedToShow", mapOf("message" to message))
             }
 
@@ -290,40 +286,34 @@ class MediationManagerMethodHandler(
                 invokeMethod("OnInterstitialAdClicked")
             }
 
-            override fun onComplete() {
-                invokeMethod("OnInterstitialAdComplete")
-            }
-
             override fun onClosed() {
                 invokeMethod("OnInterstitialAdClosed")
             }
-
-            override fun onRect(x: Int, y: Int, width: Int, height: Int) {}
         }
     }
 
-    private fun createRewardedCallback(): CASCallback {
-        return object : CASCallback {
-            override fun onLoaded() {
+    private fun createRewardedCallback(): AdCallbackWrapper {
+        return object : AdCallbackWrapper() {
+            override fun onAdLoaded() {
                 invokeMethod("OnRewardedAdLoaded")
             }
 
-            override fun onFailed(error: Int) {
+            override fun onAdFailed(error: Int) {
                 invokeMethod(
                     "OnRewardedAdFailedToLoad",
                     mapOf("message" to AdError(error).message)
                 )
             }
 
-            override fun onShown() {
+            override fun onShown(ad: AdStatusHandler) {
                 invokeMethod("OnRewardedAdShown")
             }
 
-            override fun onImpression(impression: AdStatusHandler?) {
-                invokeMethod("OnRewardedAdImpression", impression?.toMap())
+            override fun onAdRevenuePaid(ad: AdStatusHandler) {
+                invokeMethod("OnRewardedAdImpression", ad.toMap())
             }
 
-            override fun onShowFailed(message: String?) {
+            override fun onShowFailed(message: String) {
                 invokeMethod("OnRewardedAdFailedToShow", mapOf("message" to message))
             }
 
@@ -338,28 +328,26 @@ class MediationManagerMethodHandler(
             override fun onClosed() {
                 invokeMethod("OnRewardedAdClosed")
             }
-
-            override fun onRect(x: Int, y: Int, width: Int, height: Int) {}
         }
     }
 
-    private fun createAppReturnCallback(): CASCallback {
-        return object : CASCallback {
-            override fun onLoaded() {
+    private fun createAppReturnCallback(): AdCallbackWrapper {
+        return object : AdCallbackWrapper() {
+            override fun onAdLoaded() {
             }
 
-            override fun onFailed(error: Int) {
+            override fun onAdFailed(error: Int) {
             }
 
-            override fun onShown() {
+            override fun onShown(ad: AdStatusHandler) {
                 invokeMethod("OnAppReturnAdShown")
             }
 
-            override fun onImpression(impression: AdStatusHandler?) {
-                invokeMethod("OnAppReturnAdImpression", impression?.toMap())
+            override fun onAdRevenuePaid(ad: AdStatusHandler) {
+                invokeMethod("OnAppReturnAdImpression", ad.toMap())
             }
 
-            override fun onShowFailed(message: String?) {
+            override fun onShowFailed(message: String) {
                 invokeMethod("OnAppReturnAdFailedToShow", mapOf("message" to message))
             }
 
@@ -367,13 +355,9 @@ class MediationManagerMethodHandler(
                 invokeMethod("OnAppReturnAdClicked")
             }
 
-            override fun onComplete() {}
-
             override fun onClosed() {
                 invokeMethod("OnAppReturnAdClosed")
             }
-
-            override fun onRect(x: Int, y: Int, width: Int, height: Int) {}
         }
     }
 

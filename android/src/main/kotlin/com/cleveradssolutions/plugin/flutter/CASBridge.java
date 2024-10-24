@@ -30,10 +30,8 @@ public final class CASBridge implements AdLoadCallback {
             MediationManager manager,
             MediationManagerMethodHandler mediationManagerMethodHandler
     ) {
-        this.interstitialAdListener =
-                new AdCallbackWrapper(mediationManagerMethodHandler.getInterstitialCallbackWrapper(), false);
-        this.rewardedListener =
-                new AdCallbackWrapper(mediationManagerMethodHandler.getRewardedCallbackWrapper(), true);
+        this.interstitialAdListener = mediationManagerMethodHandler.getInterstitialCallbackWrapper();
+        this.rewardedListener = mediationManagerMethodHandler.getRewardedCallbackWrapper();
         this.manager = manager;
         manager.getOnAdLoadEvent().add(this);
     }
@@ -54,8 +52,8 @@ public final class CASBridge implements AdLoadCallback {
         return view;
     }
 
-    public void enableReturnAds(CASCallback returnAdListener) {
-        manager.enableAppReturnAds(new AdCallbackWrapper(returnAdListener, false));
+    public void enableReturnAds(AdCallbackWrapper returnAdListener) {
+        manager.enableAppReturnAds(returnAdListener);
     }
 
     public void disableReturnAds() {
