@@ -11,15 +11,13 @@ import Flutter
 private let channelName = "com.cleveradssolutions.plugin.flutter/mediation_manager"
 
 class MediationManagerMethodHandler: MethodHandler {
-    private let bridgeProvider: () -> CASBridge?
+    var bridge: CASBridge?
 
     let flutterInterstitialListener: CASFlutterCallback = FlutterInterstitialCallback()
     let flutterRewardedListener: CASFlutterCallback = FlutterRewardedCallback()
-    let flutterAppReturnListener: FlutterAppReturnCallback
+    let flutterAppReturnListener: FlutterAppReturnCallback = FlutterAppReturnCallback()
 
-    init(with registrar: FlutterPluginRegistrar, _ bridgeProvider: @escaping () -> CASBridge?) {
-        self.bridgeProvider = bridgeProvider
-        flutterAppReturnListener = FlutterAppReturnCallback()
+    init(with registrar: FlutterPluginRegistrar) {
         super.init(with: registrar, on: channelName)
         flutterInterstitialListener.setFlutterCaller(caller: invokeMethod)
         flutterRewardedListener.setFlutterCaller(caller: invokeMethod)
@@ -185,7 +183,6 @@ class MediationManagerMethodHandler: MethodHandler {
     }
 
     private func getBridgeAndCheckNil(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) -> CASBridge? {
-        let bridge = bridgeProvider()
         if bridge == nil { result(call.errorFieldNil("CASBridge")) }
         return bridge
     }

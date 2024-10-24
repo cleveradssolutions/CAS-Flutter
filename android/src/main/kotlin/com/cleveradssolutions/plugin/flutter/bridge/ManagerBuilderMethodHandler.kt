@@ -1,6 +1,5 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
-import android.app.Activity
 import com.cleveradssolutions.plugin.flutter.CASBridge
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
@@ -48,7 +47,6 @@ class ManagerBuilderMethodHandler(
     }
 
     private fun setUserId(call: MethodCall, result: MethodChannel.Result) {
-
         call.getArgAndReturn<String>("userId", result) {
             builder.withUserID(it)
         }
@@ -84,7 +82,7 @@ class ManagerBuilderMethodHandler(
             .initialize(contextService)
 
         mediationManagerMethodHandler.bridge =
-            CASBridge(contextService, manager, mediationManagerMethodHandler)
+            CASBridge(manager, mediationManagerMethodHandler)
 
         builderField = null
 

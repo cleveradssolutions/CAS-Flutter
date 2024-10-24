@@ -9,36 +9,23 @@ import CleverAdsSolutions
 import Foundation
 
 public class CASBridge: CASLoadDelegate {
-    private let manager: CASMediationManager
+    let manager: CASMediationManager
+
     private let interstitialAdListener: AdCallbackWrapper
     private let rewardedListener: AdCallbackWrapper
     private let appReturnListener: CASAppReturnDelegate
-    private let builder: CASBridgeBuilder
-
-    var mediationManager: CASMediationManager { manager }
 
     var banners = [Int: CASView]()
 
     init(
-        builder: CASBridgeBuilder,
-        casID: String,
-        mediationManagerMethodHandler: MediationManagerMethodHandler
+        _ manager: CASMediationManager,
+        _ mediationManagerMethodHandler: MediationManagerMethodHandler
     ) {
-        self.builder = builder
-
+        self.manager = manager
         interstitialAdListener = AdCallbackWrapper(flutterCallback: mediationManagerMethodHandler.flutterInterstitialListener, withComplete: false)
         rewardedListener = AdCallbackWrapper(flutterCallback: mediationManagerMethodHandler.flutterRewardedListener, withComplete: true)
         appReturnListener = mediationManagerMethodHandler.flutterAppReturnListener
-
-        manager = builder.managerBuilder
-            .withCompletionHandler({ initialConfig in
-                builder.initCallback.onCASInitialized(
-                    error: initialConfig.error,
-                    countryCode: initialConfig.countryCode,
-                    isConsentRequired: initialConfig.isConsentRequired,
-                    isTestMode: initialConfig.manager.isDemoAdMode)
-            })
-            .create(withCasId: casID)
+        manager.adLoadDelegate = self
     }
 
     func getManager() -> CASMediationManager {
@@ -66,11 +53,19 @@ public class CASBridge: CASLoadDelegate {
     }
 
     func showInterstitial() {
-        manager.presentInterstitial(fromRootViewController: builder.rootViewController, callback: interstitialAdListener)
+        if let viewController = Util.findRootViewController() {
+            manager.presentInterstitial(fromRootViewController: viewController, callback: interstitialAdListener)
+        } else {
+            interstitialAdListener.didShowAdFailed(error: "rootViewController is nil")
+        }
     }
 
     func showRewarded() {
-        manager.presentRewardedAd(fromRootViewController: builder.rootViewController, callback: rewardedListener)
+        if let viewController = Util.findRootViewController() {
+            manager.presentRewardedAd(fromRootViewController: viewController, callback: rewardedListener)
+        } else {
+            rewardedListener.didShowAdFailed(error: "rootViewController is nil")
+        }
     }
 
     func isInterstitialReady() -> Bool {
@@ -128,11 +123,15 @@ public class CASBridge: CASLoadDelegate {
             banners[sizeId]?.showBanner()
             return
         }
+        guard let viewController = Util.findRootViewController() else {
+            print("showGlobalBannerAd: rootViewController is nil")
+            return
+        }
 
         var casSize = CASSize.banner
         switch sizeId {
         case 2:
-            casSize = CASSize.getAdaptiveBanner(inContainer: builder.rootViewController.view)
+            casSize = CASSize.getAdaptiveBanner(inContainer: viewController.view)
             break
         case 3:
             casSize = CASSize.getSmartBanner()
@@ -151,13 +150,13 @@ public class CASBridge: CASLoadDelegate {
         let globalBannerView = CASBannerView(adSize: casSize, manager: manager)
         let flutterCallback = FlutterBannerCallback(sizeId: sizeId)
         flutterCallback.setFlutterCaller(caller: mediationManagerMethodHandler.invokeMethod)
-        let view = CASView(bannerView: globalBannerView, view: builder.rootViewController, callback: flutterCallback)
+        let view = CASView(bannerView: globalBannerView, view: viewController, callback: flutterCallback)
 
         banners[sizeId] = view
 
-        globalBannerView.rootViewController = builder.rootViewController
+        globalBannerView.rootViewController = viewController
 
-        builder.rootViewController.view.addSubview(globalBannerView)
+        viewController.view.addSubview(globalBannerView)
     }
 
     func loadNextBanner(sizeId: Int) {

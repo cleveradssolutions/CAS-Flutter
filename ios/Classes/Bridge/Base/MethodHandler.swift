@@ -17,7 +17,9 @@ class MethodHandler {
         self.channelName = channelName
         let binaryMessenger = registrar.messenger()
         channel = FlutterMethodChannel(name: channelName, binaryMessenger: binaryMessenger)
-        channel.setMethodCallHandler(onMethodCall)
+        channel.setMethodCallHandler { [weak self] call, result in
+            self?.onMethodCall(call, result)
+        }
     }
 
     open func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

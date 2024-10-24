@@ -11,11 +11,11 @@ import Foundation
 class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
 
     private var registrar: FlutterPluginRegistrar
-    private var bridgeProvider: () -> CASBridge?
+    private var managerHandler: MediationManagerMethodHandler
 
-    init(with registrar: FlutterPluginRegistrar, bridgeProvider: @escaping () -> CASBridge?) {
+    init(with registrar: FlutterPluginRegistrar, managerHandler: MediationManagerMethodHandler) {
         self.registrar = registrar
-        self.bridgeProvider = bridgeProvider
+        self.managerHandler = managerHandler
     }
 
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
@@ -25,7 +25,7 @@ class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
             viewId: viewId,
             args: args,
             registrar: registrar,
-            bridgeProvider: bridgeProvider
+            managerHandler: managerHandler
         )
     }
 
