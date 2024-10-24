@@ -4,13 +4,9 @@ import Flutter
 public class CASFlutter: NSObject, FlutterPlugin {
     private var methodHandlers: [MethodHandler] = []
 
-    private var casBridge: CASBridge?
-
     init(with registrar: FlutterPluginRegistrar) {
-        super.init()
-        let bridgeProvider: () -> CASBridge? = { self.casBridge }
         let consentFlowMethodHandler = ConsentFlowMethodHandler(with: registrar)
-        let mediationManagerMethodHandler = MediationManagerMethodHandler(with: registrar, bridgeProvider)
+        let mediationManagerMethodHandler = MediationManagerMethodHandler(with: registrar)
 
         methodHandlers = [
             AdSizeMethodHandler(with: registrar),
@@ -21,12 +17,12 @@ public class CASFlutter: NSObject, FlutterPlugin {
                 with: registrar,
                 consentFlowMethodHandler,
                 mediationManagerMethodHandler
-            ) { casBridge in self.casBridge = casBridge },
+            ),
             mediationManagerMethodHandler,
             TargetingOptionsMethodHandler(with: registrar)
         ]
 
-        registrar.register(BannerViewFactory(with: registrar, bridgeProvider: bridgeProvider), withId: "<cas-banner-view>")
+        registrar.register(BannerViewFactory(with: registrar, managerHandler: mediationManagerMethodHandler), withId: "<cas-banner-view>")
     }
 
     public static func register(with registrar: any FlutterPluginRegistrar) {

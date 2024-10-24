@@ -18,9 +18,9 @@ class BannerView: NSObject, FlutterPlatformView {
         viewId: Int64,
         args: [String: Any?]?,
         registrar: FlutterPluginRegistrar,
-        bridgeProvider: @escaping () -> CASBridge?
+        managerHandler: MediationManagerMethodHandler
     ) {
-        let manager = bridgeProvider()?.mediationManager
+        let manager = managerHandler.bridge?.manager
         banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
         banner.tag = Int(viewId)
 

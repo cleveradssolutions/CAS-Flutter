@@ -1,9 +1,6 @@
 package com.cleveradssolutions.plugin.flutter;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -17,8 +14,6 @@ import com.cleveradssolutions.sdk.base.CASHandler;
 import com.cleversolutions.ads.AdError;
 import com.cleversolutions.ads.AdLoadCallback;
 import com.cleversolutions.ads.AdType;
-import com.cleversolutions.ads.InitialConfiguration;
-import com.cleversolutions.ads.InitializationListener;
 import com.cleversolutions.ads.MediationManager;
 
 public final class CASBridge implements AdLoadCallback {
@@ -27,17 +22,14 @@ public final class CASBridge implements AdLoadCallback {
     private static final int AD_TYPE_REWARD = 2;
     private static final int AD_TYPE_NATIVE = 3;
 
-    private final ContextService contextService;
     private final MediationManager manager;
     private final AdCallbackWrapper interstitialAdListener;
     private final AdCallbackWrapper rewardedListener;
 
     public CASBridge(
-            ContextService contextService,
             MediationManager manager,
             MediationManagerMethodHandler mediationManagerMethodHandler
     ) {
-        this.contextService = contextService;
         this.interstitialAdListener =
                 new AdCallbackWrapper(mediationManagerMethodHandler.getInterstitialCallbackWrapper(), false);
         this.rewardedListener =
