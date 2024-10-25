@@ -17,7 +17,9 @@ class MethodHandler {
         self.channelName = channelName
         let binaryMessenger = registrar.messenger()
         channel = FlutterMethodChannel(name: channelName, binaryMessenger: binaryMessenger)
-        channel.setMethodCallHandler(onMethodCall)
+        channel.setMethodCallHandler { [weak self] call, result in
+            self?.onMethodCall(call, result)
+        }
     }
 
     open func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -25,7 +27,7 @@ class MethodHandler {
         result(FlutterMethodNotImplemented)
     }
 
-    func invokeMethod(methodName: String, args: Any? = nil) {
+    func invokeMethod(_ methodName: String, _ args: Any? = nil) {
         channel.invokeMethod(methodName, arguments: args, result: nil)
     }
 }

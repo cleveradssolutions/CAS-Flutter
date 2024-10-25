@@ -38,7 +38,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
 
       case 'OnInterstitialAdFailedToLoad':
         _adLoadCallback?.onAdFailedToLoad(
-            AdType.Interstitial, call.arguments?["message"]);
+            AdType.Interstitial, call.arguments);
         break;
 
       case 'OnInterstitialAdShown':
@@ -50,15 +50,11 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnInterstitialAdFailedToShow':
-        _interstitialListener?.onShowFailed(call.arguments?["message"]);
+        _interstitialListener?.onShowFailed(call.arguments);
         break;
 
       case 'OnInterstitialAdClicked':
         _interstitialListener?.onClicked();
-        break;
-
-      case 'OnInterstitialAdComplete':
-        _interstitialListener?.onComplete();
         break;
 
       case 'OnInterstitialAdClosed':
@@ -72,8 +68,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnRewardedAdFailedToLoad':
-        _adLoadCallback?.onAdFailedToLoad(
-            AdType.Rewarded, call.arguments?["message"]);
+        _adLoadCallback?.onAdFailedToLoad(AdType.Rewarded, call.arguments);
         break;
 
       case 'OnRewardedAdShown':
@@ -85,7 +80,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnRewardedAdFailedToShow':
-        _rewardedListener?.onShowFailed(call.arguments?["message"]);
+        _rewardedListener?.onShowFailed(call.arguments);
         break;
 
       case 'OnRewardedAdClicked':
@@ -112,7 +107,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
 
       case 'OnAppReturnAdFailedToShow':
         if ((call.arguments as Object?) != null) {
-          _rewardedListener?.onShowFailed(call.arguments["message"]);
+          _rewardedListener?.onShowFailed(call.arguments);
         }
         break;
 
@@ -264,7 +259,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
     }
 
-    _channel.invokeMethod("createBannerView", {"sizeId": sizeId});
+    _channel.invokeMethod("showBanner", {"sizeId": sizeId});
     return InternalCASBannerView(_channel, _listenerContainer, sizeId);
   }
 

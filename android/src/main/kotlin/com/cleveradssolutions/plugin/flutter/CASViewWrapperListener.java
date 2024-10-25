@@ -2,7 +2,8 @@ package com.cleveradssolutions.plugin.flutter;
 
 import com.cleversolutions.ads.AdStatusHandler;
 
-public interface CASCallback {
+@Deprecated
+public interface CASViewWrapperListener {
     void onLoaded();
 
     void onFailed(int error);
@@ -11,13 +12,7 @@ public interface CASCallback {
 
     void onImpression(AdStatusHandler impression);
 
-    void onShowFailed(String message);
-
     void onClicked();
-
-    void onComplete();
-
-    void onClosed();
 
     void onRect( int x, int y, int width, int height );
 

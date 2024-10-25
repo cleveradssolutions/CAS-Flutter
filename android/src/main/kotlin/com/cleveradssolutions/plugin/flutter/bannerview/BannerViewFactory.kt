@@ -1,7 +1,6 @@
 package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
-import com.cleveradssolutions.plugin.flutter.CASBridge
 import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.StandardMessageCodec
@@ -20,7 +19,7 @@ class BannerViewFactory(
             viewId,
             creationParams,
             binding,
-            managerHandler
+            managerHandler.manager
         )
     }
 

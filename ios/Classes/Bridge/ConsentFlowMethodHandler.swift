@@ -16,11 +16,8 @@ class ConsentFlowMethodHandler: MethodHandler {
 
     init(with registrar: FlutterPluginRegistrar) {
         super.init(with: registrar, on: channelName)
-        consentFlowDismissListener = { status in
-            self.invokeMethod(
-                methodName: "OnDismissListener",
-                args: ["status": status.rawValue]
-            )
+        consentFlowDismissListener = { [weak self] status in
+            self?.invokeMethod("OnDismissListener", ["status": status.rawValue])
         }
     }
 

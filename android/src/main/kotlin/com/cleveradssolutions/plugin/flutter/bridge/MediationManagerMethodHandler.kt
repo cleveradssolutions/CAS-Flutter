@@ -1,9 +1,8 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
-import com.cleveradssolutions.plugin.flutter.CASBridge
-import com.cleveradssolutions.plugin.flutter.CASCallback
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.CASViewWrapper
+import com.cleveradssolutions.plugin.flutter.CASViewWrapperListener
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.error
 import com.cleveradssolutions.plugin.flutter.util.errorFieldNull
@@ -11,8 +10,14 @@ import com.cleveradssolutions.plugin.flutter.util.errorInvalidArg
 import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
 import com.cleveradssolutions.plugin.flutter.util.success
 import com.cleveradssolutions.plugin.flutter.util.toMap
+import com.cleveradssolutions.sdk.base.CASHandler
 import com.cleversolutions.ads.AdError
+import com.cleversolutions.ads.AdLoadCallback
+import com.cleversolutions.ads.AdPaidCallback
 import com.cleversolutions.ads.AdStatusHandler
+import com.cleversolutions.ads.AdType
+import com.cleversolutions.ads.LoadAdCallback
+import com.cleversolutions.ads.MediationManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -22,18 +27,14 @@ private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/mediatio
 class MediationManagerMethodHandler(
     binding: FlutterPluginBinding,
     private val contextService: CASFlutterContext,
-) : MethodHandler(binding, CHANNEL_NAME) {
+) : MethodHandler(binding, CHANNEL_NAME), AdLoadCallback {
 
-    var bridge: CASBridge? = null
-    var interstitialCallbackWrapper: CASCallback? = null
-    var rewardedCallbackWrapper: CASCallback? = null
-    private var appReturnCallbackWrapper: CASCallback? = null
+    var manager: MediationManager? = null
+        private set
 
-    init {
-        appReturnCallbackWrapper = createAppReturnCallback()
-        interstitialCallbackWrapper = createInterstitialCallback()
-        rewardedCallbackWrapper = createRewardedCallback()
-    }
+    private val interstitialListener = InterstitialListener()
+    private val rewardedListener = RewardedListener()
+    private val appReturnListener = AppReturnListener()
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -45,43 +46,64 @@ class MediationManagerMethodHandler(
             "setEnabled" -> setEnabled(call, result)
             "isEnabled" -> isEnabled(call, result)
 
-            "createBannerView" -> createBannerView(call, result)
             "showBanner" -> showBanner(call, result)
             "hideBanner" -> hideBanner(call, result)
             "setBannerPosition" -> setBannerPosition(call, result)
         }
     }
 
+    override fun onAdLoaded(type: AdType) {
+        CASHandler.main {
+            if (type == AdType.Interstitial) interstitialListener.onAdLoaded()
+            else if (type == AdType.Rewarded) rewardedListener.onAdLoaded()
+        }
+    }
+
+    override fun onAdFailedToLoad(type: AdType, error: String?) {
+        if (error == null) return
+        CASHandler.main {
+            if (type == AdType.Interstitial) interstitialListener.onAdFailedToLoad(AdError(error))
+            else if (type == AdType.Rewarded) rewardedListener.onAdFailedToLoad(AdError(error))
+        }
+    }
+
+    fun setManager(manager: MediationManager) {
+        this.manager = manager
+        manager.onAdLoadEvent.add(this)
+    }
+
     private fun setEnabled(call: MethodCall, result: MethodChannel.Result) {
-        val casBridge = getBridgeAndCheckNull(call, result) ?: return
+        val manager = getManagerAndCheckNull(call, result) ?: return
 
-        val adType = call.getArgAndCheckNull<Int>("adType", result) ?: return
+        val adTypeIndex = call.getArgAndCheckNull<Int>("adType", result) ?: return
+        if (adTypeIndex < 0 || adTypeIndex > 2) return result.errorInvalidArg(call, "adType")
+        val adType = AdType.values()[adTypeIndex]
         val enabled = call.getArgAndCheckNull<Boolean>("enable", result) ?: return
-        if (adType < 0 || adType > 2) return result.errorInvalidArg(call, "adType")
 
-        casBridge.enableAd(adType, enabled)
+        manager.setEnabled(adType, enabled)
 
         result.success()
     }
 
     private fun isEnabled(call: MethodCall, result: MethodChannel.Result) {
-        val casBridge = getBridgeAndCheckNull(call, result) ?: return
+        val manager = getManagerAndCheckNull(call, result) ?: return
 
-        val adType = call.getArgAndCheckNull<Int>("adType", result) ?: return
-        if (adType < 0 || adType > 2) {
-            return result.errorInvalidArg(call, "adType")
-        }
+        val adTypeIndex = call.getArgAndCheckNull<Int>("adType", result) ?: return
+        if (adTypeIndex < 0 || adTypeIndex > 2) return result.errorInvalidArg(call, "adType")
+        val adType = AdType.values()[adTypeIndex]
 
-        result.success(casBridge.isEnabled(adType))
+        val enabled = manager.isEnabled(adType)
+
+        result.success(enabled)
     }
 
     private fun loadAd(call: MethodCall, result: MethodChannel.Result) {
-        val casBridge = getBridgeAndCheckNull(call, result) ?: return
+        val manager = getManagerAndCheckNull(call, result) ?: return
 
         val adType = call.getArgAndCheckNull<Int>("adType", result) ?: return
         when (adType) {
-            1 -> casBridge.loadInterstitial()
-            2 -> casBridge.loadRewarded()
+            AdType.Interstitial.ordinal -> manager.loadInterstitial()
+            AdType.Rewarded.ordinal -> manager.loadRewardedAd()
             else -> return result.error(call, "AdType is not supported")
         }
 
@@ -89,24 +111,24 @@ class MediationManagerMethodHandler(
     }
 
     private fun isReadyAd(call: MethodCall, result: MethodChannel.Result) {
-        val casBridge = getBridgeAndCheckNull(call, result) ?: return
+        val manager = getManagerAndCheckNull(call, result) ?: return
 
         val adType = call.getArgAndCheckNull<Int>("adType", result) ?: return
         when (adType) {
-            1 -> result.success(casBridge.isInterstitialAdReady)
-            2 -> result.success(casBridge.isRewardedAdReady)
+            AdType.Interstitial.ordinal -> result.success(manager.isInterstitialReady)
+            AdType.Rewarded.ordinal -> result.success(manager.isRewardedAdReady)
             else -> result.error(call, "AdType is not supported")
         }
     }
 
     private fun showAd(call: MethodCall, result: MethodChannel.Result) {
-        val casBridge = getBridgeAndCheckNull(call, result) ?: return
+        val manager = getManagerAndCheckNull(call, result) ?: return
 
         val activity = contextService.getActivityOrError(call, result) ?: return
         val adType = call.getArgAndCheckNull<Int>("adType", result) ?: return
         when (adType) {
-            1 -> casBridge.showInterstitial(activity)
-            2 -> casBridge.showRewarded(activity)
+            AdType.Interstitial.ordinal -> manager.showInterstitial(activity, interstitialListener)
+            AdType.Rewarded.ordinal -> manager.showRewardedAd(activity, rewardedListener)
             else -> return result.error(call, "AdType is not supported")
         }
 
@@ -114,23 +136,23 @@ class MediationManagerMethodHandler(
     }
 
     private fun enableAppReturn(call: MethodCall, result: MethodChannel.Result) {
-        val casBridge = getBridgeAndCheckNull(call, result) ?: return
+        val manager = getManagerAndCheckNull(call, result) ?: return
 
         val enable = call.getArgAndCheckNull<Boolean>("enable", result) ?: return
 
         if (enable) {
-            casBridge.enableReturnAds(appReturnCallbackWrapper)
+            manager.enableAppReturnAds(appReturnListener)
         } else {
-            casBridge.disableReturnAds()
+            manager.disableAppReturnAds()
         }
 
         result.success()
     }
 
     private fun skipNextAppReturnAds(call: MethodCall, result: MethodChannel.Result) {
-        val casBridge = getBridgeAndCheckNull(call, result) ?: return
+        val manager = getManagerAndCheckNull(call, result) ?: return
 
-        casBridge.skipNextReturnAds()
+        manager.skipNextAppReturnAds()
 
         result.success()
     }
@@ -138,24 +160,19 @@ class MediationManagerMethodHandler(
 
     private val banners = mutableMapOf<Int, CASViewWrapper?>()
 
-    private fun createBannerView(call: MethodCall, result: MethodChannel.Result) {
-        val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
-
-        if (!banners.containsKey(sizeId)) {
-            val casBridge = getBridgeAndCheckNull(call, result) ?: return
-
-            banners[sizeId] = casBridge.createAdView(createListener(sizeId), sizeId, contextService)
-        }
-
-        result.success()
-    }
-
     private fun showBanner(call: MethodCall, result: MethodChannel.Result) {
         val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
-        val banner = banners[sizeId]
-            ?: return result.errorFieldNull(call, "banners[${getBannerName(sizeId)}]")
 
-        banner.show()
+        val banner = banners[sizeId]
+        if (banner != null) {
+            banner.show()
+        } else {
+            val view = CASViewWrapper(contextService)
+            CASHandler.main {
+                view.createView(manager, BannerListener(sizeId), sizeId)
+            }
+            banners[sizeId] = view
+        }
 
         result.success()
     }
@@ -183,9 +200,12 @@ class MediationManagerMethodHandler(
         result.success()
     }
 
-    private fun getBridgeAndCheckNull(call: MethodCall, result: MethodChannel.Result): CASBridge? {
-        if (bridge == null) result.errorFieldNull(call, "CASBridge")
-        return bridge
+    private fun getManagerAndCheckNull(
+        call: MethodCall,
+        result: MethodChannel.Result
+    ): MediationManager? {
+        if (manager == null) result.errorFieldNull(call, "manager")
+        return manager
     }
 
     private fun getBannerName(sizeId: Int): String {
@@ -198,182 +218,146 @@ class MediationManagerMethodHandler(
         }
     }
 
-    private fun createListener(sizeId: Int): CASCallback {
-        val name = getBannerName(sizeId)
-        return object : CASCallback {
-            override fun onLoaded() {
-                invokeMethod("OnBannerAdLoaded", mapOf("banner" to name))
-            }
+    private inner class BannerListener(sizeId: Int) : CASViewWrapperListener {
 
-            override fun onFailed(error: Int) {
-                invokeMethod(
-                    "OnBannerAdFailedToLoad",
-                    mapOf(
-                        "banner" to name,
-                        "message" to AdError(error).message
-                    )
+        private val name = getBannerName(sizeId)
+
+        override fun onLoaded() {
+            invokeMethod("OnBannerAdLoaded", mapOf("banner" to name))
+        }
+
+        override fun onFailed(error: Int) {
+            invokeMethod(
+                "OnBannerAdFailedToLoad",
+                mapOf(
+                    "banner" to name,
+                    "message" to AdError(error).message
                 )
-            }
+            )
+        }
 
-            override fun onShown() {
-                invokeMethod("OnBannerAdShown", mapOf("banner" to name))
-            }
+        override fun onShown() {
+            invokeMethod("OnBannerAdShown", mapOf("banner" to name))
+        }
 
-            override fun onImpression(impression: AdStatusHandler?) {
-                invokeMethod(
-                    "OnBannerAdImpression",
-                    mapOf("banner" to name) + (impression?.toMap() ?: emptyMap())
+        override fun onImpression(impression: AdStatusHandler?) {
+            invokeMethod(
+                "OnBannerAdImpression",
+                mapOf("banner" to name) + (impression?.toMap() ?: emptyMap())
+            )
+        }
+
+        override fun onClicked() {
+            invokeMethod("OnBannerAdClicked", mapOf("banner" to name))
+        }
+
+        override fun onRect(x: Int, y: Int, width: Int, height: Int) {
+            invokeMethod(
+                "OnBannerAdRect",
+                mapOf(
+                    "banner" to name,
+                    "x" to x,
+                    "y" to y,
+                    "width" to width,
+                    "height" to height
                 )
-            }
-
-            override fun onShowFailed(message: String?) {
-                invokeMethod(
-                    "OnBannerAdFailedToShow",
-                    mapOf(
-                        "banner" to name,
-                        "message" to message
-                    )
-                )
-            }
-
-            override fun onClicked() {
-                invokeMethod("OnBannerAdClicked", mapOf("banner" to name))
-            }
-
-            override fun onComplete() {
-            }
-
-            override fun onClosed() {
-            }
-
-            override fun onRect(x: Int, y: Int, width: Int, height: Int) {
-                invokeMethod(
-                    "OnBannerAdRect",
-                    mapOf(
-                        "banner" to name,
-                        "x" to x,
-                        "y" to y,
-                        "width" to width,
-                        "height" to height
-                    )
-                )
-            }
+            )
         }
     }
 
-    private fun createInterstitialCallback(): CASCallback {
-        return object : CASCallback {
-            override fun onLoaded() {
-                invokeMethod("OnInterstitialAdLoaded")
-            }
+    private inner class InterstitialListener : AdPaidCallback, LoadAdCallback {
+        override fun onAdLoaded() {
+            invokeMethod("OnInterstitialAdLoaded")
+        }
 
-            override fun onFailed(error: Int) {
-                invokeMethod(
-                    "OnInterstitialAdFailedToLoad",
-                    mapOf("message" to AdError(error).message)
-                )
-            }
+        override fun onAdFailedToLoad(error: AdError) {
+            invokeMethod(
+                "OnInterstitialAdFailedToLoad",
+                mapOf("message" to error.message)
+            )
+        }
 
-            override fun onShown() {
-                invokeMethod("OnInterstitialAdShown")
-            }
+        override fun onShown(ad: AdStatusHandler) {
+            invokeMethod("OnInterstitialAdShown")
+        }
 
-            override fun onImpression(impression: AdStatusHandler?) {
-                invokeMethod("OnInterstitialAdImpression", impression?.toMap())
-            }
+        override fun onAdRevenuePaid(ad: AdStatusHandler) {
+            invokeMethod("OnInterstitialAdImpression", ad.toMap())
+        }
 
-            override fun onShowFailed(message: String?) {
-                invokeMethod("OnInterstitialAdFailedToShow", mapOf("message" to message))
-            }
+        override fun onShowFailed(message: String) {
+            invokeMethod("OnInterstitialAdFailedToShow", mapOf("message" to message))
+        }
 
-            override fun onClicked() {
-                invokeMethod("OnInterstitialAdClicked")
-            }
+        override fun onClicked() {
+            invokeMethod("OnInterstitialAdClicked")
+        }
 
-            override fun onComplete() {
-                invokeMethod("OnInterstitialAdComplete")
-            }
-
-            override fun onClosed() {
-                invokeMethod("OnInterstitialAdClosed")
-            }
-
-            override fun onRect(x: Int, y: Int, width: Int, height: Int) {}
+        override fun onClosed() {
+            invokeMethod("OnInterstitialAdClosed")
         }
     }
 
-    private fun createRewardedCallback(): CASCallback {
-        return object : CASCallback {
-            override fun onLoaded() {
-                invokeMethod("OnRewardedAdLoaded")
-            }
+    private inner class RewardedListener : AdPaidCallback, LoadAdCallback {
+        override fun onAdLoaded() {
+            invokeMethod("OnRewardedAdLoaded")
+        }
 
-            override fun onFailed(error: Int) {
-                invokeMethod(
-                    "OnRewardedAdFailedToLoad",
-                    mapOf("message" to AdError(error).message)
-                )
-            }
+        override fun onAdFailedToLoad(error: AdError) {
+            invokeMethod(
+                "OnRewardedAdFailedToLoad",
+                mapOf("message" to error.message)
+            )
+        }
 
-            override fun onShown() {
-                invokeMethod("OnRewardedAdShown")
-            }
+        override fun onShown(ad: AdStatusHandler) {
+            invokeMethod("OnRewardedAdShown")
+        }
 
-            override fun onImpression(impression: AdStatusHandler?) {
-                invokeMethod("OnRewardedAdImpression", impression?.toMap())
-            }
+        override fun onAdRevenuePaid(ad: AdStatusHandler) {
+            invokeMethod("OnRewardedAdImpression", ad.toMap())
+        }
 
-            override fun onShowFailed(message: String?) {
-                invokeMethod("OnRewardedAdFailedToShow", mapOf("message" to message))
-            }
+        override fun onShowFailed(message: String) {
+            invokeMethod("OnRewardedAdFailedToShow", mapOf("message" to message))
+        }
 
-            override fun onClicked() {
-                invokeMethod("OnRewardedAdClicked")
-            }
+        override fun onClicked() {
+            invokeMethod("OnRewardedAdClicked")
+        }
 
-            override fun onComplete() {
-                invokeMethod("OnRewardedAdCompleted")
-            }
+        override fun onComplete() {
+            invokeMethod("OnRewardedAdCompleted")
+        }
 
-            override fun onClosed() {
-                invokeMethod("OnRewardedAdClosed")
-            }
-
-            override fun onRect(x: Int, y: Int, width: Int, height: Int) {}
+        override fun onClosed() {
+            invokeMethod("OnRewardedAdClosed")
         }
     }
 
-    private fun createAppReturnCallback(): CASCallback {
-        return object : CASCallback {
-            override fun onLoaded() {
-            }
+    private inner class AppReturnListener : AdPaidCallback, LoadAdCallback {
+        override fun onAdLoaded() {}
 
-            override fun onFailed(error: Int) {
-            }
+        override fun onAdFailedToLoad(error: AdError) {}
 
-            override fun onShown() {
-                invokeMethod("OnAppReturnAdShown")
-            }
+        override fun onShown(ad: AdStatusHandler) {
+            invokeMethod("OnAppReturnAdShown")
+        }
 
-            override fun onImpression(impression: AdStatusHandler?) {
-                invokeMethod("OnAppReturnAdImpression", impression?.toMap())
-            }
+        override fun onAdRevenuePaid(ad: AdStatusHandler) {
+            invokeMethod("OnAppReturnAdImpression", ad.toMap())
+        }
 
-            override fun onShowFailed(message: String?) {
-                invokeMethod("OnAppReturnAdFailedToShow", mapOf("message" to message))
-            }
+        override fun onShowFailed(message: String) {
+            invokeMethod("OnAppReturnAdFailedToShow", mapOf("message" to message))
+        }
 
-            override fun onClicked() {
-                invokeMethod("OnAppReturnAdClicked")
-            }
+        override fun onClicked() {
+            invokeMethod("OnAppReturnAdClicked")
+        }
 
-            override fun onComplete() {}
-
-            override fun onClosed() {
-                invokeMethod("OnAppReturnAdClosed")
-            }
-
-            override fun onRect(x: Int, y: Int, width: Int, height: Int) {}
+        override fun onClosed() {
+            invokeMethod("OnAppReturnAdClosed")
         }
     }
 

@@ -8,7 +8,7 @@
 import Foundation
 import CleverAdsSolutions
 
-class CASView : CASBannerDelegate{
+class CASView: CASBannerDelegate {
     private var bannerView: CASBannerView
     private var view: UIViewController
     private var callback: FlutterBannerCallback
