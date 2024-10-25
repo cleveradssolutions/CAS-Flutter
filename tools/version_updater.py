@@ -4,7 +4,7 @@ import sys
 
 
 # To run, execute the command:
-# python version_updater.py CAS_VERSION=3.9.5 FLUTTER_PLUGIN_VERSION=0.6.0
+# python version_updater.py CAS_VERSION=3.9.6 FLUTTER_PLUGIN_VERSION=0.6.1
 
 def parse_args(args):
     cas_version = None
@@ -53,7 +53,7 @@ def update_cas_sdk_version_android(cas_version):
 def update_cas_sdk_version_android_example(cas_version):
     update_version_in_file(
         os.path.join('..', 'example', 'android', 'app', 'build.gradle'),
-        "com.cleveradssolutions:cas-families:",
+        "id(\"com.cleveradssolutions.gradle-plugin\") version \"",
         cas_version,
         "[Android example] [build.gradle]"
     )

@@ -17,7 +17,7 @@ import 'user_consent.dart';
 
 /// Represents the CAS.AI SDK.
 class CAS {
-  static const String _pluginVersion = "0.6.0";
+  static const String _pluginVersion = "0.6.1";
 
   static const MethodChannel _channel =
       MethodChannel("com.cleveradssolutions.plugin.flutter/cas");
