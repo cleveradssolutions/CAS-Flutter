@@ -1,52 +1,38 @@
-import Foundation
 import CleverAdsSolutions
+import Foundation
 
-public class FlutterInterstitialCallback : CASFlutterCallback {
-    
-    var flutterCaller: completion?
-    
-    func setFlutterCaller(caller: @escaping(completion)) {
-        flutterCaller = caller
+class FlutterInterstitialCallback: CASPaidCallback {
+    private var handler: MethodHandler?
+
+    func setMethodHandler(handler: MethodHandler) {
+        self.handler = handler
     }
-    
-    func onLoaded() {
-        flutterCaller?("OnInterstitialAdLoaded", nil)
+
+    func onAdLoaded() {
+        handler?.invokeMethod("OnInterstitialAdLoaded")
     }
-    
-    func onFailed(error: String?) {
-        var args = [String: Any]()
-        args["message"] = error != nil ? error! : ""
-        flutterCaller?("OnInterstitialAdFailedToLoad", args)
+
+    func onAdFailedToLoad(withError message: String?) {
+        handler?.invokeMethod("OnInterstitialAdFailedToLoad", message)
     }
-    
-    func onShown() {
-        flutterCaller?("OnInterstitialAdShown", nil)
+
+    func willShown(ad adStatus: CASImpression) {
+        handler?.invokeMethod("OnInterstitialAdShown")
     }
-    
-    func onImpression(for impression: CASImpression) {
-        flutterCaller?("OnInterstitialAdImpression", impression.toDict())
+
+    func didPayRevenue(for ad: CASImpression) {
+        handler?.invokeMethod("OnInterstitialAdImpression", ad.toDict())
     }
-    
-    func onShowFailed(message: String) {
-        var args = [String: Any]()
-        args["message"] = message
-        flutterCaller?("OnInterstitialAdFailedToShow", args)
+
+    func didShowAdFailed(error: String) {
+        handler?.invokeMethod("OnInterstitialAdFailedToShow", error)
     }
-    
-    func onClicked() {
-        flutterCaller?("OnInterstitialAdClicked", nil)
+
+    func didClickedAd() {
+        handler?.invokeMethod("OnInterstitialAdClicked")
     }
-    
-    func onComplete() {
-        flutterCaller?("OnInterstitialAdComplete", nil)
-    }
-    
-    func onClosed() {
-        flutterCaller?("OnInterstitialAdClosed", nil)
-    }
-    
-    func OnRect(x: Int, y: Int, width: Int, height: Int) {
-        
+
+    func didClosedAd() {
+        handler?.invokeMethod("OnInterstitialAdClosed")
     }
 }
-

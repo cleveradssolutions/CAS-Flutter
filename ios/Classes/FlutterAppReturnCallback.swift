@@ -1,52 +1,34 @@
-import Foundation
 import CleverAdsSolutions
+import Foundation
 
-public class FlutterAppReturnCallback : CASAppReturnDelegate, FlutterCaller {
-    var flutterCaller: completion?
-    
-    func setFlutterCaller(caller: @escaping(completion)) {
-        flutterCaller = caller
+class FlutterAppReturnCallback: CASAppReturnDelegate {
+    private var handler: MethodHandler?
+
+    func setMethodHandler(handler: MethodHandler) {
+        self.handler = handler
     }
-    
-    func onLoaded() {
-        
+
+    func willShown(ad adStatus: CASImpression) {
+        handler?.invokeMethod("OnAppReturnAdShown")
     }
-    
-    func onFailed(error: String?) {
-        
+
+    func didPayRevenue(for ad: CASImpression) {
+        handler?.invokeMethod("OnAppReturnAdImpression", ad.toDict())
     }
-    
-    func onShown() {
-        flutterCaller?("OnAppReturnAdShown", nil)
+
+    func didShowAdFailed(error: String) {
+        handler?.invokeMethod("OnAppReturnAdFailedToShow", error)
     }
-    
-    func onImpression(for impression: CASImpression) {
-        flutterCaller?("OnAppReturnAdImpression", impression.toDict())
+
+    func didClickedAd() {
+        handler?.invokeMethod("OnAppReturnAdClicked")
     }
-    
-    func onShowFailed(message: String) {
-        var args = [String: Any]()
-        args["message"] = message
-        flutterCaller?("OnAppReturnAdFailedToShow", args)
+
+    func didClosedAd() {
+        handler?.invokeMethod("OnAppReturnAdClosed")
     }
-    
-    func onClicked() {
-        flutterCaller?("OnAppReturnAdClicked", nil)
-    }
-    
-    func onComplete() {
-        
-    }
-    
-    func onClosed() {
-        flutterCaller?("OnAppReturnAdClosed", nil)
-    }
-    
-    func OnRect(x: Int, y: Int, width: Int, height: Int) {
-        
-    }
-    
-    public func viewControllerForPresentingAppReturnAd() -> UIViewController {
+
+    func viewControllerForPresentingAppReturnAd() -> UIViewController {
         return Util.findRootViewController()!
     }
 }

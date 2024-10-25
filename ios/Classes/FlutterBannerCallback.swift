@@ -1,37 +1,36 @@
 import CleverAdsSolutions
 import Foundation
 
-public class FlutterBannerCallback: CASBannerDelegate, FlutterCaller {
+class FlutterBannerCallback: CASBannerDelegate {
+    private var handler: MethodHandler?
     private var sizeId = 0
 
     init(sizeId: Int) {
         self.sizeId = sizeId
     }
 
-    var flutterCaller: completion?
-
-    func setFlutterCaller(caller: @escaping (completion)) {
-        flutterCaller = caller
+    func setMethodHandler(handler: MethodHandler) {
+        self.handler = handler
     }
 
-    public func bannerAdViewDidLoad(_ view: CleverAdsSolutions.CASBannerView) {
-        let args = ["name": "banner"]
-        flutterCaller?("OnBannerAdLoaded", args)
+    func bannerAdViewDidLoad(_ view: CleverAdsSolutions.CASBannerView) {
+        handler?.invokeMethod("OnBannerAdLoaded", ["name": "banner"])
     }
 
-    public func bannerAdView(_ adView: CleverAdsSolutions.CASBannerView, didFailWith error: CleverAdsSolutions.CASError) {
-        let args = ["name": "banner", "message": error.message]
-        flutterCaller?("OnBannerAdFailedToLoad", args)
+    func bannerAdView(_ adView: CleverAdsSolutions.CASBannerView, didFailWith error: CleverAdsSolutions.CASError) {
+        handler?.invokeMethod("OnBannerAdFailedToLoad", [
+            "name": "banner",
+            "message": error.message
+        ])
     }
 
-    public func bannerAdView(_ adView: CleverAdsSolutions.CASBannerView, willPresent impression: CleverAdsSolutions.CASImpression) {
+    func bannerAdView(_ adView: CleverAdsSolutions.CASBannerView, willPresent impression: CleverAdsSolutions.CASImpression) {
         let args: [String: Any?] = ["name": "banner"]
-        flutterCaller?("OnBannerAdShown", args)
-        flutterCaller?("OnBannerAdImpression", args.merging(impression.toDict()) { current, _ in current })
+        handler?.invokeMethod("OnBannerAdShown", args)
+        handler?.invokeMethod("OnBannerAdImpression", args.merging(impression.toDict()) { current, _ in current })
     }
 
-    public func bannerAdViewDidRecordClick(_ adView: CleverAdsSolutions.CASBannerView) {
-        let args = ["name": "banner"]
-        flutterCaller?("OnBannerAdClicked", args)
+    func bannerAdViewDidRecordClick(_ adView: CleverAdsSolutions.CASBannerView) {
+        handler?.invokeMethod("OnBannerAdClicked", ["name": "banner"])
     }
 }

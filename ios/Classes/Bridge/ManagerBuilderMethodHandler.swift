@@ -69,7 +69,7 @@ class ManagerBuilderMethodHandler: MethodHandler {
                 .withFramework("Flutter", version: version)
                 .withConsentFlow(consentFlowMethodHandler.getConsentFlow())
                 .withCompletionHandler({ [weak self] initialConfig in
-                    self?.invokeMethod(methodName: "onCASInitialized", args: [
+                    self?.invokeMethod("onCASInitialized", [
                         "error": initialConfig.error as Any?,
                         "countryCode": initialConfig.countryCode,
                         "isConsentRequired": initialConfig.isConsentRequired,
@@ -78,8 +78,7 @@ class ManagerBuilderMethodHandler: MethodHandler {
                 })
                 .create(withCasId: id)
 
-            mediationManagerMethodHandler.bridge =
-                CASBridge(manager, mediationManagerMethodHandler)
+            mediationManagerMethodHandler.setManager(manager)
 
             builderField = nil
 

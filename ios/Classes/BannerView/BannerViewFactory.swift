@@ -25,7 +25,7 @@ class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
             viewId: viewId,
             args: args,
             registrar: registrar,
-            managerHandler: managerHandler
+            manager: managerHandler.manager
         )
     }
 

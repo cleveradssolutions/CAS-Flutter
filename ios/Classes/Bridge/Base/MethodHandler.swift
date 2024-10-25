@@ -27,7 +27,7 @@ class MethodHandler {
         result(FlutterMethodNotImplemented)
     }
 
-    func invokeMethod(methodName: String, args: Any? = nil) {
+    func invokeMethod(_ methodName: String, _ args: Any? = nil) {
         channel.invokeMethod(methodName, arguments: args, result: nil)
     }
 }

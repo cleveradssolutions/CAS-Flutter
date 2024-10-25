@@ -36,19 +36,19 @@ class BannerMethodHandler: MethodHandler, CASBannerDelegate {
     }
 
     func bannerAdViewDidLoad(_ view: CASBannerView) {
-        invokeMethod(methodName: "onAdViewLoaded")
+        invokeMethod("onAdViewLoaded")
     }
 
     func bannerAdView(_ adView: CASBannerView, didFailWith error: CASError) {
-        invokeMethod(methodName: "onAdViewFailed", args: error.message)
+        invokeMethod("onAdViewFailed", error.message)
     }
 
     func bannerAdView(_ adView: CASBannerView, willPresent impression: CASImpression) {
-        invokeMethod(methodName: "onAdViewPresented", args: impression.toDict())
+        invokeMethod("onAdViewPresented", impression.toDict())
     }
 
     func bannerAdViewDidRecordClick(_ adView: CASBannerView) {
-        invokeMethod(methodName: "onAdViewClicked")
+        invokeMethod("onAdViewClicked")
     }
 
     private func isAdReady(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

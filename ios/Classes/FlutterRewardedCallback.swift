@@ -1,51 +1,42 @@
-import Foundation
 import CleverAdsSolutions
+import Foundation
 
-public class FlutterRewardedCallback : CASFlutterCallback {
-    
-    var flutterCaller: completion?
-    
-    func setFlutterCaller(caller: @escaping(completion)) {
-        flutterCaller = caller
+class FlutterRewardedCallback: CASPaidCallback {
+    private var handler: MethodHandler?
+
+    func setMethodHandler(handler: MethodHandler) {
+        self.handler = handler
     }
-    
-    func onLoaded() {
-        flutterCaller?("OnRewardedAdLoaded", nil)
+
+    func onAdLoaded() {
+        handler?.invokeMethod("OnRewardedAdLoaded")
     }
-    
-    func onFailed(error: String?) {
-        var args = [String: Any]()
-        args["message"] = error != nil ? error! : ""
-        flutterCaller?("OnRewardedAdFailedToLoad", args)
+
+    func onAdFailedToLoad(withError message: String?) {
+        handler?.invokeMethod("OnRewardedAdFailedToLoad", message)
     }
-    
-    func onShown() {
-        flutterCaller?("OnRewardedAdShown", nil)
+
+    func willShown(ad adStatus: CASImpression) {
+        handler?.invokeMethod("OnRewardedAdShown")
     }
-    
-    func onImpression(for impression: CASImpression) {
-        flutterCaller?("OnRewardedAdImpression", impression.toDict())
+
+    func didPayRevenue(for ad: CASImpression) {
+        handler?.invokeMethod("OnRewardedAdImpression", ad.toDict())
     }
-    
-    func onShowFailed(message: String) {
-        var args = [String: Any]()
-        args["message"] = message
-        flutterCaller?("OnRewardedAdFailedToShow", args)
+
+    func didShowAdFailed(error: String) {
+        handler?.invokeMethod("OnRewardedAdFailedToShow", error)
     }
-    
-    func onClicked() {
-        flutterCaller?("OnRewardedAdClicked", nil)
+
+    func didClickedAd() {
+        handler?.invokeMethod("OnRewardedAdClicked")
     }
-    
-    func onComplete() {
-        flutterCaller?("OnRewardedAdCompleted", nil)
+
+    func didCompletedAd() {
+        handler?.invokeMethod("OnRewardedAdCompleted")
     }
-    
-    func onClosed() {
-        flutterCaller?("OnRewardedAdClosed", nil)
-    }
-    
-    func OnRect(x: Int, y: Int, width: Int, height: Int) {
-        
+
+    func didClosedAd() {
+        handler?.invokeMethod("OnRewardedAdClosed")
     }
 }

@@ -7,20 +7,18 @@
 
 import CleverAdsSolutions
 import Flutter
-import Foundation
 
 class BannerView: NSObject, FlutterPlatformView {
-    private var banner: CASBannerView
-    private var methodHandler: BannerMethodHandler
+    private let banner: CASBannerView
+    private let methodHandler: BannerMethodHandler
 
     init(
         frame: CGRect,
         viewId: Int64,
         args: [String: Any?]?,
         registrar: FlutterPluginRegistrar,
-        managerHandler: MediationManagerMethodHandler
+        manager: CASMediationManager?
     ) {
-        let manager = managerHandler.bridge?.manager
         banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
         banner.tag = Int(viewId)
 
