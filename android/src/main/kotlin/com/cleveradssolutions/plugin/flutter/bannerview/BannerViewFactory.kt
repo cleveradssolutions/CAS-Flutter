@@ -1,7 +1,7 @@
 package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
-import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.manager.MediationManagerMethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView

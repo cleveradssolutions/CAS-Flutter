@@ -7,6 +7,7 @@ export 'src/ad_type.dart';
 export 'src/ad_types.dart';
 export 'src/ad_view_listener.dart';
 export 'src/ads_settings.dart';
+export 'src/app_open/cas_app_open.dart';
 export 'src/audience.dart';
 export 'src/banner_widget.dart';
 export 'src/cas.dart';

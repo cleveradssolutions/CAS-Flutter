@@ -1,6 +1,7 @@
-package com.cleveradssolutions.plugin.flutter.bridge
+package com.cleveradssolutions.plugin.flutter.bridge.manager
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
+import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn

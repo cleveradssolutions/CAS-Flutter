@@ -5,8 +5,8 @@ import com.cleveradssolutions.plugin.flutter.bridge.AdSizeMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.AdsSettingsMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.CASMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
-import com.cleveradssolutions.plugin.flutter.bridge.ManagerBuilderMethodHandler
-import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.manager.ManagerBuilderMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.manager.MediationManagerMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.TargetingOptionsMethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
