@@ -10,10 +10,10 @@ class AdSize {
 
   const AdSize._(this.width, this.height, this.mode);
 
-  AdSize._parseMap(Map<String, int?> map)
-      : width = map["width"] ?? 0,
-        height = map["height"] ?? 0,
-        mode = map["mode"] ?? 0;
+  AdSize._parseMap(Map<dynamic, dynamic>? map)
+      : width = map?["width"] ?? 0,
+        height = map?["height"] ?? 0,
+        mode = map?["mode"] ?? 0;
 
   /// Standard banner size 320dp width and 50dp height
   static const AdSize banner = AdSize._(320, 50, 0);
@@ -42,7 +42,7 @@ class AdSize {
   /// Typically, Smart Banners on phones have a [BANNER] size.
   /// Or on tablets a [LEADERBOARD] size.
   static Future<AdSize> getSmartBanner() async {
-    final Map<String, int> map = await _channel.invokeMethod("getSmartBanner");
+    final map = await _channel.invokeMethod<Map>("getSmartBanner");
     return AdSize._parseMap(map);
   }
 
@@ -56,7 +56,7 @@ class AdSize {
   /// In most cases, this will be the full width of the screen of the device in use.
   /// Be sure to take into account applicable safe areas.
   static Future<AdSize> getInlineBanner(int width, int maxHeight) async {
-    final Map<String, int> map = await _channel.invokeMethod(
+    final map = await _channel.invokeMethod<Map>(
         "getInlineBanner", {"width": width, "maxHeight": maxHeight});
     return AdSize._parseMap(map);
   }
@@ -66,9 +66,8 @@ class AdSize {
   /// - The width of adaptive banners cannot be less than 300 dp.
   /// - The adaptive banners use fixed aspect ratios instead of fixed heights.
   static Future<AdSize> getAdaptiveBanner(int maxWidthDp) async {
-    final Map<String, int> map = await _channel.invokeMethod(
-        "getAdaptiveBanner",
-        {"maxWidthDp": maxWidthDp});
+    final map = await _channel
+        .invokeMethod<Map>("getAdaptiveBanner", {"maxWidthDp": maxWidthDp});
     return AdSize._parseMap(map);
   }
 
@@ -77,8 +76,7 @@ class AdSize {
   /// - The width of adaptive banners cannot be less than 300 dp.
   /// - The adaptive banners use fixed aspect ratios instead of fixed heights.
   static Future<AdSize> getAdaptiveBannerInScreen() async {
-    final Map<String, int> map =
-        await _channel.invokeMethod("getAdaptiveBannerInScreen");
+    final map = await _channel.invokeMethod<Map>("getAdaptiveBannerInScreen");
     return AdSize._parseMap(map);
   }
 }
