@@ -113,7 +113,10 @@ class _MyAppState extends State<MyApp>
         .withAdTypes(AdTypeFlags.Banner |
             AdTypeFlags.Interstitial |
             AdTypeFlags.Rewarded)
-        .withConsentFlow(CAS.buildConsentFlow().withDismissListener(this))
+        .withConsentFlow(CAS
+            .buildConsentFlow()
+            .withDismissListener(this)
+            .withPrivacyPolicy("https://example.com/"))
         .withCompletionListener(_onCASInitialized)
         .build();
   }
@@ -140,7 +143,7 @@ class _MyAppState extends State<MyApp>
 
   @override
   void onConsentFlowDismissed(int status) {
-    logDebug("Consent flow dismissed");
+    logDebug("Consent flow dismissed: $status");
   }
 
   @override
