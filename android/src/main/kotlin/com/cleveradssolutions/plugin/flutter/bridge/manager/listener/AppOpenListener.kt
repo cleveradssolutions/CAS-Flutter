@@ -8,7 +8,7 @@ import com.cleversolutions.ads.AdStatusHandler
 import com.cleversolutions.ads.LoadAdCallback
 
 class AppOpenListener(
-private val handler: MethodHandler
+    private val handler: MethodHandler
 ) : AdPaidCallback, LoadAdCallback {
     override fun onAdLoaded() {
         handler.invokeMethod("OnAppOpenAdLoaded")

@@ -8,6 +8,91 @@ void main() {
   final appOpenAd = CASAppOpen.create("demo");
   appOpenAd.contentCallback = AppOpenAdListener();
   appOpenAd.loadAd(AppOpenAdLoadListener());
+  runApp(const SplashScreen());
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  bool _isLoadingAppResources = false;
+  bool _isVisibleAppOpenAd = false;
+  bool _isCompletedSplash = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _simulationLongAppResourcesLoading();
+    _createAppOpenAd();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('CAS.AI Sample'),
+        ),
+        backgroundColor: const Color(0x001a283e),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/icon.png',
+                height: 150,
+                width: double.infinity,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'AppOpenAd loading is carried out before the application resources are ready.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                '',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  _openNextScreen();
+                },
+                child: const Text(
+                  'Skip AppOpenAd',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _openNextScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const MyApp()),
+    );
+  }
 }
 
 class AppOpenAdLoadListener extends AdLoadCallback {
@@ -19,13 +104,14 @@ class AppOpenAdLoadListener extends AdLoadCallback {
       appOpenAd.show(SampleAppOpenAdActivity.this);
     }
 
-    // runApp(const MyApp());
+    _openNextScreen();
   }
 
   @override
   void onAdFailedToLoad(AdError adError) {
     logDebug("App Open Ad failed to load: " + adError.getMessage());
-    runApp(const MyApp());
+
+    _openNextScreen();
   }
 }
 
@@ -40,7 +126,7 @@ class AppOpenAdListener extends AdCallback {
     logDebug("App Open Ad show failed: " + message);
 
     isVisibleAppOpenAd = false;
-    startNextActivity();
+    _openNextScreen();
   }
 
   @override
@@ -48,6 +134,6 @@ class AppOpenAdListener extends AdCallback {
     logDebug("App Open Ad closed");
 
     isVisibleAppOpenAd = false;
-    startNextActivity();
+    _openNextScreen();
   }
 }
