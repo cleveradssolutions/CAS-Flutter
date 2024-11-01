@@ -13,7 +13,7 @@ cas {
     }
     // Instead of defining each adapter separately,
     // you can simply include the list of recommended adapters in one line:
-    //includeOptimalAds = true
+    // includeOptimalAds = true
 }
 
 def localProperties = new Properties()

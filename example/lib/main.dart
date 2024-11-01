@@ -108,7 +108,7 @@ class _MyAppState extends State<MyApp>
     // Initialize SDK
     _manager = CAS
         .buildManager()
-        .withCasId("example")
+        .withCasId("demo")
         .withTestMode(true)
         .withAdTypes(AdTypeFlags.Banner |
             AdTypeFlags.Interstitial |
@@ -158,7 +158,7 @@ class _MyAppState extends State<MyApp>
 
   @override
   void onAdFailedToLoad(AdType adType, String? error) {
-    logDebug("Ad ${adType.name} failed to load: ${error}");
+    logDebug("Ad ${adType.name} failed to load: $error");
   }
 
   void _showInterstitial() {
@@ -177,32 +177,32 @@ class AdListener extends AdCallback {
 
   @override
   void onClicked() {
-    debugPrint("$_name ad was pressed!");
+    logDebug("$_name ad was pressed!");
   }
 
   @override
   void onClosed() {
-    debugPrint("$_name ad was closed!");
+    logDebug("$_name ad was closed!");
   }
 
   @override
   void onComplete() {
-    debugPrint("$_name ad was complete!");
+    logDebug("$_name ad was complete!");
   }
 
   @override
   void onImpression(AdImpression? adImpression) {
-    debugPrint("$_name ad did impression: $adImpression!");
+    logDebug("$_name ad did impression: $adImpression!");
   }
 
   @override
   void onShowFailed(String? message) {
-    debugPrint("$_name ad failed to show: $message!");
+    logDebug("$_name ad failed to show: $message!");
   }
 
   @override
   void onShown() {
-    debugPrint("$_name ad shown!");
+    logDebug("$_name ad shown!");
   }
 }
 
@@ -213,26 +213,26 @@ class BannerListener extends AdViewListener {
 
   @override
   void onAdViewPresented() {
-    debugPrint("Banner $_name ad was presented!");
+    logDebug("Banner $_name ad was presented!");
   }
 
   @override
   void onClicked() {
-    debugPrint("Banner $_name ad was pressed!");
+    logDebug("Banner $_name ad was pressed!");
   }
 
   @override
   void onFailed(String? message) {
-    debugPrint("Banner $_name error! $message");
+    logDebug("Banner $_name error! $message");
   }
 
   @override
   void onImpression(AdImpression? adImpression) {
-    debugPrint("Banner $_name impression: $adImpression");
+    logDebug("Banner $_name impression: $adImpression");
   }
 
   @override
   void onLoaded() {
-    debugPrint("Banner $_name ad was loaded!");
+    logDebug("Banner $_name ad was loaded!");
   }
 }
