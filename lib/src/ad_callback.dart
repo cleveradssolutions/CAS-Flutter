@@ -1,14 +1,18 @@
 import 'ad_impression.dart';
 
+/// A callback interface for handling advertisement events.
 abstract class AdCallback {
   /// Executed when the ad is displayed.
   void onShown();
 
+  /// Executed when an ad impression is registered.
+  ///
+  /// [adImpression] Impression details
   void onImpression(AdImpression? adImpression);
 
   /// Executed when the ad is failed to display.
   ///
-  /// @param message Error message
+  /// [message] Error message
   void onShowFailed(String? message);
 
   /// Executed when the user clicks on an Ad.
