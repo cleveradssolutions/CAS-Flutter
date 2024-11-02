@@ -70,16 +70,6 @@ class InternalManagerBuilder extends ManagerBuilder {
 
   @override
   ManagerBuilder withConsentFlow(ConsentFlow consentFlow) {
-    if (!consentFlow.isEnable) {
-      _channel.invokeMethod('disable');
-      return this;
-    }
-
-    String? privacyPolicyUrl = consentFlow.privacyPolicy;
-    if (privacyPolicyUrl != null) {
-      _channel.invokeMethod('withPrivacyPolicy', {'url': privacyPolicyUrl});
-    }
-
     return this;
   }
 

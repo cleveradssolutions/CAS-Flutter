@@ -98,7 +98,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
       //AppReturn
 
       case 'OnAppReturnAdShown':
-        _rewardedListener?.onShown();
+        _appReturnListener?.onShown();
         break;
 
       case 'OnAppReturnAdImpression':
@@ -107,16 +107,16 @@ class InternalMediationManager extends AdListener implements MediationManager {
 
       case 'OnAppReturnAdFailedToShow':
         if ((call.arguments as Object?) != null) {
-          _rewardedListener?.onShowFailed(call.arguments);
+          _appReturnListener?.onShowFailed(call.arguments);
         }
         break;
 
       case 'OnAppReturnAdClicked':
-        _rewardedListener?.onClicked();
+        _appReturnListener?.onClicked();
         break;
 
       case 'OnAppReturnAdClosed':
-        _rewardedListener?.onComplete();
+        _appReturnListener?.onComplete();
         break;
     }
   }

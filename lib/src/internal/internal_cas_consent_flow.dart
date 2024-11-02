@@ -6,8 +6,8 @@ import '../consent_flow.dart';
 import '../on_dismiss_listener.dart';
 
 class InternalCASConsentFlow extends ConsentFlow {
-  final MethodChannel _channel =
-      const MethodChannel("com.cleveradssolutions.plugin.flutter/consent_flow");
+  static const MethodChannel _channel =
+      MethodChannel("com.cleveradssolutions.plugin.flutter/consent_flow");
   OnDismissListener? onDismissListener;
 
   InternalCASConsentFlow() {
@@ -27,7 +27,7 @@ class InternalCASConsentFlow extends ConsentFlow {
 
   @override
   ConsentFlow disableFlow() {
-    isEnable = false;
+    _channel.invokeMethod('disable');
     return this;
   }
 
@@ -39,20 +39,17 @@ class InternalCASConsentFlow extends ConsentFlow {
 
   @override
   ConsentFlow withPrivacyPolicy(String? privacyPolicy) {
-    this.privacyPolicy = privacyPolicy;
+    _channel.invokeMethod('withPrivacyPolicy', {'url': privacyPolicy});
     return this;
   }
 
   @override
-  Future<void> show() async {
-    if (!isEnable) {
-      _channel.invokeMethod('disable');
-    } else {
-      if (privacyPolicy != null) {
-        _channel.invokeMethod('withPrivacyUrl', {'url': privacyPolicy});
-      }
+  Future<void> showIfRequired() async {
+    _channel.invokeMethod('show', {'force': false});
+  }
 
-      _channel.invokeMethod('show');
-    }
+  @override
+  Future<void> show() async {
+    _channel.invokeMethod('show', {'force': true});
   }
 }

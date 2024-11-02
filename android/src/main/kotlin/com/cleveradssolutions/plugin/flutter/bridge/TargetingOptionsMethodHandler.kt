@@ -91,12 +91,12 @@ class TargetingOptionsMethodHandler(
     }
 
     private fun getKeywords(result: MethodChannel.Result) {
-        result.success(CAS.targetingOptions.keywords)
+        result.success(CAS.targetingOptions.keywords?.toList())
     }
 
     private fun setKeywords(call: MethodCall, result: MethodChannel.Result) {
-        call.getArgAndReturn<Set<String>?>("keywords", result) {
-            CAS.targetingOptions.keywords = it
+        call.getArgAndReturn<List<String>?>("keywords", result) {
+            CAS.targetingOptions.keywords = it?.toSet()
         }
     }
 

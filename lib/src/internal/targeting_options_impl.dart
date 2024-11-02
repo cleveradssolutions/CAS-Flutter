@@ -83,13 +83,16 @@ class TargetingOptionsImpl extends TargetingOptions {
   }
 
   @override
-  Future<Set<String>?> getKeywords() {
-    return _channel.invokeMethod<Set<String>>("getKeywords");
+  Future<Set<String>?> getKeywords() async {
+    return (await _channel.invokeMethod<List>("getKeywords"))
+        ?.toSet()
+        .cast<String>();
   }
 
   @override
   Future<void> setKeywords(Set<String>? keywords) {
-    return _channel.invokeMethod("setKeywords", {"keywords": keywords});
+    return _channel
+        .invokeMethod("setKeywords", {"keywords": keywords?.toList()});
   }
 
   @override
