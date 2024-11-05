@@ -1,4 +1,4 @@
-import 'ad_impression.dart';
+import '../ad_impression.dart';
 
 abstract class AdViewListener {
   void onAdViewPresented();

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 import '../ad_view_listener.dart';
-import 'ad_listener.dart';
+import '../../internal/ad_listener.dart';
 
 class InternalListenerContainer extends AdListener {
   AdViewListener? standardBannerListener;

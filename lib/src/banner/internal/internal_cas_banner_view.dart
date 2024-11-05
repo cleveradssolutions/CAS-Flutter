@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
+import 'internal_listener_container.dart';
 import '../ad_position.dart';
 import '../ad_view_listener.dart';
 import '../cas_banner_view.dart';
-import 'internal_listener_container.dart';
 
 @Deprecated("Use BannerView instead")
 class InternalCASBannerView extends CASBannerView {

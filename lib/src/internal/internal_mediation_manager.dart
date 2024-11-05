@@ -6,11 +6,11 @@ import '../ad_callback.dart';
 import '../ad_load_callback.dart';
 import '../ad_size.dart';
 import '../ad_type.dart';
-import '../cas_banner_view.dart';
+import '../banner/cas_banner_view.dart';
+import '../banner/internal/internal_cas_banner_view.dart';
+import '../banner/internal/internal_listener_container.dart';
 import '../mediation_manager.dart';
 import 'ad_listener.dart';
-import 'internal_cas_banner_view.dart';
-import 'internal_listener_container.dart';
 
 class InternalMediationManager extends AdListener implements MediationManager {
   static const MethodChannel _channel =
@@ -37,8 +37,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnInterstitialAdFailedToLoad':
-        _adLoadCallback?.onAdFailedToLoad(
-            AdType.Interstitial, call.arguments);
+        _adLoadCallback?.onAdFailedToLoad(AdType.Interstitial, call.arguments);
         break;
 
       case 'OnInterstitialAdShown':
