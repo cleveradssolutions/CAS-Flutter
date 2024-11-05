@@ -10,7 +10,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/consent_flow"
+private const val CHANNEL_NAME = "cleveradssolutions/consent_flow"
 
 class ConsentFlowMethodHandler(
     binding: FlutterPluginBinding,

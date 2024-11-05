@@ -10,7 +10,7 @@ import '../mediation_manager.dart';
 
 class InternalManagerBuilder extends ManagerBuilder {
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/manager_builder");
+      MethodChannel("cleveradssolutions/manager_builder");
 
   Function(InitConfig config)? onCASInitialized;
 

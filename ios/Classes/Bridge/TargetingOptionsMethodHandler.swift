@@ -8,7 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "com.cleveradssolutions.plugin.flutter/targeting_options"
+private let channelName = "cleveradssolutions/targeting_options"
 
 class TargetingOptionsMethodHandler: MethodHandler {
     init(with registrar: FlutterPluginRegistrar) {

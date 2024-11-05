@@ -9,7 +9,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/ads_settings"
+private const val CHANNEL_NAME = "cleveradssolutions/ads_settings"
 
 class AdsSettingsMethodHandler(
     binding: FlutterPluginBinding

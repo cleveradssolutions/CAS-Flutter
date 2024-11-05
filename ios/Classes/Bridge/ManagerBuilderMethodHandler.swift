@@ -8,7 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "com.cleveradssolutions.plugin.flutter/manager_builder"
+private let channelName = "cleveradssolutions/manager_builder"
 
 class ManagerBuilderMethodHandler: MethodHandler {
     private let consentFlowMethodHandler: ConsentFlowMethodHandler

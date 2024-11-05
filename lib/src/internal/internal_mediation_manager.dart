@@ -14,7 +14,7 @@ import 'ad_listener.dart';
 
 class InternalMediationManager extends AdListener implements MediationManager {
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/mediation_manager");
+      MethodChannel("cleveradssolutions/mediation_manager");
 
   AdCallback? _interstitialListener;
   AdCallback? _rewardedListener;

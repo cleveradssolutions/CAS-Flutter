@@ -8,7 +8,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/ad_size"
+private const val CHANNEL_NAME = "cleveradssolutions/ad_size"
 
 class AdSizeMethodHandler(
     binding: FlutterPluginBinding

@@ -8,7 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "com.cleveradssolutions.plugin.flutter/consent_flow"
+private let channelName = "cleveradssolutions/consent_flow"
 
 class ConsentFlowMethodHandler: MethodHandler {
     private var consentFlow: CASConsentFlow?

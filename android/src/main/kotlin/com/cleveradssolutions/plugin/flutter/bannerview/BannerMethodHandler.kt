@@ -12,7 +12,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/banner."
+private const val CHANNEL_NAME = "cleveradssolutions/banner."
 
 class BannerMethodHandler(
     binding: FlutterPluginBinding,

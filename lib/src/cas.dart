@@ -19,8 +19,7 @@ import 'user_consent.dart';
 class CAS {
   static const String _pluginVersion = "0.6.2";
 
-  static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/cas");
+  static const MethodChannel _channel = MethodChannel("cleveradssolutions/cas");
 
   /// Get singleton instance for configure all mediation managers
   static final AdsSettings settings = AdsSettingsImpl();

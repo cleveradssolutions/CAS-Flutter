@@ -8,7 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "com.cleveradssolutions.plugin.flutter/ad_size"
+private let channelName = "cleveradssolutions/ad_size"
 
 class AdSizeMethodHandler: MethodHandler {
     init(with registrar: FlutterPluginRegistrar) {

@@ -7,7 +7,7 @@ import '../on_dismiss_listener.dart';
 
 class InternalCASConsentFlow extends ConsentFlow {
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/consent_flow");
+      MethodChannel("cleveradssolutions/consent_flow");
   OnDismissListener? onDismissListener;
 
   InternalCASConsentFlow() {

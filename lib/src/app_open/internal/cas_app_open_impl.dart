@@ -7,7 +7,7 @@ import '../cas_app_open.dart';
 
 class CASAppOpenImpl extends CASAppOpen {
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/app_open");
+      MethodChannel("cleveradssolutions/app_open");
 
   @override
   String managerId;

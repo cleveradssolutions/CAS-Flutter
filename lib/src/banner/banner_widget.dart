@@ -109,8 +109,7 @@ class _BannerWidgetState extends BannerWidgetState {
     _refreshInterval = widget.refreshInterval;
     _maxWidthDpi = widget.maxWidthDpi;
 
-    final String channelName =
-        "com.cleveradssolutions.plugin.flutter/banner.$_id";
+    final String channelName = "cleveradssolutions/banner.$_id";
     _channel = MethodChannel(channelName);
     _channel.setMethodCallHandler(handleMethodCall);
   }

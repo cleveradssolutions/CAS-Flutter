@@ -21,7 +21,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/mediation_manager"
+private const val CHANNEL_NAME = "cleveradssolutions/mediation_manager"
 
 class MediationManagerMethodHandler(
     binding: FlutterPluginBinding,

@@ -8,7 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "com.cleveradssolutions.plugin.flutter/cas"
+private let channelName = "cleveradssolutions/cas"
 
 class CASMethodHandler: MethodHandler {
     init(with registrar: FlutterPluginRegistrar) {

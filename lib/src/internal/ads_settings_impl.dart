@@ -8,7 +8,7 @@ import '../loading_mode.dart';
 
 class AdsSettingsImpl extends AdsSettings {
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/ads_settings");
+      MethodChannel("cleveradssolutions/ads_settings");
 
   @override
   Future<Audience> getTaggedAudience() async {

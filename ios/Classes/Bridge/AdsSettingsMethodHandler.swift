@@ -8,7 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "com.cleveradssolutions.plugin.flutter/ads_settings"
+private let channelName = "cleveradssolutions/ads_settings"
 
 class AdsSettingsMethodHandler: MethodHandler {
     init(with registrar: FlutterPluginRegistrar) {

@@ -10,7 +10,7 @@ import Flutter
 import Foundation
 
 private let logTag = "BannerMethodHandler"
-private let channelName = "com.cleveradssolutions.plugin.flutter/banner."
+private let channelName = "cleveradssolutions/banner."
 
 class BannerMethodHandler: MethodHandler, CASBannerDelegate {
     private let bannerView: CASBannerView
