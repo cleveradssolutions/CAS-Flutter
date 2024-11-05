@@ -1,11 +1,14 @@
 export 'src/ad_callback.dart';
+export 'src/ad_error.dart';
 export 'src/ad_impression.dart';
 export 'src/ad_load_callback.dart';
 export 'src/ad_size.dart';
 export 'src/ad_type.dart';
 export 'src/ad_types.dart';
 export 'src/ads_settings.dart';
+export 'src/app_open/app_open_ad_listener.dart';
 export 'src/app_open/cas_app_open.dart';
+export 'src/app_open/load_ad_callback.dart';
 export 'src/audience.dart';
 export 'src/banner/ad_position.dart';
 export 'src/banner/ad_view_listener.dart';

@@ -1,7 +1,7 @@
 import '../ad_callback.dart';
-import '../ad_load_callback.dart';
 import '../mediation_manager.dart';
 import 'internal/cas_app_open_impl.dart';
+import 'load_ad_callback.dart';
 
 abstract class CASAppOpen {
   static CASAppOpen create(String managerId) {
@@ -25,7 +25,7 @@ abstract class CASAppOpen {
   ///
   /// @param context The context.
   /// @param callback An object that handles events for loading an app open ad.
-  void loadAd(AdLoadCallback? callback);
+  void loadAd(LoadAdCallback? callback);
 
   Future<bool> isAdAvailable();
 

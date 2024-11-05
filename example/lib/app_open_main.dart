@@ -1,13 +1,14 @@
+import 'dart:async';
+
 import 'package:clever_ads_solutions/clever_ads_solutions.dart';
 import 'package:flutter/material.dart';
 
 import 'log.dart';
 import 'main.dart';
 
+const _casId = "demo";
+
 void main() {
-  final appOpenAd = CASAppOpen.create("demo");
-  appOpenAd.contentCallback = AppOpenAdListener();
-  appOpenAd.loadAd(AppOpenAdLoadListener());
   runApp(const SplashScreen());
 }
 
@@ -20,6 +21,8 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool _isLoadingAppResources = false;
+  int _loadingSecondsLeft = 5;
+  Timer? _loadingTimer;
   bool _isVisibleAppOpenAd = false;
   bool _isCompletedSplash = false;
 
@@ -71,6 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
+                  _isLoadingAppResources = false;
                   _openNextScreen();
                 },
                 child: const Text(
@@ -87,53 +91,74 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  _openNextScreen() {
+  @override
+  void dispose() {
+    super.dispose();
+    _loadingTimer?.cancel();
+  }
+
+  void _createAppOpenAd() {
+    // Create an Ad
+    final appOpenAd = CASAppOpen.create(_casId);
+
+    // Handle fullscreen callback events
+    appOpenAd.contentCallback = AppOpenAdListener(
+      onShown: () => logDebug("App open ad shown"),
+      onImpression: (adImpression) =>
+          logDebug("App open ad did impression:$adImpression!"),
+      onShowFailed: (message) {
+        logDebug("App open ad show failed: $message");
+
+        _isVisibleAppOpenAd = false;
+        _openNextScreen();
+      },
+      onClosed: () {
+        logDebug("App open ad closed");
+
+        _isVisibleAppOpenAd = false;
+        _openNextScreen();
+      },
+    );
+
+    // Load the Ad
+    appOpenAd.loadAd(LoadAdCallback(onAdLoaded: () {
+      logDebug("App Open Ad loaded");
+      if (_isLoadingAppResources) {
+        _isVisibleAppOpenAd = true;
+        appOpenAd.show();
+      }
+    }, onAdFailedToLoad: (adError) {
+      logDebug("App Open Ad failed to load: ${adError.message}");
+      _openNextScreen();
+    }));
+  }
+
+  void _openNextScreen() {
+    if (_isLoadingAppResources || _isVisibleAppOpenAd || _isCompletedSplash) {
+      return;
+    }
+    _isCompletedSplash = true;
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const MyApp()),
     );
   }
-}
 
-class AppOpenAdLoadListener extends AdLoadCallback {
-  @override
-  void onAdLoaded() {
-    logDebug("App Open Ad loaded");
-    if (isLoadingAppResources) {
-      isVisibleAppOpenAd = true;
-      appOpenAd.show(SampleAppOpenAdActivity.this);
-    }
+  void _simulationLongAppResourcesLoading() {
+    // Simulation of long application resources loading for 5 seconds.
+    _isLoadingAppResources = true;
+    _loadingTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      setState(() {
+        if (_loadingSecondsLeft > 1) {
+          _loadingSecondsLeft--;
+        } else {
+          _isLoadingAppResources = false;
+          _loadingTimer?.cancel();
 
-    _openNextScreen();
-  }
-
-  @override
-  void onAdFailedToLoad(AdError adError) {
-    logDebug("App Open Ad failed to load: " + adError.getMessage());
-
-    _openNextScreen();
-  }
-}
-
-class AppOpenAdListener extends AdCallback {
-  @override
-  void onShown(AdStatusHandler adStatusHandler) {
-    logDebug("App Open Ad shown");
-  }
-
-  @override
-  void onShowFailed(String message) {
-    logDebug("App Open Ad show failed: " + message);
-
-    isVisibleAppOpenAd = false;
-    _openNextScreen();
-  }
-
-  @override
-  void onClosed() {
-    logDebug("App Open Ad closed");
-
-    isVisibleAppOpenAd = false;
-    _openNextScreen();
+          _openNextScreen();
+        }
+      });
+    });
   }
 }
