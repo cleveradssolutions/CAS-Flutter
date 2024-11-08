@@ -1,3 +1,17 @@
+## 0.6.3
+### Features
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.7 SDK
+### Bug Fixes
+- Fixed a crash on banner disposal.
+
+## 0.6.2
+### Features
+- Update doc
+### Bug Fixes
+- Fixed ad event handling on app return
+- Fixed issues with AdSize method calls
+- Fixed issues with consent flow handling
+
 ## 0.6.1
 ### Features
 - Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.6 SDK
