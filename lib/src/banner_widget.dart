@@ -91,7 +91,6 @@ class _BannerWidgetState extends BannerWidgetState {
   late String _id;
 
   late MethodChannel _channel;
-  late StreamSubscription _subscription;
   late AdViewListener? _listener;
 
   late AdSize _size;
@@ -191,7 +190,6 @@ class _BannerWidgetState extends BannerWidgetState {
 
   @override
   Future<void> dispose() {
-    _subscription.cancel();
     super.dispose();
     return _channel.invokeMethod("dispose");
   }
