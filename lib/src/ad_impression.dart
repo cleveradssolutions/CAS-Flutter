@@ -24,4 +24,18 @@ class AdImpression {
       this.lifetimeRevenue)
       : adType = AdType.values[adType],
         priceAccuracy = PriceAccuracy.values[priceAccuracy];
+
+  @override
+  String toString() {
+    return 'AdImpression('
+        'adType: $adType, '
+        'cpm: $cpm, '
+        'network: $network, '
+        'priceAccuracy: $priceAccuracy, '
+        'versionInfo: $versionInfo, '
+        'creativeIdentifier: $creativeIdentifier, '
+        'identifier: $identifier, '
+        'impressionDepth: $impressionDepth, '
+        'lifetimeRevenue: $lifetimeRevenue)';
+  }
 }

@@ -79,4 +79,7 @@ class AdSize {
     final map = await _channel.invokeMethod<Map>("getAdaptiveBannerInScreen");
     return AdSize._parseMap(map);
   }
+
+  @override
+  String toString() => 'width: $width, height: $height, mode: $mode';
 }
