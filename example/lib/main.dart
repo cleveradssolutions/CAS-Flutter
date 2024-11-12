@@ -67,7 +67,6 @@ class _MyAppState extends State<MyApp>
                         ),
                         BannerWidget(
                           size: AdSize.leaderboard,
-                          isAutoloadEnabled: true,
                           refreshInterval: 20,
                           listener: BannerListener("leaderboard"),
                         )
@@ -84,8 +83,7 @@ class _MyAppState extends State<MyApp>
                       if (_isReady)
                         BannerWidget(
                           size: AdSize.mediumRectangle,
-                          isAutoloadEnabled: true,
-                          refreshInterval: 20,
+                          refreshInterval: 30,
                           listener: BannerListener("mediumRectangle"),
                         ),
                     ],
