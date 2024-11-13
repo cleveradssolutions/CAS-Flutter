@@ -20,14 +20,14 @@ abstract class ManagerBuilder {
   /// Enable demo ad mode that will always request test ads.
   ///
   /// **Attention** Don't forget to set it to False after the tests are completed.
-  ManagerBuilder withTestMode(final bool isTestBuild);
+  ManagerBuilder withTestMode(final bool isEnabled);
 
   /// Using Ad types in current session.
   /// By default: All Ad types are used.
   /// Set [AdType.None] to disable all ad types requests.
   ///
   /// Ad types can be enabled manually after initialize by [MediationManager.setEnabled]
-  ManagerBuilder withAdTypes(final int enableTypes);
+  ManagerBuilder withAdTypes(final int adTypes);
 
   /// The userID is a unique identifier supplied by your application and must be static for each user across sessions.
   /// Your userID should not contain any personally identifiable information such as

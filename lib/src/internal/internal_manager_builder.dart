@@ -15,11 +15,10 @@ class InternalManagerBuilder extends ManagerBuilder {
   Function(InitConfig config)? onCASInitialized;
 
   String _casId = "demo";
-  int _enableAdTypes = 0;
-  final String _flutterVersion;
 
-  InternalManagerBuilder(this._flutterVersion) {
+  InternalManagerBuilder(String pluginVersion) {
     _channel.setMethodCallHandler(handleMethodCall);
+    _channel.invokeMethod('withFramework', {'pluginVersion': pluginVersion});
   }
 
   Future<dynamic> handleMethodCall(MethodCall call) async {
@@ -57,8 +56,8 @@ class InternalManagerBuilder extends ManagerBuilder {
   }
 
   @override
-  ManagerBuilder withAdTypes(int enableTypes) {
-    _enableAdTypes |= enableTypes;
+  ManagerBuilder withAdTypes(int adTypes) {
+    _channel.invokeMethod('withAdTypes', {'formats': adTypes});
     return this;
   }
 
@@ -75,14 +74,13 @@ class InternalManagerBuilder extends ManagerBuilder {
 
   @override
   ManagerBuilder withMediationExtras(String key, String value) {
-    _channel.invokeMethod("withMediationExtras", {'key': key, "value": value});
+    _channel.invokeMethod('withMediationExtras', {'key': key, 'value': value});
     return this;
   }
 
   @override
   MediationManager build() {
-    _channel.invokeMethod('build',
-        {'id': _casId, "formats": _enableAdTypes, "version": _flutterVersion});
+    _channel.invokeMethod('build', {'id': _casId});
     return InternalMediationManager();
   }
 

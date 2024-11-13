@@ -35,8 +35,10 @@ class ManagerBuilderMethodHandler: MethodHandler {
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "withTestAdMode": withTestAdMode(call, result)
+        case "withAdTypes": withAdTypes(call, result)
         case "withUserId": withUserId(call, result)
         case "withMediationExtras": withMediationExtras(call, result)
+        case "withFramework": withFramework(call, result)
         case "build": build(call, result)
         default: super.onMethodCall(call, result)
         }
@@ -45,6 +47,12 @@ class ManagerBuilderMethodHandler: MethodHandler {
     private func withTestAdMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         call.getArgAndReturn("isEnabled", result) { isEnabled in
             builder.withTestAdMode(isEnabled)
+        }
+    }
+
+    private func withAdTypes(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturn("adTypes", result) { (adTypes: Int) in
+            builder.withAdFlags(CASTypeFlags(rawValue: UInt(adTypes)))
         }
     }
 
@@ -60,13 +68,15 @@ class ManagerBuilderMethodHandler: MethodHandler {
         }
     }
 
+    private func withFramework(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturn("pluginVersion", result) { pluginVersion in
+            builder.withFramework("Flutter", version: pluginVersion)
+        }
+    }
+
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let id: String = call.getArgAndCheckNil("id", result),
-           let formats: Int = call.getArgAndCheckNil("formats", result),
-           let version: String = call.getArgAndCheckNil("version", result) {
+        call.getArgAndReturn("id", result) { id in
             let manager = builder
-                .withAdFlags(CASTypeFlags(rawValue: UInt(formats)))
-                .withFramework("Flutter", version: version)
                 .withConsentFlow(consentFlowMethodHandler.getConsentFlow())
                 .withCompletionHandler({ [weak self] initialConfig in
                     self?.invokeMethod("onCASInitialized", [
@@ -81,8 +91,6 @@ class ManagerBuilderMethodHandler: MethodHandler {
             mediationManagerMethodHandler.setManager(manager)
 
             builderField = nil
-
-            result(nil)
         }
     }
 }
