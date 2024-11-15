@@ -46,11 +46,6 @@ class CASAppOpenImpl extends CASAppOpen {
   }
 
   @override
-  Future<void> setImmersiveMode(bool enabled) {
-    return _channel.invokeMethod('setImmersiveMode', {'enabled': enabled});
-  }
-
-  @override
   Future<bool> isAdAvailable() async {
     return await _channel.invokeMethod<bool>('isAdAvailable') ?? false;
   }

@@ -29,13 +29,6 @@ abstract class CASAppOpen {
 
   Future<bool> isAdAvailable();
 
-  /// Sets a flag that controls if this app open ad object will be displayed in immersive mode.
-  ///
-  /// Call this method before [show].
-  /// During show time, if this flag is on and immersive mode is supported,
-  /// SYSTEM_UI_FLAG_IMMERSIVE_STICKY & SYSTEM_UI_FLAG_HIDE_NAVIGATION will be turned on for the app open ad.
-  void setImmersiveMode(bool enabled);
-
   /// Shows the AppOpenAd.
   ///
   /// @param activity The activity from which the AppOpenAd is shown from.
