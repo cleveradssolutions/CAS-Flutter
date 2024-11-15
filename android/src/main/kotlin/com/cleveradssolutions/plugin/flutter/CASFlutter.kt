@@ -5,9 +5,9 @@ import com.cleveradssolutions.plugin.flutter.bridge.AdSizeMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.AdsSettingsMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.CASMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.TargetingOptionsMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.manager.ManagerBuilderMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.manager.MediationManagerMethodHandler
-import com.cleveradssolutions.plugin.flutter.bridge.TargetingOptionsMethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -20,7 +20,7 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         val context = CASFlutterContext(binding.applicationContext)
         contextService = context
 
-        val consentFlowMethodHandler = ConsentFlowMethodHandler(binding, context)
+        val consentFlowFactory = ConsentFlowMethodHandler.Factory(binding, context)
         val mediationManagerMethodHandler = MediationManagerMethodHandler(binding, context)
 
         AdSizeMethodHandler(binding)
@@ -28,7 +28,7 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         CASMethodHandler(binding, context)
         ManagerBuilderMethodHandler(
             binding,
-            consentFlowMethodHandler,
+            consentFlowFactory,
             mediationManagerMethodHandler,
             context
         )

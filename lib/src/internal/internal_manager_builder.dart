@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clever_ads_solutions/src/internal/native_object.dart';
 import 'package:flutter/services.dart';
 
 import '../consent_flow.dart';
@@ -69,6 +70,8 @@ class InternalManagerBuilder extends ManagerBuilder {
 
   @override
   ManagerBuilder withConsentFlow(ConsentFlow consentFlow) {
+    _channel.invokeMethod(
+        'withConsentFlow', {'id': (consentFlow as NativeObject).id});
     return this;
   }
 

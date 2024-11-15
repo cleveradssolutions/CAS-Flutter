@@ -3,6 +3,7 @@ package com.cleveradssolutions.plugin.flutter.bridge.manager
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
+import com.cleveradssolutions.plugin.flutter.util.errorArgNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -15,7 +16,7 @@ private const val CHANNEL_NAME = "cleveradssolutions/manager_builder"
 
 class ManagerBuilderMethodHandler(
     binding: FlutterPluginBinding,
-    private val consentFlowMethodHandler: ConsentFlowMethodHandler,
+    private val consentFlowFactory: ConsentFlowMethodHandler.Factory,
     private val mediationManagerMethodHandler: MediationManagerMethodHandler,
     private val contextService: CASFlutterContext
 ) : MethodHandler(binding, CHANNEL_NAME) {
@@ -35,6 +36,7 @@ class ManagerBuilderMethodHandler(
             "withTestAdMode" -> withTestAdMode(call, result)
             "withAdTypes" -> withAdTypes(call, result)
             "withUserId" -> setUserId(call, result)
+            "withConsentFlow" -> withConsentFlow(call, result)
             "withMediationExtras" -> withMediationExtras(call, result)
             "withFramework" -> withFramework(call, result)
             "build" -> build(call, result)
@@ -60,6 +62,15 @@ class ManagerBuilderMethodHandler(
         }
     }
 
+    private fun withConsentFlow(call: MethodCall, result: MethodChannel.Result) {
+        val id = call.getArgAndCheckNull<String>("id", result) ?: return
+        val consentFlowMethodHandler = consentFlowFactory[id] ?: return result.errorArgNull(call, "consentFlow")
+
+        builder.withConsentFlow(consentFlowMethodHandler.consentFlow)
+
+        result.success()
+    }
+
     private fun withMediationExtras(call: MethodCall, result: MethodChannel.Result) {
         call.getArgAndReturn<String, String>("key", "value", result) { key, value ->
             builder.withMediationExtras(key, value)
@@ -76,7 +87,6 @@ class ManagerBuilderMethodHandler(
         call.getArgAndReturn<String>("id", result) {
             val manager = builder
                 .withCasId(it)
-                .withConsentFlow(consentFlowMethodHandler.getConsentFlow())
                 .withCompletionListener { config ->
                     invokeMethod(
                         "onCASInitialized",

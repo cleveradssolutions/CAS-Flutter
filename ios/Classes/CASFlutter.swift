@@ -5,17 +5,17 @@ public class CASFlutter: NSObject, FlutterPlugin {
     private var methodHandlers: [MethodHandler] = []
 
     init(with registrar: FlutterPluginRegistrar) {
-        let consentFlowMethodHandler = ConsentFlowMethodHandler(with: registrar)
+        let consentFlowFactory = ConsentFlowMethodHandler.Factory(with: registrar)
         let mediationManagerMethodHandler = MediationManagerMethodHandler(with: registrar)
 
         methodHandlers = [
             AdSizeMethodHandler(with: registrar),
             AdsSettingsMethodHandler(with: registrar),
             CASMethodHandler(with: registrar),
-            consentFlowMethodHandler,
+            consentFlowFactory,
             ManagerBuilderMethodHandler(
                 with: registrar,
-                consentFlowMethodHandler,
+                consentFlowFactory,
                 mediationManagerMethodHandler
             ),
             mediationManagerMethodHandler,

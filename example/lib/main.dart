@@ -111,8 +111,7 @@ class _MyAppState extends State<MyApp>
         .withAdTypes(AdTypeFlags.Banner |
             AdTypeFlags.Interstitial |
             AdTypeFlags.Rewarded)
-        .withConsentFlow(CAS
-            .buildConsentFlow()
+        .withConsentFlow(ConsentFlow.create()
             .withDismissListener(this)
             .withPrivacyPolicy("https://example.com/"))
         .withCompletionListener(_onCASInitialized)
