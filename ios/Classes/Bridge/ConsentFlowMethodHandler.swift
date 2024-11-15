@@ -14,8 +14,21 @@ class ConsentFlowMethodHandler: MethodHandler {
     private var consentFlow: CASConsentFlow?
     private var consentFlowDismissListener: CASConsentCompletionHandler?
 
-    init(with registrar: FlutterPluginRegistrar) {
-        super.init(with: registrar, on: channelName)
+    class Factory: FlutterObjectFactory<ConsentFlowMethodHandler> {
+        private let registrar: FlutterPluginRegistrar
+
+        init(with registrar: FlutterPluginRegistrar) {
+            self.registrar = registrar
+            super.init(with: registrar, on: channelName)
+        }
+
+        override func initInstance(id: String) -> ConsentFlowMethodHandler {
+            ConsentFlowMethodHandler(with: registrar, id: id)
+        }
+    }
+
+    init(with registrar: FlutterPluginRegistrar, id: String) {
+        super.init(with: registrar, on: "\(channelName).\(id)")
         consentFlowDismissListener = { [weak self] status in
             self?.invokeMethod("OnDismissListener", status.rawValue)
         }
@@ -61,5 +74,11 @@ class ConsentFlowMethodHandler: MethodHandler {
             }
         }
         result(nil)
+    }
+
+    private func createDismissListener() -> CASConsentCompletionHandler {
+        return { [weak self] status in
+            self?.invokeMethod("OnDismissListener", status.rawValue)
+        }
     }
 }

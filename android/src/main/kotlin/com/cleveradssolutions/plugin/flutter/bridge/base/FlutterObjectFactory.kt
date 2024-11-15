@@ -13,16 +13,12 @@ abstract class FlutterObjectFactory<T>(
     private val map: MutableMap<String, T> = HashMap()
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        when (call.method) {
-            "initObject" -> call.getArgAndReturn<String>("id", result) { id ->
-                map[id] = initInstance(id)
+        call.getArgAndReturn<String>("id", result) { id ->
+            when (call.method) {
+                "initObject" -> map[id] = initInstance(id)
+                "disposeObject" -> map.remove(id)
+                else -> super.onMethodCall(call, result)
             }
-
-            "disposeObject" -> call.getArgAndReturn<String>("id", result) { id ->
-                map.remove(id)
-            }
-
-            else -> super.onMethodCall(call, result)
         }
     }
 

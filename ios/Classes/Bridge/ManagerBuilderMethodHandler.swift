@@ -11,7 +11,7 @@ import Flutter
 private let channelName = "cleveradssolutions/manager_builder"
 
 class ManagerBuilderMethodHandler: MethodHandler {
-    private let consentFlowMethodHandler: ConsentFlowMethodHandler
+    private let consentFlowFactory: ConsentFlowMethodHandler.Factory
     private let mediationManagerMethodHandler: MediationManagerMethodHandler
 
     private var builderField: CleverAdsSolutions.CASManagerBuilder?
@@ -24,10 +24,10 @@ class ManagerBuilderMethodHandler: MethodHandler {
 
     init(
         with registrar: FlutterPluginRegistrar,
-        _ consentFlowMethodHandler: ConsentFlowMethodHandler,
+        _ consentFlowFactory: ConsentFlowMethodHandler.Factory,
         _ mediationManagerMethodHandler: MediationManagerMethodHandler
     ) {
-        self.consentFlowMethodHandler = consentFlowMethodHandler
+        self.consentFlowFactory = consentFlowFactory
         self.mediationManagerMethodHandler = mediationManagerMethodHandler
         super.init(with: registrar, on: channelName)
     }
@@ -37,6 +37,7 @@ class ManagerBuilderMethodHandler: MethodHandler {
         case "withTestAdMode": withTestAdMode(call, result)
         case "withAdTypes": withAdTypes(call, result)
         case "withUserId": withUserId(call, result)
+        case "withConsentFlow": withConsentFlow(call, result)
         case "withMediationExtras": withMediationExtras(call, result)
         case "withFramework": withFramework(call, result)
         case "build": build(call, result)
@@ -62,6 +63,17 @@ class ManagerBuilderMethodHandler: MethodHandler {
         }
     }
 
+    private func withConsentFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        if let id: String = call.getArgAndCheckNil("id", result) {
+            if let consentFlowMethodHandler = consentFlowFactory[id] {
+                builder.withConsentFlow(consentFlowMethodHandler.getConsentFlow())
+                result(nil)
+            } else {
+                result(call.errorFieldNil("consentFlow"))
+            }
+        }
+    }
+
     private func withMediationExtras(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         call.getArgAndReturn("key", "value", result) { key, value in
             builder.withMediationExtras(value, forKey: key)
@@ -77,13 +89,12 @@ class ManagerBuilderMethodHandler: MethodHandler {
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         call.getArgAndReturn("id", result) { id in
             let manager = builder
-                .withConsentFlow(consentFlowMethodHandler.getConsentFlow())
                 .withCompletionHandler({ [weak self] initialConfig in
                     self?.invokeMethod("onCASInitialized", [
                         "error": initialConfig.error as Any?,
                         "countryCode": initialConfig.countryCode,
                         "isConsentRequired": initialConfig.isConsentRequired,
-                        "testMode": initialConfig.manager.isDemoAdMode
+                        "testMode": initialConfig.manager.isDemoAdMode,
                     ])
                 })
                 .create(withCasId: id)

@@ -3,7 +3,7 @@ package com.cleveradssolutions.plugin.flutter.bridge.manager
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
-import com.cleveradssolutions.plugin.flutter.util.errorArgNull
+import com.cleveradssolutions.plugin.flutter.util.errorFieldNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -64,7 +64,8 @@ class ManagerBuilderMethodHandler(
 
     private fun withConsentFlow(call: MethodCall, result: MethodChannel.Result) {
         val id = call.getArgAndCheckNull<String>("id", result) ?: return
-        val consentFlowMethodHandler = consentFlowFactory[id] ?: return result.errorArgNull(call, "consentFlow")
+        val consentFlowMethodHandler = consentFlowFactory[id]
+            ?: return result.errorFieldNull(call, "consentFlow")
 
         builder.withConsentFlow(consentFlowMethodHandler.consentFlow)
 

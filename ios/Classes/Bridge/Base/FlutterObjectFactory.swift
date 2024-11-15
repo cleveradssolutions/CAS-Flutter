@@ -7,25 +7,22 @@
 
 import Flutter
 
-class FlutterObjectFactory<T> {
+class FlutterObjectFactory<T>: MethodHandler {
     private var map: [String: T] = [:]
 
     func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        switch call.method {
-            case "initObject":
-                call.getArgAndReturn("id", result) { id in
-                    map[id] = initInstance(id: id)
-                }
-            case "disposeObject":
-                call.getArgAndReturn("id", result) { id in
-                    map.removeValue(forKey: id)
-                }
-            default:
-                break
+        call.getArgAndReturn("id", result) { id in
+            switch call.method {
+            case "initObject": map[id] = initInstance(id: id)
+            case "disposeObject": map.removeValue(forKey: id)
+            default: super.onMethodCall(call, result)
+            }
         }
     }
 
-    func initInstance(id: String) -> T
+    open func initInstance(id: String) -> T {
+        fatalError("FlutterObjectFactory<T>.initInstance(id:) must be overridden in a subclass!")
+    }
 
     subscript(id: String) -> T? {
         return map[id]

@@ -14,7 +14,7 @@ private const val CHANNEL_NAME = "cleveradssolutions/consent_flow"
 
 class ConsentFlowMethodHandler private constructor(
     binding: FlutterPluginBinding,
-    private val contextService: CASFlutterContext,
+    contextService: CASFlutterContext,
     id: String
 ) : MethodHandler(binding, "$CHANNEL_NAME.$id") {
 
@@ -26,12 +26,9 @@ class ConsentFlowMethodHandler private constructor(
             ConsentFlowMethodHandler(binding, contextService, id)
     }
 
-    private var consentFlowField: ConsentFlow? = null
-    val consentFlow: ConsentFlow
-        get() = consentFlowField ?: ConsentFlow()
-            .withUIContext(contextService.getActivityOrNull())
-            .withDismissListener(createDismissListener())
-            .also { consentFlowField = it }
+    val consentFlow: ConsentFlow = ConsentFlow()
+        .withUIContext(contextService.getActivityOrNull())
+        .withDismissListener(createDismissListener())
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
