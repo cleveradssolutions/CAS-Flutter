@@ -5,6 +5,7 @@ import com.cleveradssolutions.plugin.flutter.CASViewWrapper
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.AppReturnListener
 import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.BannerListener
+import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.BannerListener.Companion.getBannerName
 import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.InterstitialListener
 import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.RewardedListener
 import com.cleveradssolutions.plugin.flutter.util.error
@@ -179,10 +180,7 @@ class MediationManagerMethodHandler(
     private fun hideBanner(call: MethodCall, result: MethodChannel.Result) {
         val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
         val banner = banners[sizeId]
-            ?: return result.errorFieldNull(
-                call,
-                "banners[${BannerListener.getBannerName(sizeId)}]"
-            )
+            ?: return result.errorFieldNull(call, "banners[${getBannerName(sizeId)}]")
 
         banner.hide()
 
@@ -192,10 +190,7 @@ class MediationManagerMethodHandler(
     private fun setBannerPosition(call: MethodCall, result: MethodChannel.Result) {
         val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
         val banner = banners[sizeId]
-            ?: return result.errorFieldNull(
-                call,
-                "banners[${BannerListener.getBannerName(sizeId)}]"
-            )
+            ?: return result.errorFieldNull(call, "banners[${getBannerName(sizeId)}]")
         val positionId = call.getArgAndCheckNull<Int>("positionId", result) ?: return
         val x = call.getArgAndCheckNull<Int>("x", result) ?: return
         val y = call.getArgAndCheckNull<Int>("y", result) ?: return

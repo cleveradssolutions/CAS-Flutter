@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 import '../ad_callback.dart';
+import '../ad_impression.dart';
 import '../ad_load_callback.dart';
 import '../ad_size.dart';
 import '../ad_type.dart';
@@ -10,9 +11,8 @@ import '../banner/cas_banner_view.dart';
 import '../banner/internal/internal_cas_banner_view.dart';
 import '../banner/internal/internal_listener_container.dart';
 import '../mediation_manager.dart';
-import 'ad_listener.dart';
 
-class InternalMediationManager extends AdListener implements MediationManager {
+class InternalMediationManager implements MediationManager {
   static const MethodChannel _channel =
       MethodChannel("cleveradssolutions/mediation_manager");
 
@@ -45,7 +45,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnInterstitialAdImpression':
-        _interstitialListener?.onImpression(tryGetAdImpression(call));
+        _interstitialListener?.onImpression(AdImpression.tryParse(call));
         break;
 
       case 'OnInterstitialAdFailedToShow':
@@ -75,7 +75,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnRewardedAdImpression':
-        _rewardedListener?.onImpression(tryGetAdImpression(call));
+        _rewardedListener?.onImpression(AdImpression.tryParse(call));
         break;
 
       case 'OnRewardedAdFailedToShow':
@@ -101,7 +101,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnAppReturnAdImpression':
-        _appReturnListener?.onImpression(tryGetAdImpression(call));
+        _appReturnListener?.onImpression(AdImpression.tryParse(call));
         break;
 
       case 'OnAppReturnAdFailedToShow':

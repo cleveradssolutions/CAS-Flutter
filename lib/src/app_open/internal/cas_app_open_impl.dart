@@ -1,8 +1,9 @@
 import 'package:flutter/services.dart';
 
-import '../../ad_callback.dart';
 import '../../ad_error.dart';
+import '../../ad_impression.dart';
 import '../../mediation_manager.dart';
+import '../app_open_ad_listener.dart';
 import '../cas_app_open.dart';
 import '../load_ad_callback.dart';
 
@@ -17,7 +18,7 @@ class CASAppOpenImpl extends CASAppOpen {
 
   LoadAdCallback? _loadCallback;
   @override
-  AdCallback? contentCallback;
+  AppOpenAdListener? contentCallback;
 
   CASAppOpenImpl(this.managerId, [this.manager]) {
     _channel.setMethodCallHandler(handleMethodCall);
@@ -31,6 +32,18 @@ class CASAppOpenImpl extends CASAppOpen {
       case 'onAdFailedToLoad':
         _loadCallback?.onAdFailedToLoad(AdError(call.arguments));
         break;
+      case 'onShown':
+        contentCallback?.onShown();
+        break;
+      case 'onImpression':
+        contentCallback?.onImpression(AdImpression.tryParse(call));
+        break;
+      case 'onShowFailed':
+        contentCallback?.onShowFailed(call.arguments);
+        break;
+      case 'onClosed':
+        contentCallback?.onClosed();
+        break;
     }
   }
 
@@ -41,12 +54,12 @@ class CASAppOpenImpl extends CASAppOpen {
   }
 
   @override
-  Future<void> show() {
-    return _channel.invokeMethod('show');
+  Future<bool> isAdAvailable() async {
+    return await _channel.invokeMethod<bool>('isAdAvailable') ?? false;
   }
 
   @override
-  Future<bool> isAdAvailable() async {
-    return await _channel.invokeMethod<bool>('isAdAvailable') ?? false;
+  Future<void> show() {
+    return _channel.invokeMethod('show');
   }
 }

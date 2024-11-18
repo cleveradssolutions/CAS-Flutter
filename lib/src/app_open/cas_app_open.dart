@@ -1,5 +1,5 @@
-import '../ad_callback.dart';
 import '../mediation_manager.dart';
+import 'app_open_ad_listener.dart';
 import 'internal/cas_app_open_impl.dart';
 import 'load_ad_callback.dart';
 
@@ -17,7 +17,7 @@ abstract class CASAppOpen {
   abstract String managerId;
 
   /// Registers a callback to be invoked when ads show and dismiss full screen content.
-  abstract AdCallback? contentCallback;
+  abstract AppOpenAdListener? contentCallback;
 
   /// Loads an AppOpenAd.
   ///
@@ -25,12 +25,13 @@ abstract class CASAppOpen {
   ///
   /// @param context The context.
   /// @param callback An object that handles events for loading an app open ad.
-  void loadAd(LoadAdCallback? callback);
+  Future<void> loadAd(LoadAdCallback? callback);
 
+  /// Indicates whether the ad is currently loaded and ready to be shown.
   Future<bool> isAdAvailable();
 
   /// Shows the AppOpenAd.
   ///
   /// @param activity The activity from which the AppOpenAd is shown from.
-  void show();
+  Future<void> show();
 }

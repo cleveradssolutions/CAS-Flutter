@@ -6,8 +6,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import com.cleveradssolutions.mediation.ContextService
 import com.cleveradssolutions.plugin.flutter.util.errorFieldNull
-import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
-import com.cleveradssolutions.plugin.flutter.util.success
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -28,6 +26,6 @@ class CASFlutterContext(private val application: Context) : ContextService {
         ?: lastActivity?.application
         ?: throw ActivityNotFoundException()
 
-    override fun getContextOrNull(): Context? = application
+    override fun getContextOrNull(): Context = application
     override fun getContext(): Context = application
 }
