@@ -54,6 +54,7 @@ class ConsentFlowMethodHandler: MethodHandler {
     }
 
     private func withPrivacyPolicy(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+       print("DevDebug", "DevDebug: get call withPrivacyPolicy in android");
         call.getArgAndReturn("url", result) { url in
             getConsentFlow().withPrivacyPolicy(url)
         }

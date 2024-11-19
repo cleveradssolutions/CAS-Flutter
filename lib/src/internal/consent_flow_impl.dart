@@ -27,17 +27,18 @@ class ConsentFlowImpl extends NativeObject implements ConsentFlow {
 
   @override
   ConsentFlow withPrivacyPolicy(String? privacyPolicy) {
+    print("DevDebug: try to call withPrivacyPolicy from flutter");
     channel.invokeMethod('withPrivacyPolicy', {'url': privacyPolicy});
     return this;
   }
 
   @override
-  void showIfRequired() {
-    channel.invokeMethod('show', {'force': false});
+  Future<void> showIfRequired() {
+    return channel.invokeMethod('show', {'force': false});
   }
 
   @override
-  void show() {
-    channel.invokeMethod('show', {'force': true});
+  Future<void> show() {
+    return channel.invokeMethod('show', {'force': true});
   }
 }

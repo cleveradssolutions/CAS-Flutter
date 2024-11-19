@@ -3,13 +3,27 @@ import 'dart:async';
 import 'package:clever_ads_solutions/clever_ads_solutions.dart';
 import 'package:flutter/material.dart';
 
+import 'home_screen.dart';
 import 'log.dart';
-import 'main.dart';
 
 const _casId = "demo";
 
 void main() {
-  runApp(const SplashScreen());
+  runApp(const AppWithSplashScreen());
+}
+
+class AppWithSplashScreen extends StatelessWidget {
+  const AppWithSplashScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const SplashScreen(),
+      routes: {
+        '/home': (context) => const HomeScreen(),
+      },
+    );
+  }
 }
 
 class SplashScreen extends StatefulWidget {
@@ -21,80 +35,72 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool _isLoadingAppResources = false;
-  int _loadingSecondsLeft = 5;
-  Timer? _loadingTimer;
   bool _isVisibleAppOpenAd = false;
   bool _isCompletedSplash = false;
 
   @override
   void initState() {
     super.initState();
-    _simulationLongAppResourcesLoading();
-    _createAppOpenAd();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _simulationLongAppResourcesLoading();
+      _createAppOpenAd();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('CAS.AI Sample'),
-        ),
-        backgroundColor: const Color(0x001a283e),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/icon.png',
-                height: 150,
-                width: double.infinity,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('CAS.AI Sample'),
+      ),
+      backgroundColor: const Color(0x001a283e),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/icon.webp',
+              height: 150,
+              width: double.infinity,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'AppOpenAd loading is carried out before the application resources are ready.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'AppOpenAd loading is carried out before the application resources are ready.',
-                textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              '',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _isLoadingAppResources = false;
+                _openNextScreen();
+              },
+              child: const Text(
+                'Skip AppOpenAd',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                '',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  _isLoadingAppResources = false;
-                  _openNextScreen();
-                },
-                child: const Text(
-                  'Skip AppOpenAd',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _loadingTimer?.cancel();
   }
 
   void _createAppOpenAd() {
@@ -105,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen> {
     appOpenAd.contentCallback = AppOpenAdListener(
       onShown: () => logDebug("App open ad shown"),
       onImpression: (adImpression) =>
-          logDebug("App open ad did impression:$adImpression!"),
+          logDebug("App open ad did impression: $adImpression!"),
       onShowFailed: (message) {
         logDebug("App open ad show failed: $message");
 
@@ -139,26 +145,16 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     _isCompletedSplash = true;
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const MyApp()),
-    );
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
-  void _simulationLongAppResourcesLoading() {
-    // Simulation of long application resources loading for 5 seconds.
+  Future<void> _simulationLongAppResourcesLoading() async {
     _isLoadingAppResources = true;
-    _loadingTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      setState(() {
-        if (_loadingSecondsLeft > 1) {
-          _loadingSecondsLeft--;
-        } else {
-          _isLoadingAppResources = false;
-          _loadingTimer?.cancel();
-
-          _openNextScreen();
-        }
-      });
+    // Simulation of long application resources loading for 5 seconds.
+    await Future.delayed(const Duration(seconds: 15));
+    setState(() {
+      _isLoadingAppResources = false;
+      _openNextScreen();
     });
   }
 }

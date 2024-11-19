@@ -16,6 +16,7 @@ abstract class MethodHandler(
     private val channel = MethodChannel(binding.binaryMessenger, channelName)
 
     init {
+        Log.e("DevDebug", "register channel $channelName")
         @Suppress("LeakingThis")
         channel.setMethodCallHandler(this)
     }

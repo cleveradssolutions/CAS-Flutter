@@ -1,5 +1,6 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
+import android.util.Log
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.FlutterObjectFactory
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
@@ -40,6 +41,7 @@ class ConsentFlowMethodHandler private constructor(
     }
 
     private fun withPrivacyPolicy(call: MethodCall, result: MethodChannel.Result) {
+        Log.e("DevDebug", "DevDebug: get call withPrivacyPolicy in android");
         call.getArgAndReturn<String>("url", result) {
             consentFlow.withPrivacyPolicy(it)
         }

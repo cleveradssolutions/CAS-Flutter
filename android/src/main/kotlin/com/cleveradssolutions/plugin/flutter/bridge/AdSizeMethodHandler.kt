@@ -1,6 +1,6 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
-import android.content.Context
+import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturnResult
 import com.cleversolutions.ads.AdSize
@@ -11,10 +11,9 @@ import io.flutter.plugin.common.MethodChannel
 private const val CHANNEL_NAME = "cleveradssolutions/ad_size"
 
 class AdSizeMethodHandler(
-    binding: FlutterPluginBinding
+    binding: FlutterPluginBinding,
+    private val contextService: CASFlutterContext
 ) : MethodHandler(binding, CHANNEL_NAME) {
-
-    private val context: Context = binding.applicationContext
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -36,19 +35,19 @@ class AdSizeMethodHandler(
         call.getArgAndReturnResult<Int, Int>(
             "maxWidthDp", "orientation", result
         ) { maxWidthDp, orientation ->
-            AdSize.getAdaptiveBanner(context, maxWidthDp, orientation).toMap()
+            AdSize.getAdaptiveBanner(contextService.getContext(), maxWidthDp, orientation).toMap()
         }
     }
 
     private fun getAdaptiveBannerInScreen(result: MethodChannel.Result) {
         result.success(
-            AdSize.getAdaptiveBannerInScreen(context).toMap()
+            AdSize.getAdaptiveBannerInScreen(contextService.getContext()).toMap()
         )
     }
 
     private fun getSmartBanner(result: MethodChannel.Result) {
         result.success(
-            AdSize.getSmartBanner(context).toMap()
+            AdSize.getSmartBanner(contextService.getContext()).toMap()
         )
     }
 

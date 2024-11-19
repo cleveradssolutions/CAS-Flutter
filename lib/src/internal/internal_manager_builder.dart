@@ -11,7 +11,7 @@ import '../mediation_manager.dart';
 
 class InternalManagerBuilder extends ManagerBuilder {
   static const MethodChannel _channel =
-      MethodChannel("cleveradssolutions/manager_builder");
+      MethodChannel('cleveradssolutions/manager_builder');
 
   Function(InitConfig config)? onCASInitialized;
 
@@ -58,7 +58,7 @@ class InternalManagerBuilder extends ManagerBuilder {
 
   @override
   ManagerBuilder withAdTypes(int adTypes) {
-    _channel.invokeMethod('withAdTypes', {'formats': adTypes});
+    _channel.invokeMethod('withAdTypes', {'adTypes': adTypes});
     return this;
   }
 

@@ -2,17 +2,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class NativeObject {
-  final String id = UniqueKey().toString();
-  static MethodChannel? _factoryChannel;
+  final String id;
   late MethodChannel channel;
 
-  static final Finalizer<String> _finalizer = Finalizer(
-      (id) => _factoryChannel!.invokeMethod('disposeObject', {'id': id}));
+  static final Map<String, MethodChannel> _factoryChannels = {};
+  static final Map<String, Finalizer<String>> _finalizers = {};
 
-  NativeObject(String channelName) {
+  NativeObject(String channelName, [String? objectId])
+      : id = objectId ?? UniqueKey().hashCode.toString() {
     channel = MethodChannel('$channelName.$id');
-    final factoryChannel = _factoryChannel ??= MethodChannel(channelName);
+
+    final factoryChannel =
+        _factoryChannels[channelName] ??= MethodChannel(channelName);
     factoryChannel.invokeMethod('initObject', {'id': id});
-    _finalizer.attach(this, id);
+
+    final finalizer = _finalizers[channelName] ??= Finalizer(
+        (id) => factoryChannel.invokeMethod('disposeObject', {'id': id}));
+    finalizer.attach(this, id);
   }
 }

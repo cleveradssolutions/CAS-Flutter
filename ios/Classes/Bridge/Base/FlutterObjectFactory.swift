@@ -10,7 +10,7 @@ import Flutter
 class FlutterObjectFactory<T>: MethodHandler {
     private var map: [String: T] = [:]
 
-    func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         call.getArgAndReturn("id", result) { id in
             switch call.method {
             case "initObject": map[id] = initInstance(id: id)

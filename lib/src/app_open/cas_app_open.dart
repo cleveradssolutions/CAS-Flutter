@@ -10,7 +10,7 @@ abstract class CASAppOpen {
 
   static Future<CASAppOpen> createFromManager(MediationManager manager) async {
     final managerId = await manager.getManagerID();
-    return CASAppOpenImpl(managerId, manager);
+    return CASAppOpenImpl(managerId);
   }
 
   /// Returns the ad manager ID.

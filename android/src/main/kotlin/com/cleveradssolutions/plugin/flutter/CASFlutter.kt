@@ -1,5 +1,6 @@
 package com.cleveradssolutions.plugin.flutter
 
+import com.cleveradssolutions.plugin.flutter.appopen.AppOpenMethodHandler
 import com.cleveradssolutions.plugin.flutter.bannerview.BannerViewFactory
 import com.cleveradssolutions.plugin.flutter.bridge.AdSizeMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.AdsSettingsMethodHandler
@@ -20,11 +21,12 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         val context = CASFlutterContext(binding.applicationContext)
         contextService = context
 
-        val consentFlowFactory = ConsentFlowMethodHandler.Factory(binding, context)
         val mediationManagerMethodHandler = MediationManagerMethodHandler(binding, context)
 
-        AdSizeMethodHandler(binding)
+        AdSizeMethodHandler(binding, context)
         AdsSettingsMethodHandler(binding)
+        AppOpenMethodHandler.Factory(binding, context)
+        val consentFlowFactory = ConsentFlowMethodHandler.Factory(binding, context)
         CASMethodHandler(binding, context)
         ManagerBuilderMethodHandler(
             binding,
