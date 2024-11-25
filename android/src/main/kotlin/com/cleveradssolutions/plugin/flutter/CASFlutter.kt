@@ -21,16 +21,16 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         val context = CASFlutterContext(binding.applicationContext)
         contextService = context
 
+        val consentFlowMethodHandler = ConsentFlowMethodHandler(binding, context)
         val mediationManagerMethodHandler = MediationManagerMethodHandler(binding, context)
 
         AdSizeMethodHandler(binding, context)
         AdsSettingsMethodHandler(binding)
-        AppOpenMethodHandler.Factory(binding, context)
-        val consentFlowFactory = ConsentFlowMethodHandler.Factory(binding, context)
+        AppOpenMethodHandler(binding, context)
         CASMethodHandler(binding, context)
         ManagerBuilderMethodHandler(
             binding,
-            consentFlowFactory,
+            consentFlowMethodHandler,
             mediationManagerMethodHandler,
             context
         )

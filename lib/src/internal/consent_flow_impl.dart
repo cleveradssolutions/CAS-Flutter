@@ -1,13 +1,13 @@
 import '../consent_flow.dart';
 import '../on_dismiss_listener.dart';
-import 'native_object.dart';
+import 'mapped_object.dart';
 
-class ConsentFlowImpl extends NativeObject implements ConsentFlow {
+class ConsentFlowImpl extends MappedObject implements ConsentFlow {
   ConsentFlowImpl() : super('cleveradssolutions/consent_flow');
 
   @override
   ConsentFlow disableFlow() {
-    channel.invokeMethod('disable');
+    invokeMethod('disable');
     return this;
   }
 
@@ -27,18 +27,17 @@ class ConsentFlowImpl extends NativeObject implements ConsentFlow {
 
   @override
   ConsentFlow withPrivacyPolicy(String? privacyPolicy) {
-    print("DevDebug: try to call withPrivacyPolicy from flutter");
-    channel.invokeMethod('withPrivacyPolicy', {'url': privacyPolicy});
+    invokeMethod('withPrivacyPolicy', {'url': privacyPolicy});
     return this;
   }
 
   @override
   Future<void> showIfRequired() {
-    return channel.invokeMethod('show', {'force': false});
+    return invokeMethod('show', {'force': false});
   }
 
   @override
   Future<void> show() {
-    return channel.invokeMethod('show', {'force': true});
+    return invokeMethod('show', {'force': true});
   }
 }

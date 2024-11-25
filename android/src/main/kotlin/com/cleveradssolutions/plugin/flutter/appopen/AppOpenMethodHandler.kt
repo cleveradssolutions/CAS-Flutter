@@ -1,16 +1,9 @@
 package com.cleveradssolutions.plugin.flutter.appopen
 
-import android.util.Log
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
-import com.cleveradssolutions.plugin.flutter.bridge.base.FlutterObjectFactory
-import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
 import com.cleveradssolutions.plugin.flutter.util.success
-import com.cleveradssolutions.plugin.flutter.util.toMap
-import com.cleversolutions.ads.AdCallback
-import com.cleversolutions.ads.AdError
-import com.cleversolutions.ads.AdImpression
 import com.cleversolutions.ads.CASAppOpen
-import com.cleversolutions.ads.LoadAdCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -19,82 +12,49 @@ private const val CHANNEL_NAME = "cleveradssolutions/app_open"
 
 class AppOpenMethodHandler(
     binding: FlutterPluginBinding,
-    private val contextService: CASFlutterContext,
-    id: String
-) : MethodHandler(binding, "$CHANNEL_NAME.$id") {
+    private val contextService: CASFlutterContext
+) : MappedMethodHandler<CASAppOpen>(binding, CHANNEL_NAME) {
 
-    class Factory(
-        private val binding: FlutterPluginBinding,
-        private val contextService: CASFlutterContext
-    ) : FlutterObjectFactory<AppOpenMethodHandler>(binding, CHANNEL_NAME) {
-        override fun initInstance(id: String): AppOpenMethodHandler =
-            AppOpenMethodHandler(binding, contextService, id)
+    override fun initInstance(id: String): CASAppOpen {
+        val appOpen = CASAppOpen.create(id)
+        appOpen.contentCallback = ContentCallback(this, id)
+        return appOpen
     }
 
-    private val appOpen: CASAppOpen = CASAppOpen.create(id)
-
-    init {
-        appOpen.contentCallback = createContentCallback()
-    }
-
-    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+    override fun onMethodCall(
+        instance: CASAppOpen,
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
         when (call.method) {
-            "getManagerId" -> getManagerId(result)
-            "loadAd" -> loadAd(result)
-            "isAdAvailable" -> isAdAvailable(result)
-            "show" -> show(call, result)
-            else -> super.onMethodCall(call, result)
+            "getManagerId" -> getManagerId(instance, result)
+            "loadAd" -> loadAd(instance, result)
+            "isAdAvailable" -> isAdAvailable(instance, result)
+            "show" -> show(instance, call, result)
+            else -> super.onMethodCall(instance, call, result)
         }
     }
 
-    private fun getManagerId(result: MethodChannel.Result) {
+    private fun getManagerId(appOpen: CASAppOpen, result: MethodChannel.Result) {
         result.success(appOpen.managerId)
     }
 
-    private fun loadAd(result: MethodChannel.Result) {
-        appOpen.loadAd(contextService.getContext(), createLoadAdCallback())
+    private fun loadAd(appOpen: CASAppOpen, result: MethodChannel.Result) {
+        appOpen.loadAd(contextService.getContext(), LoadCallback(this, appOpen.managerId))
 
         result.success()
     }
 
-    private fun isAdAvailable(result: MethodChannel.Result) {
+    private fun isAdAvailable(appOpen: CASAppOpen, result: MethodChannel.Result) {
         result.success(appOpen.isAdAvailable())
     }
 
-    private fun show(call: MethodCall, result: MethodChannel.Result) {
+    private fun show(appOpen: CASAppOpen, call: MethodCall, result: MethodChannel.Result) {
         val activity = contextService.getActivityOrError(call, result) ?: return
 
         appOpen.show(activity)
 
         result.success()
-    }
-
-    private fun createContentCallback(): AdCallback {
-        return object : AdCallback {
-            override fun onShown(ad: AdImpression) {
-                invokeMethod("onShown", ad.toMap())
-            }
-
-            override fun onShowFailed(message: String) {
-                invokeMethod("onShowFailed", message)
-            }
-
-            override fun onClosed() {
-                invokeMethod("onClosed")
-            }
-        }
-    }
-
-    private fun createLoadAdCallback(): LoadAdCallback {
-        return object : LoadAdCallback {
-            override fun onAdFailedToLoad(error: AdError) {
-                invokeMethod("onAdFailedToLoad", error.message)
-            }
-
-            override fun onAdLoaded() {
-                invokeMethod("onAdLoaded")
-            }
-        }
     }
 
 }

@@ -16,7 +16,6 @@ abstract class MethodHandler(
     private val channel = MethodChannel(binding.binaryMessenger, channelName)
 
     init {
-        Log.e("DevDebug", "register channel $channelName")
         @Suppress("LeakingThis")
         channel.setMethodCallHandler(this)
     }
@@ -29,6 +28,10 @@ abstract class MethodHandler(
 
     fun invokeMethod(methodName: String, args: Any? = null) {
         channel.invokeMethod(methodName, args, null)
+    }
+
+    fun invokeMethod(methodName: String, vararg args: Pair<String, Any?>) {
+        channel.invokeMethod(methodName, args.toMap(), null)
     }
 
 }

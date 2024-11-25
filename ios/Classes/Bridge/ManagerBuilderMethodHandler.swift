@@ -11,7 +11,7 @@ import Flutter
 private let channelName = "cleveradssolutions/manager_builder"
 
 class ManagerBuilderMethodHandler: MethodHandler {
-    private let consentFlowFactory: ConsentFlowMethodHandler.Factory
+    private let consentFlowMethodHandler: ConsentFlowMethodHandler
     private let mediationManagerMethodHandler: MediationManagerMethodHandler
 
     private var builderField: CleverAdsSolutions.CASManagerBuilder?
@@ -24,10 +24,10 @@ class ManagerBuilderMethodHandler: MethodHandler {
 
     init(
         with registrar: FlutterPluginRegistrar,
-        _ consentFlowFactory: ConsentFlowMethodHandler.Factory,
+        _ consentFlowMethodHandler: ConsentFlowMethodHandler,
         _ mediationManagerMethodHandler: MediationManagerMethodHandler
     ) {
-        self.consentFlowFactory = consentFlowFactory
+        self.consentFlowMethodHandler = consentFlowMethodHandler
         self.mediationManagerMethodHandler = mediationManagerMethodHandler
         super.init(with: registrar, on: channelName)
     }
@@ -65,8 +65,8 @@ class ManagerBuilderMethodHandler: MethodHandler {
 
     private func withConsentFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         if let id: String = call.getArgAndCheckNil("id", result) {
-            if let consentFlowMethodHandler = consentFlowFactory[id] {
-                builder.withConsentFlow(consentFlowMethodHandler.getConsentFlow())
+            if let consentFlow = consentFlowMethodHandler[id] {
+                builder.withConsentFlow(consentFlow)
                 result(nil)
             } else {
                 result(call.errorFieldNil("consentFlow"))

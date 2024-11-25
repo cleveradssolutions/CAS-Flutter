@@ -16,7 +16,7 @@ private const val CHANNEL_NAME = "cleveradssolutions/manager_builder"
 
 class ManagerBuilderMethodHandler(
     binding: FlutterPluginBinding,
-    private val consentFlowFactory: ConsentFlowMethodHandler.Factory,
+    private val consentFlowMethodHandler: ConsentFlowMethodHandler,
     private val mediationManagerMethodHandler: MediationManagerMethodHandler,
     private val contextService: CASFlutterContext
 ) : MethodHandler(binding, CHANNEL_NAME) {
@@ -64,10 +64,10 @@ class ManagerBuilderMethodHandler(
 
     private fun withConsentFlow(call: MethodCall, result: MethodChannel.Result) {
         val id = call.getArgAndCheckNull<String>("id", result) ?: return
-        val consentFlowMethodHandler = consentFlowFactory[id]
+        val consentFlow = consentFlowMethodHandler[id]
             ?: return result.errorFieldNull(call, "consentFlow")
 
-        builder.withConsentFlow(consentFlowMethodHandler.consentFlow)
+        builder.withConsentFlow(consentFlow)
 
         result.success()
     }

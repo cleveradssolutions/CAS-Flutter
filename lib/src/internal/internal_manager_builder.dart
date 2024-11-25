@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:clever_ads_solutions/src/internal/native_object.dart';
 import 'package:flutter/services.dart';
 
 import '../consent_flow.dart';
@@ -8,6 +7,7 @@ import '../init_config.dart';
 import '../internal/internal_mediation_manager.dart';
 import '../manager_builder.dart';
 import '../mediation_manager.dart';
+import 'mapped_object.dart';
 
 class InternalManagerBuilder extends ManagerBuilder {
   static const MethodChannel _channel =
@@ -71,7 +71,7 @@ class InternalManagerBuilder extends ManagerBuilder {
   @override
   ManagerBuilder withConsentFlow(ConsentFlow consentFlow) {
     _channel.invokeMethod(
-        'withConsentFlow', {'id': (consentFlow as NativeObject).id});
+        'withConsentFlow', {'id': (consentFlow as MappedObject).id});
     return this;
   }
 
