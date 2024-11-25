@@ -90,12 +90,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 _isLoadingAppResources = false;
                 _openNextScreen();
               },
-              child: const Text(
-                'Skip AppOpenAd',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+              child: const Text('Skip AppOpenAd'),
             ),
           ],
         ),
