@@ -122,7 +122,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
 
     // Load the Ad
-    appOpenAd.loadAd(LoadAdCallback(onAdLoaded: () {
+    appOpenAd.load(LoadAdCallback(onAdLoaded: () {
       logDebug("App Open Ad loaded");
       if (_isLoadingAppResources) {
         _isVisibleAppOpenAd = true;

@@ -28,8 +28,8 @@ class AppOpenMethodHandler(
     ) {
         when (call.method) {
             "getManagerId" -> getManagerId(instance, result)
-            "loadAd" -> loadAd(instance, result)
-            "isAdAvailable" -> isAdAvailable(instance, result)
+            "load" -> load(instance, result)
+            "isLoaded" -> isLoaded(instance, result)
             "show" -> show(instance, call, result)
             else -> super.onMethodCall(instance, call, result)
         }
@@ -39,13 +39,13 @@ class AppOpenMethodHandler(
         result.success(appOpen.managerId)
     }
 
-    private fun loadAd(appOpen: CASAppOpen, result: MethodChannel.Result) {
+    private fun load(appOpen: CASAppOpen, result: MethodChannel.Result) {
         appOpen.loadAd(contextService.getContext(), LoadCallback(this, appOpen.managerId))
 
         result.success()
     }
 
-    private fun isAdAvailable(appOpen: CASAppOpen, result: MethodChannel.Result) {
+    private fun isLoaded(appOpen: CASAppOpen, result: MethodChannel.Result) {
         result.success(appOpen.isAdAvailable())
     }
 

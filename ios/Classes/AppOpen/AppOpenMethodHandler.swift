@@ -25,8 +25,8 @@ class AppOpenMethodHandler: MappedMethodHandler<AppOpenMethodHandler.AppOpenHold
     override func onMethodCall(_ appOpen: AppOpenHolder, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "getManagerId": getManagerId(appOpen.ad, result)
-        case "loadAd": loadAd(appOpen.ad, result)
-        case "isAdAvailable": isAdAvailable(appOpen.ad, result)
+        case "load": load(appOpen.ad, result)
+        case "isLoaded": isLoaded(appOpen.ad, result)
         case "show": show(appOpen.ad, call, result)
         default: super.onMethodCall(call, result)
         }
@@ -36,12 +36,12 @@ class AppOpenMethodHandler: MappedMethodHandler<AppOpenMethodHandler.AppOpenHold
         result(appOpen.managerId)
     }
 
-    private func loadAd(_ appOpen: CASAppOpen, _ result: @escaping FlutterResult) {
+    private func load(_ appOpen: CASAppOpen, _ result: @escaping FlutterResult) {
         appOpen.loadAd(completionHandler: createAdCompletionCallback())
         result(nil)
     }
 
-    private func isAdAvailable(_ appOpen: CASAppOpen, _ result: @escaping FlutterResult) {
+    private func isLoaded(_ appOpen: CASAppOpen, _ result: @escaping FlutterResult) {
         result(appOpen.isAdAvailable())
     }
 

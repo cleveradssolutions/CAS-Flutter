@@ -45,14 +45,14 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
   }
 
   @override
-  Future<void> loadAd(LoadAdCallback? callback) {
+  Future<void> load(LoadAdCallback? callback) {
     _loadCallback = callback;
-    return invokeMethod('loadAd');
+    return invokeMethod('load');
   }
 
   @override
-  Future<bool> isAdAvailable() async {
-    return await invokeMethod<bool>('isAdAvailable') ?? false;
+  Future<bool> isLoaded() async {
+    return await invokeMethod<bool>('isLoaded') ?? false;
   }
 
   @override

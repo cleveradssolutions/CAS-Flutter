@@ -25,10 +25,10 @@ abstract class CASAppOpen {
   ///
   /// @param context The context.
   /// @param callback An object that handles events for loading an app open ad.
-  Future<void> loadAd(LoadAdCallback? callback);
+  Future<void> load(LoadAdCallback? callback);
 
   /// Indicates whether the ad is currently loaded and ready to be shown.
-  Future<bool> isAdAvailable();
+  Future<bool> isLoaded();
 
   /// Shows the AppOpenAd.
   ///
