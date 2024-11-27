@@ -9,28 +9,27 @@ import Flutter
 import Foundation
 
 class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
-
-    private var registrar: FlutterPluginRegistrar
-    private var managerHandler: MediationManagerMethodHandler
+    private let registrar: FlutterPluginRegistrar
+    private let managerHandler: MediationManagerMethodHandler
+    private let methodHandler: BannerMethodHandler
 
     init(with registrar: FlutterPluginRegistrar, managerHandler: MediationManagerMethodHandler) {
         self.registrar = registrar
         self.managerHandler = managerHandler
+        methodHandler = BannerMethodHandler(with: registrar)
     }
 
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
-        let args = args as? [String: Any?]
         return BannerView(
             frame: frame,
             viewId: viewId,
-            args: args,
-            registrar: registrar,
-            manager: managerHandler.manager
+            args: args as? [String: Any?],
+            manager: managerHandler.manager,
+            methodHandler: methodHandler
         )
     }
 
-    public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
+    func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
         return FlutterStandardMessageCodec.sharedInstance()
     }
-
 }

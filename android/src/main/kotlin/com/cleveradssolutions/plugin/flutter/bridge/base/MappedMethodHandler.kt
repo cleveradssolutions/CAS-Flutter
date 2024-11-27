@@ -38,9 +38,16 @@ abstract class MappedMethodHandler<T>(
         super.onMethodCall(call, result)
     }
 
-    abstract fun initInstance(id: String): T
+    open fun initInstance(id: String): T =
+        throw NotImplementedError("MappedMethodHandler<T>.initInstance(id:) must be overridden in a subclass!")
 
     operator fun get(id: String): T? = map[id]
+
+    operator fun set(id: String, value: T) {
+        map[id] = value
+    }
+
+    fun remove(id: String) = map.remove(id)
 
     fun invokeMethod(id: String, methodName: String, args: Map<String, Any?>) {
         invokeMethod(methodName, args + ("id" to id))

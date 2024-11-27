@@ -1,6 +1,6 @@
 package com.cleveradssolutions.plugin.flutter.bannerview
 
-import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
 import com.cleveradssolutions.plugin.flutter.util.toMap
@@ -12,21 +12,22 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "cleveradssolutions/banner."
+private const val CHANNEL_NAME = "cleveradssolutions/banner"
 
-class BannerMethodHandler(
-    binding: FlutterPluginBinding,
-    flutterId: String,
-    private val bannerView: CASBannerView
-) : MethodHandler(binding, CHANNEL_NAME + flutterId), AdViewListener {
+class BannerMethodHandler(binding: FlutterPluginBinding) :
+    MappedMethodHandler<BannerView>(binding, CHANNEL_NAME), AdViewListener {
 
-    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+    override fun onMethodCall(
+        instance: BannerView,
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
         when (call.method) {
-            "isAdReady" -> isAdReady(result)
-            "loadNextAd" -> loadNextAd(result)
-            "setBannerAdRefreshRate" -> setBannerAdRefreshRate(call, result)
-            "disableBannerRefresh" -> disableBannerRefresh(result)
-            "dispose" -> dispose(result)
+            "isAdReady" -> isAdReady(instance.view, result)
+            "loadNextAd" -> loadNextAd(instance.view, result)
+            "setBannerAdRefreshRate" -> setBannerAdRefreshRate(instance.view, call, result)
+            "disableBannerRefresh" -> disableBannerRefresh(instance.view, result)
+            "dispose" -> dispose(instance, result)
             else -> super.onMethodCall(call, result)
         }
     }
@@ -47,28 +48,33 @@ class BannerMethodHandler(
         invokeMethod("onAdViewClicked")
     }
 
-    private fun isAdReady(result: MethodChannel.Result) {
+    private fun isAdReady(bannerView: CASBannerView, result: MethodChannel.Result) {
         result.success(bannerView.isAdReady)
     }
 
-    private fun loadNextAd(result: MethodChannel.Result) {
+    private fun loadNextAd(bannerView: CASBannerView, result: MethodChannel.Result) {
         bannerView.loadNextAd()
         result.success()
     }
 
-    private fun setBannerAdRefreshRate(call: MethodCall, result: MethodChannel.Result) {
+    private fun setBannerAdRefreshRate(
+        bannerView: CASBannerView,
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
         call.getArgAndReturn<Int>("refresh", result) {
             bannerView.refreshInterval = it
         }
     }
 
-    private fun disableBannerRefresh(result: MethodChannel.Result) {
+    private fun disableBannerRefresh(bannerView: CASBannerView, result: MethodChannel.Result) {
         bannerView.disableAdRefresh()
         result.success()
     }
 
-    private fun dispose(result: MethodChannel.Result) {
-        bannerView.destroy()
+    private fun dispose(bannerView: BannerView, result: MethodChannel.Result) {
+        bannerView.view.destroy()
+        remove(bannerView.id)
         result.success()
     }
 

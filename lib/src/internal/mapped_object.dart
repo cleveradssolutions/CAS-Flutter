@@ -1,20 +1,28 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
-abstract class MappedObject {
+abstract class MappedObject with MappedObjectImpl {
+  MappedObject(String channelName, [String? id, bool isWidget = false]) {
+    init(channelName, id, isWidget);
+  }
+}
+
+mixin MappedObjectImpl {
   static final Map<String, MethodChannel> _channels = {};
   static final Map<String, Finalizer<String>> _finalizers = {};
+
   late final MethodChannel channel;
+  late final String id;
 
-  final String id;
-
-  MappedObject(String channelName, [String? id])
-      : id = id ??= UniqueKey().hashCode.toString() {
+  void init(String channelName, [String? id, bool isWidget = false]) {
+    this.id = id ??= UniqueKey().toString();
     channel = _channels[channelName] ??= MethodChannel(channelName);
-    final finalizer = _finalizers[channelName] ??=
-        Finalizer((id) => channel.invokeMethod('dispose', {'id': id}));
-    finalizer.attach(this, id);
-    invokeMethod('init');
+    if (!isWidget) {
+      final finalizer = _finalizers[channelName] ??=
+          Finalizer((id) => channel.invokeMethod('dispose', {'id': id}));
+      finalizer.attach(this, id);
+      invokeMethod('init');
+    }
   }
 
   Future<T?> invokeMethod<T>(String method, [Map<String, dynamic>? arguments]) {

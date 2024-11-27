@@ -36,11 +36,20 @@ class MappedMethodHandler<T>: MethodHandler, AnyMappedMethodHandler {
     }
 
     open func initInstance(_ id: String) -> T {
-        fatalError("FlutterObjectFactory<T>.initInstance(id:) must be overridden in a subclass!")
+        fatalError("MappedMethodHandler<T>.initInstance(id:) must be overridden in a subclass!")
     }
 
     subscript(_ id: String) -> T? {
-        return map[id]
+        get {
+            return map[id]
+        }
+        set(newValue) {
+            map[id] = newValue
+        }
+    }
+
+    func remove(_ id: String) -> T? {
+        return map.removeValue(forKey: id)
     }
 
     func invokeMethod(_ id: String, _ methodName: String, _ args: [String: Any?]? = nil) {
@@ -48,7 +57,7 @@ class MappedMethodHandler<T>: MethodHandler, AnyMappedMethodHandler {
             invokeMethod(methodName, ["id": id])
             return
         }
-        args["id"] = id;
+        args["id"] = id
         invokeMethod(methodName, args)
     }
 }

@@ -4,25 +4,24 @@ import android.content.Context
 import com.cleversolutions.ads.AdSize
 import com.cleversolutions.ads.MediationManager
 import com.cleversolutions.ads.android.CASBannerView
-import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.platform.PlatformView
 
 class BannerView(
     context: Context,
     viewId: Int,
     args: Map<*, *>?,
-    binding: FlutterPluginBinding,
-    manager: MediationManager?
+    manager: MediationManager?,
+    methodHandler: BannerMethodHandler
 ) : PlatformView {
 
     private val banner = CASBannerView(context, manager)
-    private val methodHandler: BannerMethodHandler
+    val id: String
 
     init {
         banner.id = viewId
 
-        val flutterId = args?.get("id") as? String ?: ""
-        methodHandler = BannerMethodHandler(binding, flutterId, banner)
+        id = args?.get("id") as? String ?: ""
+        methodHandler[id] = this
         banner.adListener = methodHandler
 
         (args?.get("size") as? Map<*, *>)?.let { size ->
