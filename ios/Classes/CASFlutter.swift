@@ -11,6 +11,7 @@ public class CASFlutter: NSObject, FlutterPlugin {
         methodHandlers = [
             AdSizeMethodHandler(with: registrar),
             AdsSettingsMethodHandler(with: registrar),
+            AppOpenMethodHandler(with: registrar),
             CASMethodHandler(with: registrar),
             consentFlowMethodHandler,
             ManagerBuilderMethodHandler(

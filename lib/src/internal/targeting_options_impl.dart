@@ -5,7 +5,7 @@ import '../targeting_options.dart';
 
 class TargetingOptionsImpl extends TargetingOptions {
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/targeting_options");
+      MethodChannel("cleveradssolutions/targeting_options");
 
   @override
   Future<Gender> getGender() async {

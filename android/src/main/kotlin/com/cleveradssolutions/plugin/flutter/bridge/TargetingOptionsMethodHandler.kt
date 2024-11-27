@@ -8,7 +8,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/targeting_options"
+private const val CHANNEL_NAME = "cleveradssolutions/targeting_options"
 
 class TargetingOptionsMethodHandler(
     binding: FlutterPluginBinding

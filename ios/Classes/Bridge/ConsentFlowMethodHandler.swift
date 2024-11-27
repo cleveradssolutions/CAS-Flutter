@@ -8,58 +8,52 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "com.cleveradssolutions.plugin.flutter/consent_flow"
+private let channelName = "cleveradssolutions/consent_flow"
 
-class ConsentFlowMethodHandler: MethodHandler {
-    private var consentFlow: CASConsentFlow?
-    private var consentFlowDismissListener: CASConsentCompletionHandler?
-
+class ConsentFlowMethodHandler: MappedMethodHandler<CASConsentFlow> {
     init(with registrar: FlutterPluginRegistrar) {
         super.init(with: registrar, on: channelName)
-        consentFlowDismissListener = { [weak self] status in
-            self?.invokeMethod("OnDismissListener", ["status": status.rawValue])
-        }
     }
 
-    override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        switch call.method {
-        case "withPrivacyPolicy": withPrivacyPolicy(call, result)
-        case "disable": disable(result)
-        case "show": show(call, result)
-        default: super.onMethodCall(call, result)
-        }
-    }
-
-    func getConsentFlow() -> CASConsentFlow {
-        if let consentFlow = consentFlow { return consentFlow }
-
-        consentFlow = CASConsentFlow()
+    override func initInstance(_ id: String) -> CASConsentFlow {
+       return CASConsentFlow()
             .withViewControllerToPresent(Util.findRootViewController())
-            .withCompletionHandler(consentFlowDismissListener)
-
-        return consentFlow!
+            .withCompletionHandler(createDismissListener(id))
     }
 
-    private func withPrivacyPolicy(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturn("url", result) { url in
-            getConsentFlow().withPrivacyPolicy(url)
+    override func onMethodCall(_ consentFlow: CASConsentFlow, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        switch call.method {
+        case "withPrivacyPolicy": withPrivacyPolicy(consentFlow, call, result)
+        case "disable": disable(consentFlow, result)
+        case "show": show(consentFlow, call, result)
+        default: super.onMethodCall(consentFlow, call, result)
         }
     }
 
-    private func disable(_ result: @escaping FlutterResult) {
-        consentFlow = CASConsentFlow(isEnabled: false)
-            .withCompletionHandler(consentFlowDismissListener)
+    private func withPrivacyPolicy(_ consentFlow: CASConsentFlow, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturn("url", result) { url in
+            consentFlow.withPrivacyPolicy(url)
+        }
+    }
+
+    private func disable(_ consentFlow: CASConsentFlow, _ result: @escaping FlutterResult) {
+        consentFlow.requestGDPR = false
         result(nil)
     }
 
-    private func show(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func show(_ consentFlow: CASConsentFlow, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         call.getArgAndReturn("force", result) { force in
             if force {
-                getConsentFlow().present()
+                consentFlow.present()
             } else {
-                getConsentFlow().presentIfRequired()
+                consentFlow.presentIfRequired()
             }
         }
-        result(nil)
+    }
+
+    private func createDismissListener(_ id: String) -> CASConsentCompletionHandler {
+        return { [weak self] status in
+            self?.invokeMethod(id, "onDismiss", ["status": status.rawValue])
+        }
     }
 }

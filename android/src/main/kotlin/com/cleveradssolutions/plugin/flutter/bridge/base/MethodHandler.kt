@@ -30,4 +30,8 @@ abstract class MethodHandler(
         channel.invokeMethod(methodName, args, null)
     }
 
+    fun invokeMethod(methodName: String, vararg args: Pair<String, Any?>) {
+        channel.invokeMethod(methodName, args.toMap(), null)
+    }
+
 }

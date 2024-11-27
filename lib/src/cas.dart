@@ -7,7 +7,7 @@ import 'consent_flow.dart';
 import 'consent_status.dart';
 import 'gender.dart';
 import 'internal/ads_settings_impl.dart';
-import 'internal/internal_cas_consent_flow.dart';
+import 'internal/consent_flow_impl.dart';
 import 'internal/internal_manager_builder.dart';
 import 'internal/targeting_options_impl.dart';
 import 'loading_mode.dart';
@@ -17,10 +17,9 @@ import 'user_consent.dart';
 
 /// Represents the CAS.AI SDK.
 class CAS {
-  static const String _pluginVersion = "0.6.3";
+  static const String _pluginVersion = "0.7.0";
 
-  static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/cas");
+  static const MethodChannel _channel = MethodChannel("cleveradssolutions/cas");
 
   /// Get singleton instance for configure all mediation managers
   static final AdsSettings settings = AdsSettingsImpl();
@@ -35,8 +34,9 @@ class CAS {
   @Deprecated("This method is no longer maintained and should not be used")
   static setFlutterVersion(String flutterVersion) {}
 
+  @Deprecated("Use ConsentFlow.build() instead")
   static ConsentFlow buildConsentFlow() {
-    return InternalCASConsentFlow();
+    return ConsentFlowImpl();
   }
 
   /// Create [MediationManager] builder.

@@ -1,11 +1,12 @@
 import "dart:async";
 
+import "package:clever_ads_solutions/src/internal/mapped_object.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
-import "ad_impression.dart";
-import "ad_size.dart";
+import "../ad_impression.dart";
+import "../ad_size.dart";
 import "ad_view_listener.dart";
 
 const String _viewType = "<cas-banner-view>";
@@ -87,10 +88,7 @@ abstract class BannerWidgetState extends State<BannerWidget> {
   Future<void> dispose();
 }
 
-class _BannerWidgetState extends BannerWidgetState {
-  late String _id;
-
-  late MethodChannel _channel;
+class _BannerWidgetState extends BannerWidgetState with MappedObjectImpl {
   late AdViewListener? _listener;
 
   late AdSize _size;
@@ -101,17 +99,14 @@ class _BannerWidgetState extends BannerWidgetState {
   @override
   void initState() {
     super.initState();
-    _id = widget._id;
+    init('cleveradssolutions/banner', widget._id, true);
     _listener = widget.listener;
     _size = widget.size;
     _isAutoloadEnabled = widget.isAutoloadEnabled;
     _refreshInterval = widget.refreshInterval;
     _maxWidthDpi = widget.maxWidthDpi;
 
-    final String channelName =
-        "com.cleveradssolutions.plugin.flutter/banner.$_id";
-    _channel = MethodChannel(channelName);
-    _channel.setMethodCallHandler(handleMethodCall);
+    channel.setMethodCallHandler(handleMethodCall);
   }
 
   Future<dynamic> handleMethodCall(MethodCall call) async {
@@ -154,10 +149,10 @@ class _BannerWidgetState extends BannerWidgetState {
         : _size;
 
     Map<String, dynamic> creationParams = <String, dynamic>{
-      "id": _id,
-      "size": _sizeToMap(size, _maxWidthDpi),
-      "isAutoloadEnabled": _isAutoloadEnabled,
-      "refreshInterval": _refreshInterval,
+      'id': id,
+      'size': _sizeToMap(size, _maxWidthDpi),
+      'isAutoloadEnabled': _isAutoloadEnabled,
+      'refreshInterval': _refreshInterval,
     };
 
     dynamic widget;
@@ -191,7 +186,7 @@ class _BannerWidgetState extends BannerWidgetState {
   @override
   Future<void> dispose() {
     super.dispose();
-    return _channel.invokeMethod("dispose");
+    return invokeMethod('dispose');
   }
 
   @override
@@ -201,56 +196,54 @@ class _BannerWidgetState extends BannerWidgetState {
 
   @override
   Future<void> setSize(AdSize size) {
-    return _channel.invokeMethod("setSize", _sizeToMap(size, _maxWidthDpi));
+    return invokeMethod('setSize', _sizeToMap(size, _maxWidthDpi));
   }
 
   @override
   Future<bool> isAdReady() async {
-    final bool? isAdReady = await _channel.invokeMethod<bool>("isAdReady");
+    final bool? isAdReady = await invokeMethod<bool>('isAdReady');
     return isAdReady ?? false;
   }
 
   @override
   Future<bool> isAutoloadEnabled() async {
-    final bool? isEnabled =
-        await _channel.invokeMethod<bool>("isAutoloadEnabled");
+    final bool? isEnabled = await invokeMethod<bool>('isAutoloadEnabled');
     return isEnabled ?? false;
   }
 
   @override
   Future<void> setAutoloadEnabled(bool isEnabled) {
-    return _channel.invokeMethod("setAutoloadEnabled", {isEnabled: isEnabled});
+    return invokeMethod('setAutoloadEnabled', {'isEnabled': isEnabled});
   }
 
   @override
   Future<int> getRefreshInterval() async {
-    final int? interval =
-        await _channel.invokeMethod<int>("getRefreshInterval");
+    final int? interval = await invokeMethod<int>('getRefreshInterval');
     return interval ?? 0;
   }
 
   @override
   Future<void> setRefreshInterval(int interval) {
-    return _channel.invokeMethod("setRefreshInterval", {interval: interval});
+    return invokeMethod('setRefreshInterval', {'interval': interval});
   }
 
   @override
   Future<void> disableAdRefresh() {
-    return _channel.invokeMethod("disableBannerRefresh");
+    return invokeMethod('disableBannerRefresh');
   }
 
   @override
   Future<void> loadNextAd() {
-    return _channel.invokeMethod("loadNextAd");
+    return invokeMethod('loadNextAd');
   }
 
   Map<String, dynamic> _sizeToMap(AdSize size, int? maxWidthDpi) {
     return <String, dynamic>{
-      "width": size.width,
-      "height": size.height,
-      "mode": size.mode,
-      "maxWidthDpi": maxWidthDpi,
-      "isAdaptive": size == AdSize.Adaptive
+      'width': size.width,
+      'height': size.height,
+      'mode': size.mode,
+      'maxWidthDpi': maxWidthDpi,
+      'isAdaptive': size == AdSize.Adaptive
     };
   }
 }

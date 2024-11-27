@@ -1,28 +1,28 @@
-package com.cleveradssolutions.plugin.flutter.bridge
+package com.cleveradssolutions.plugin.flutter.bridge.manager
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.CASViewWrapper
-import com.cleveradssolutions.plugin.flutter.CASViewWrapperListener
 import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.AppReturnListener
+import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.BannerListener
+import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.BannerListener.Companion.getBannerName
+import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.InterstitialListener
+import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.RewardedListener
 import com.cleveradssolutions.plugin.flutter.util.error
 import com.cleveradssolutions.plugin.flutter.util.errorFieldNull
 import com.cleveradssolutions.plugin.flutter.util.errorInvalidArg
 import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
 import com.cleveradssolutions.plugin.flutter.util.success
-import com.cleveradssolutions.plugin.flutter.util.toMap
 import com.cleveradssolutions.sdk.base.CASHandler
 import com.cleversolutions.ads.AdError
 import com.cleversolutions.ads.AdLoadCallback
-import com.cleversolutions.ads.AdPaidCallback
-import com.cleversolutions.ads.AdStatusHandler
 import com.cleversolutions.ads.AdType
-import com.cleversolutions.ads.LoadAdCallback
 import com.cleversolutions.ads.MediationManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "com.cleveradssolutions.plugin.flutter/mediation_manager"
+private const val CHANNEL_NAME = "cleveradssolutions/mediation_manager"
 
 class MediationManagerMethodHandler(
     binding: FlutterPluginBinding,
@@ -32,9 +32,9 @@ class MediationManagerMethodHandler(
     var manager: MediationManager? = null
         private set
 
-    private val interstitialListener = InterstitialListener()
-    private val rewardedListener = RewardedListener()
-    private val appReturnListener = AppReturnListener()
+    private val interstitialListener = InterstitialListener(this)
+    private val rewardedListener = RewardedListener(this)
+    private val appReturnListener = AppReturnListener(this)
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -169,7 +169,7 @@ class MediationManagerMethodHandler(
         } else {
             val view = CASViewWrapper(contextService)
             CASHandler.main {
-                view.createView(manager, BannerListener(sizeId), sizeId)
+                view.createView(manager, BannerListener(this, sizeId), sizeId)
             }
             banners[sizeId] = view
         }
@@ -206,159 +206,6 @@ class MediationManagerMethodHandler(
     ): MediationManager? {
         if (manager == null) result.errorFieldNull(call, "manager")
         return manager
-    }
-
-    private fun getBannerName(sizeId: Int): String {
-        return when (sizeId) {
-            2 -> "adaptive"
-            3 -> "smart"
-            4 -> "leader"
-            5 -> "mrec"
-            else -> "standard"
-        }
-    }
-
-    private inner class BannerListener(sizeId: Int) : CASViewWrapperListener {
-
-        private val name = getBannerName(sizeId)
-
-        override fun onLoaded() {
-            invokeMethod("OnBannerAdLoaded", mapOf("banner" to name))
-        }
-
-        override fun onFailed(error: Int) {
-            invokeMethod(
-                "OnBannerAdFailedToLoad",
-                mapOf(
-                    "banner" to name,
-                    "message" to AdError(error).message
-                )
-            )
-        }
-
-        override fun onShown() {
-            invokeMethod("OnBannerAdShown", mapOf("banner" to name))
-        }
-
-        override fun onImpression(impression: AdStatusHandler?) {
-            invokeMethod(
-                "OnBannerAdImpression",
-                mapOf("banner" to name) + (impression?.toMap() ?: emptyMap())
-            )
-        }
-
-        override fun onClicked() {
-            invokeMethod("OnBannerAdClicked", mapOf("banner" to name))
-        }
-
-        override fun onRect(x: Int, y: Int, width: Int, height: Int) {
-            invokeMethod(
-                "OnBannerAdRect",
-                mapOf(
-                    "banner" to name,
-                    "x" to x,
-                    "y" to y,
-                    "width" to width,
-                    "height" to height
-                )
-            )
-        }
-    }
-
-    private inner class InterstitialListener : AdPaidCallback, LoadAdCallback {
-        override fun onAdLoaded() {
-            invokeMethod("OnInterstitialAdLoaded")
-        }
-
-        override fun onAdFailedToLoad(error: AdError) {
-            invokeMethod(
-                "OnInterstitialAdFailedToLoad",
-                mapOf("message" to error.message)
-            )
-        }
-
-        override fun onShown(ad: AdStatusHandler) {
-            invokeMethod("OnInterstitialAdShown")
-        }
-
-        override fun onAdRevenuePaid(ad: AdStatusHandler) {
-            invokeMethod("OnInterstitialAdImpression", ad.toMap())
-        }
-
-        override fun onShowFailed(message: String) {
-            invokeMethod("OnInterstitialAdFailedToShow", mapOf("message" to message))
-        }
-
-        override fun onClicked() {
-            invokeMethod("OnInterstitialAdClicked")
-        }
-
-        override fun onClosed() {
-            invokeMethod("OnInterstitialAdClosed")
-        }
-    }
-
-    private inner class RewardedListener : AdPaidCallback, LoadAdCallback {
-        override fun onAdLoaded() {
-            invokeMethod("OnRewardedAdLoaded")
-        }
-
-        override fun onAdFailedToLoad(error: AdError) {
-            invokeMethod(
-                "OnRewardedAdFailedToLoad",
-                mapOf("message" to error.message)
-            )
-        }
-
-        override fun onShown(ad: AdStatusHandler) {
-            invokeMethod("OnRewardedAdShown")
-        }
-
-        override fun onAdRevenuePaid(ad: AdStatusHandler) {
-            invokeMethod("OnRewardedAdImpression", ad.toMap())
-        }
-
-        override fun onShowFailed(message: String) {
-            invokeMethod("OnRewardedAdFailedToShow", mapOf("message" to message))
-        }
-
-        override fun onClicked() {
-            invokeMethod("OnRewardedAdClicked")
-        }
-
-        override fun onComplete() {
-            invokeMethod("OnRewardedAdCompleted")
-        }
-
-        override fun onClosed() {
-            invokeMethod("OnRewardedAdClosed")
-        }
-    }
-
-    private inner class AppReturnListener : AdPaidCallback, LoadAdCallback {
-        override fun onAdLoaded() {}
-
-        override fun onAdFailedToLoad(error: AdError) {}
-
-        override fun onShown(ad: AdStatusHandler) {
-            invokeMethod("OnAppReturnAdShown")
-        }
-
-        override fun onAdRevenuePaid(ad: AdStatusHandler) {
-            invokeMethod("OnAppReturnAdImpression", ad.toMap())
-        }
-
-        override fun onShowFailed(message: String) {
-            invokeMethod("OnAppReturnAdFailedToShow", mapOf("message" to message))
-        }
-
-        override fun onClicked() {
-            invokeMethod("OnAppReturnAdClicked")
-        }
-
-        override fun onClosed() {
-            invokeMethod("OnAppReturnAdClosed")
-        }
     }
 
 }

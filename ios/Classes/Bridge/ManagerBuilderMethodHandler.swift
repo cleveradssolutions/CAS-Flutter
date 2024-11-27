@@ -8,7 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "com.cleveradssolutions.plugin.flutter/manager_builder"
+private let channelName = "cleveradssolutions/manager_builder"
 
 class ManagerBuilderMethodHandler: MethodHandler {
     private let consentFlowMethodHandler: ConsentFlowMethodHandler
@@ -35,8 +35,11 @@ class ManagerBuilderMethodHandler: MethodHandler {
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
         case "withTestAdMode": withTestAdMode(call, result)
+        case "withAdTypes": withAdTypes(call, result)
         case "withUserId": withUserId(call, result)
+        case "withConsentFlow": withConsentFlow(call, result)
         case "withMediationExtras": withMediationExtras(call, result)
+        case "withFramework": withFramework(call, result)
         case "build": build(call, result)
         default: super.onMethodCall(call, result)
         }
@@ -48,9 +51,26 @@ class ManagerBuilderMethodHandler: MethodHandler {
         }
     }
 
+    private func withAdTypes(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturn("adTypes", result) { (adTypes: Int) in
+            builder.withAdFlags(CASTypeFlags(rawValue: UInt(adTypes)))
+        }
+    }
+
     private func withUserId(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         call.getArgAndReturn("userId", result) { userId in
             builder.withUserID(userId)
+        }
+    }
+
+    private func withConsentFlow(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        if let id: String = call.getArgAndCheckNil("id", result) {
+            if let consentFlow = consentFlowMethodHandler[id] {
+                builder.withConsentFlow(consentFlow)
+                result(nil)
+            } else {
+                result(call.errorFieldNil("consentFlow"))
+            }
         }
     }
 
@@ -60,20 +80,21 @@ class ManagerBuilderMethodHandler: MethodHandler {
         }
     }
 
+    private func withFramework(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        call.getArgAndReturn("pluginVersion", result) { pluginVersion in
+            builder.withFramework("Flutter", version: pluginVersion)
+        }
+    }
+
     private func build(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        if let id: String = call.getArgAndCheckNil("id", result),
-           let formats: Int = call.getArgAndCheckNil("formats", result),
-           let version: String = call.getArgAndCheckNil("version", result) {
+        call.getArgAndReturn("id", result) { id in
             let manager = builder
-                .withAdFlags(CASTypeFlags(rawValue: UInt(formats)))
-                .withFramework("Flutter", version: version)
-                .withConsentFlow(consentFlowMethodHandler.getConsentFlow())
                 .withCompletionHandler({ [weak self] initialConfig in
                     self?.invokeMethod("onCASInitialized", [
                         "error": initialConfig.error as Any?,
                         "countryCode": initialConfig.countryCode,
                         "isConsentRequired": initialConfig.isConsentRequired,
-                        "testMode": initialConfig.manager.isDemoAdMode
+                        "testMode": initialConfig.manager.isDemoAdMode,
                     ])
                 })
                 .create(withCasId: id)
@@ -81,8 +102,6 @@ class ManagerBuilderMethodHandler: MethodHandler {
             mediationManagerMethodHandler.setManager(manager)
 
             builderField = nil
-
-            result(nil)
         }
     }
 }

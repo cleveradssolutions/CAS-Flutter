@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 
 class AdSize {
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/ad_size");
+      MethodChannel("cleveradssolutions/ad_size");
 
   final int width;
   final int height;
@@ -79,4 +79,7 @@ class AdSize {
     final map = await _channel.invokeMethod<Map>("getAdaptiveBannerInScreen");
     return AdSize._parseMap(map);
   }
+
+  @override
+  String toString() => 'width: $width, height: $height, mode: $mode';
 }

@@ -1,13 +1,14 @@
 package com.cleveradssolutions.plugin.flutter
 
+import com.cleveradssolutions.plugin.flutter.appopen.AppOpenMethodHandler
 import com.cleveradssolutions.plugin.flutter.bannerview.BannerViewFactory
 import com.cleveradssolutions.plugin.flutter.bridge.AdSizeMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.AdsSettingsMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.CASMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
-import com.cleveradssolutions.plugin.flutter.bridge.ManagerBuilderMethodHandler
-import com.cleveradssolutions.plugin.flutter.bridge.MediationManagerMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.TargetingOptionsMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.manager.ManagerBuilderMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.manager.MediationManagerMethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -23,8 +24,9 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         val consentFlowMethodHandler = ConsentFlowMethodHandler(binding, context)
         val mediationManagerMethodHandler = MediationManagerMethodHandler(binding, context)
 
-        AdSizeMethodHandler(binding)
+        AdSizeMethodHandler(binding, context)
         AdsSettingsMethodHandler(binding)
+        AppOpenMethodHandler(binding, context)
         CASMethodHandler(binding, context)
         ManagerBuilderMethodHandler(
             binding,

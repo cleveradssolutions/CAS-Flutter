@@ -4,7 +4,7 @@ import 'ad_callback.dart';
 import 'ad_load_callback.dart';
 import 'ad_size.dart';
 import 'ad_type.dart';
-import 'cas_banner_view.dart';
+import 'banner/cas_banner_view.dart';
 
 abstract class MediationManager {
   /// CAS manager (Placement) identifier

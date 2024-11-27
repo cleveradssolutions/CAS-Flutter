@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
+import '../../ad_impression.dart';
 import '../ad_view_listener.dart';
-import 'ad_listener.dart';
 
-class InternalListenerContainer extends AdListener {
+class InternalListenerContainer {
   AdViewListener? standardBannerListener;
   AdViewListener? adaptiveBannerListener;
   AdViewListener? smartBannerListener;
@@ -27,7 +27,7 @@ class InternalListenerContainer extends AdListener {
         break;
 
       case 'OnBannerAdImpression':
-        getBannerListener(call)?.onImpression(tryGetAdImpression(call));
+        getBannerListener(call)?.onImpression(AdImpression.tryParse(call));
         break;
 
       case 'OnBannerAdFailedToShow':

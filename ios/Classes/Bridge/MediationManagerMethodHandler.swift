@@ -8,7 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "com.cleveradssolutions.plugin.flutter/mediation_manager"
+private let channelName = "cleveradssolutions/mediation_manager"
 
 class MediationManagerMethodHandler: MethodHandler, CASLoadDelegate {
     private(set) var manager: CASMediationManager?

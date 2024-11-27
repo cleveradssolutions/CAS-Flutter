@@ -9,21 +9,25 @@ import CleverAdsSolutions
 import Flutter
 
 class BannerView: NSObject, FlutterPlatformView {
-    private let banner: CASBannerView
+    let banner: CASBannerView
     private let methodHandler: BannerMethodHandler
+    let id: String
 
     init(
         frame: CGRect,
         viewId: Int64,
         args: [String: Any?]?,
-        registrar: FlutterPluginRegistrar,
-        manager: CASMediationManager?
+        manager: CASMediationManager?,
+        methodHandler: BannerMethodHandler
     ) {
+        self.methodHandler = methodHandler
+
         banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
         banner.tag = Int(viewId)
 
-        let flutterId = args?["id"] as? String ?? ""
-        methodHandler = BannerMethodHandler(with: registrar, flutterId, banner)
+        id = args?["id"] as? String ?? ""
+        super.init()
+        methodHandler[id] = self
         banner.adDelegate = methodHandler
 
         if let isAutoloadEnabled = args?["isAutoloadEnabled"] as? Bool {

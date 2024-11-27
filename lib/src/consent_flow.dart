@@ -1,3 +1,4 @@
+import 'internal/consent_flow_impl.dart';
 import 'on_dismiss_listener.dart';
 
 /// Use this object for configure Consent flow forms for GDPR.
@@ -26,6 +27,8 @@ abstract class ConsentFlow {
   /// There was an error with another form is still being displayed.
   static const statusFlowStillShowing = 13;
 
+  static ConsentFlow create() => ConsentFlowImpl();
+
   /// Disable auto display consent flow if required on Ads initialization.
   ConsentFlow disableFlow();
 
@@ -39,11 +42,11 @@ abstract class ConsentFlow {
 
   /// Shows the consent form only if it is required and the user has not responded previously.
   /// If the consent status is required, the SDK loads a form and immediately presents it.
-  Future<void> showIfRequired();
+  void showIfRequired();
 
   /// Force shows the form to modify user  consent at any time.
   ///
   /// When a user interacts with your UI element, call function to show the form
   /// so the user can update their privacy options at any time.
-  Future<void> show();
+  void show();
 }

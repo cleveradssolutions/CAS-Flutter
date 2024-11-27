@@ -3,18 +3,18 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 import '../ad_callback.dart';
+import '../ad_impression.dart';
 import '../ad_load_callback.dart';
 import '../ad_size.dart';
 import '../ad_type.dart';
-import '../cas_banner_view.dart';
+import '../banner/cas_banner_view.dart';
+import '../banner/internal/internal_cas_banner_view.dart';
+import '../banner/internal/internal_listener_container.dart';
 import '../mediation_manager.dart';
-import 'ad_listener.dart';
-import 'internal_cas_banner_view.dart';
-import 'internal_listener_container.dart';
 
-class InternalMediationManager extends AdListener implements MediationManager {
+class InternalMediationManager implements MediationManager {
   static const MethodChannel _channel =
-      MethodChannel("com.cleveradssolutions.plugin.flutter/mediation_manager");
+      MethodChannel("cleveradssolutions/mediation_manager");
 
   AdCallback? _interstitialListener;
   AdCallback? _rewardedListener;
@@ -37,8 +37,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnInterstitialAdFailedToLoad':
-        _adLoadCallback?.onAdFailedToLoad(
-            AdType.Interstitial, call.arguments);
+        _adLoadCallback?.onAdFailedToLoad(AdType.Interstitial, call.arguments);
         break;
 
       case 'OnInterstitialAdShown':
@@ -46,7 +45,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnInterstitialAdImpression':
-        _interstitialListener?.onImpression(tryGetAdImpression(call));
+        _interstitialListener?.onImpression(AdImpression.tryParse(call));
         break;
 
       case 'OnInterstitialAdFailedToShow':
@@ -76,7 +75,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnRewardedAdImpression':
-        _rewardedListener?.onImpression(tryGetAdImpression(call));
+        _rewardedListener?.onImpression(AdImpression.tryParse(call));
         break;
 
       case 'OnRewardedAdFailedToShow':
@@ -102,7 +101,7 @@ class InternalMediationManager extends AdListener implements MediationManager {
         break;
 
       case 'OnAppReturnAdImpression':
-        _appReturnListener?.onImpression(tryGetAdImpression(call));
+        _appReturnListener?.onImpression(AdImpression.tryParse(call));
         break;
 
       case 'OnAppReturnAdFailedToShow':

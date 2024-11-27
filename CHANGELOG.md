@@ -1,3 +1,12 @@
+## 0.7.0
+### Features
+- Added support for AppOpen ads.
+### Changes
+- [Android] Requires a minimum `minSdk` of 23.
+### Bug Fixes
+- [Android] Fixed error: `PlatformException(Platform views cannot be displayed below API level 23)`.
+- Fixed error: `MissingPluginException(No implementation found for method dispose on channel 'banner')`.
+
 ## 0.6.3
 ### Features
 - Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.7 SDK
@@ -18,8 +27,7 @@
 
 ## 0.6.0
 ### Features
-- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases)
-  and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.5 SDK
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.5 SDK
 ### Changes
 - Methods for configuring ads settings and targeting options in the `CAS` class deprecated.
   Use dedicated singletons of the `AdsSettings` and `TargetingOptions` classes in CAS:

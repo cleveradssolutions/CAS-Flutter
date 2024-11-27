@@ -9,28 +9,20 @@ import CleverAdsSolutions
 import Flutter
 import Foundation
 
-private let logTag = "BannerMethodHandler"
-private let channelName = "com.cleveradssolutions.plugin.flutter/banner."
+private let channelName = "cleveradssolutions/banner"
 
-class BannerMethodHandler: MethodHandler, CASBannerDelegate {
-    private let bannerView: CASBannerView
-
-    init(
-        with registrar: FlutterPluginRegistrar,
-        _ flutterId: String,
-        _ bannerView: CASBannerView
-    ) {
-        self.bannerView = bannerView
-        super.init(with: registrar, on: channelName + flutterId)
+class BannerMethodHandler: MappedMethodHandler<BannerView>, CASBannerDelegate {
+    init(with registrar: FlutterPluginRegistrar) {
+        super.init(with: registrar, on: channelName)
     }
 
-    override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    override func onMethodCall(_ bannerView: BannerView, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
-        case "isAdReady": isAdReady(call, result)
-        case "loadNextAd": loadNextAd(call, result)
-        case "setBannerAdRefreshRate": setBannerAdRefreshRate(call, result)
-        case "disableBannerRefresh": disableBannerRefresh(call, result)
-        case "dispose": dispose(call, result)
+        case "isAdReady": isAdReady(bannerView.banner, call, result)
+        case "loadNextAd": loadNextAd(bannerView.banner, call, result)
+        case "setBannerAdRefreshRate": setBannerAdRefreshRate(bannerView.banner, call, result)
+        case "disableBannerRefresh": disableBannerRefresh(bannerView.banner, call, result)
+        case "dispose": dispose(bannerView, call, result)
         default: super.onMethodCall(call, result)
         }
     }
@@ -51,28 +43,29 @@ class BannerMethodHandler: MethodHandler, CASBannerDelegate {
         invokeMethod("onAdViewClicked")
     }
 
-    private func isAdReady(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func isAdReady(_ bannerView: CASBannerView, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         result(bannerView.isAdReady)
     }
 
-    private func loadNextAd(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func loadNextAd(_ bannerView: CASBannerView, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         bannerView.loadNextAd()
         result(nil)
     }
 
-    private func setBannerAdRefreshRate(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func setBannerAdRefreshRate(_ bannerView: CASBannerView, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         call.getArgAndReturn("refresh", result) { interval in
             bannerView.refreshInterval = interval
         }
     }
 
-    private func disableBannerRefresh(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+    private func disableBannerRefresh(_ bannerView: CASBannerView, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         bannerView.disableAdRefresh()
         result(nil)
     }
 
-    private func dispose(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        bannerView.destroy()
+    private func dispose(_ bannerView: BannerView, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        bannerView.banner.destroy()
+        _ = remove(bannerView.id)
         result(nil)
     }
 }
