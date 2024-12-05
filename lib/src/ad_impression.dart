@@ -42,7 +42,7 @@ class AdImpression {
   }
 
   static AdImpression? tryParse(MethodCall call) {
-    final arguments = call.arguments as Map<String, Object>?;
+    final arguments = call.arguments as Map<dynamic, dynamic>?;
 
     if (arguments != null) {
       return AdImpression(

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'log.dart';
 
-const _casId = "demo";
+const _casId = 'demo';
 
 void main() {
   runApp(const AppWithSplashScreen());
@@ -104,17 +104,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // Handle fullscreen callback events
     appOpenAd.contentCallback = AppOpenAdListener(
-      onShown: () => logDebug("App open ad shown"),
-      onImpression: (adImpression) =>
-          logDebug("App open ad did impression: $adImpression!"),
+      onShown: (adImpression) => logDebug('App open ad shown: $adImpression'),
       onShowFailed: (message) {
-        logDebug("App open ad show failed: $message");
+        logDebug('App open ad show failed: $message');
 
         _isVisibleAppOpenAd = false;
         _openNextScreen();
       },
+      onClicked: () => logDebug('App open ad clicked'),
+      onImpression: (adImpression) =>
+          logDebug('App open ad did impression: $adImpression!'),
       onClosed: () {
-        logDebug("App open ad closed");
+        logDebug('App open ad closed');
 
         _isVisibleAppOpenAd = false;
         _openNextScreen();
@@ -122,16 +123,19 @@ class _SplashScreenState extends State<SplashScreen> {
     );
 
     // Load the Ad
-    appOpenAd.load(LoadAdCallback(onAdLoaded: () {
-      logDebug("App Open Ad loaded");
-      if (_isLoadingAppResources) {
-        _isVisibleAppOpenAd = true;
-        appOpenAd.show();
-      }
-    }, onAdFailedToLoad: (adError) {
-      logDebug("App Open Ad failed to load: ${adError.message}");
-      _openNextScreen();
-    }));
+    appOpenAd.load(LoadAdCallback(
+      onAdLoaded: () {
+        logDebug('App Open Ad loaded');
+        if (_isLoadingAppResources) {
+          _isVisibleAppOpenAd = true;
+          appOpenAd.show();
+        }
+      },
+      onAdFailedToLoad: (adError) {
+        logDebug('App Open Ad failed to load: ${adError.message}');
+        _openNextScreen();
+      },
+    ));
   }
 
   void _openNextScreen() {
