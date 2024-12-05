@@ -28,15 +28,18 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
       case 'onAdFailedToLoad':
         _loadCallback?.onAdFailedToLoad(AdError(call.arguments));
         break;
+
       case 'onShown':
-        final callback = contentCallback;
-        if (callback != null) {
-          callback.onShown();
-          callback.onImpression(AdImpression.tryParse(call));
-        }
+        contentCallback?.onShown(AdImpression.tryParse(call));
         break;
       case 'onShowFailed':
         contentCallback?.onShowFailed(call.arguments);
+        break;
+      case 'onClicked':
+        contentCallback?.onClicked();
+        break;
+      case 'onAdRevenuePaid':
+        contentCallback?.onImpression(AdImpression.tryParse(call));
         break;
       case 'onClosed':
         contentCallback?.onClosed();
