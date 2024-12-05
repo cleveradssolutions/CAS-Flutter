@@ -1,6 +1,6 @@
 ## 0.7.1
 ### Bug Fixes
-Fixed issues with AppOpen ads.
+- Fixed issues with AppOpen ads.
 
 ## 0.7.0
 ### Features
