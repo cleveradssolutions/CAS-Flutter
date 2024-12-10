@@ -1,3 +1,10 @@
+## 0.7.2
+### Changes
+- Reworked AdSize so the BannerWidget constructor can accept the result of AdSize methods.
+### Bug Fixes
+- Fixed crash when calling AdSize.getAdaptiveBanner(maxWidthDp).
+- [iOS] Fixed crash when calling AdSize.getAdaptiveBannerInScreen().
+
 ## 0.7.1
 ### Bug Fixes
 - Fixed issues with AppOpen ads.
