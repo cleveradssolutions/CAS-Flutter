@@ -234,28 +234,16 @@ class InternalMediationManager implements MediationManager {
   @override
   CASBannerView getAdView(AdSize size) {
     int sizeId;
-    switch (size) {
-      case AdSize.banner:
-      case AdSize.Banner:
-        sizeId = 1;
-        break;
-      case AdSize.Adaptive:
-        sizeId = 2;
-        break;
-      case AdSize.Smart:
-        sizeId = 3;
-        break;
-      case AdSize.leaderboard:
-      case AdSize.Leaderboard:
-        sizeId = 4;
-        break;
-      case AdSize.mediumRectangle:
-      case AdSize.MediumRectangle:
-        sizeId = 5;
-        break;
-      default:
-        sizeId = 1;
-        break;
+    if (size == AdSize.Adaptive) {
+      sizeId = 2;
+    } else if (size == AdSize.Smart) {
+      sizeId = 3;
+    } else if (size == AdSize.leaderboard) {
+      sizeId = 4;
+    } else if (size == AdSize.mediumRectangle) {
+      sizeId = 5;
+    } else {
+      sizeId = 1;
     }
 
     _channel.invokeMethod("showBanner", {"sizeId": sizeId});

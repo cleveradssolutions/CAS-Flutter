@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:clever_ads_solutions/clever_ads_solutions.dart';
 import 'package:flutter/material.dart';
 
-import 'home_screen.dart';
-import 'log.dart';
+import 'main.dart';
 
 const _casId = 'demo';
 

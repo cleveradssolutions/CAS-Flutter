@@ -32,10 +32,8 @@ class AdSizeMethodHandler(
     }
 
     private fun getAdaptiveBanner(call: MethodCall, result: MethodChannel.Result) {
-        call.getArgAndReturnResult<Int, Int>(
-            "maxWidthDp", "orientation", result
-        ) { maxWidthDp, orientation ->
-            AdSize.getAdaptiveBanner(contextService.getContext(), maxWidthDp, orientation).toMap()
+        call.getArgAndReturnResult<Int>("maxWidthDp", result) { maxWidthDp ->
+            AdSize.getAdaptiveBanner(contextService.getContext(), maxWidthDp).toMap()
         }
     }
 

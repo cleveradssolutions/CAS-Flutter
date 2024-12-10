@@ -7,6 +7,7 @@ import "package:flutter/services.dart";
 
 import "../ad_impression.dart";
 import "../ad_size.dart";
+import "../internal/ad_size_impl.dart";
 import "ad_view_listener.dart";
 
 const String _viewType = "<cas-banner-view>";
@@ -89,22 +90,26 @@ abstract class BannerWidgetState extends State<BannerWidget> {
 }
 
 class _BannerWidgetState extends BannerWidgetState with MappedObjectImpl {
-  late AdViewListener? _listener;
+  AdViewListener? _listenerField;
 
-  late AdSize _size;
-  late bool? _isAutoloadEnabled;
-  late int? _refreshInterval;
-  late int? _maxWidthDpi;
+  AdViewListener? get _listener => _listenerField ?? widget.listener;
+
+  AdSize? _size;
+  bool _sizeChanged = false;
 
   @override
   void initState() {
     super.initState();
     init('cleveradssolutions/banner', widget._id, true);
-    _listener = widget.listener;
-    _size = widget.size;
-    _isAutoloadEnabled = widget.isAutoloadEnabled;
-    _refreshInterval = widget.refreshInterval;
-    _maxWidthDpi = widget.maxWidthDpi;
+
+    final size = widget.size;
+    if (size is FutureAdSize) {
+      size.future.then((value) => setState(() {
+            _size = value;
+          }));
+    } else {
+      _size = size;
+    }
 
     channel.setMethodCallHandler(handleMethodCall);
   }
@@ -140,25 +145,26 @@ class _BannerWidgetState extends BannerWidgetState with MappedObjectImpl {
 
   @override
   Widget build(BuildContext context) {
-    var shortestSide = MediaQuery.of(context).size.shortestSide;
-    final bool isTablet = shortestSide > 600;
-    final AdSize size = _size == AdSize.Smart
-        ? isTablet
-            ? AdSize.leaderboard
-            : AdSize.banner
-        : _size;
+    final AdSize? size;
+    if (_size == null) {
+      return const SizedBox.shrink();
+    } else if (_size == AdSize.Smart) {
+      size = AdSize.getSmartBanner(context);
+    } else {
+      size = _size!;
+    }
 
     Map<String, dynamic> creationParams = <String, dynamic>{
       'id': id,
-      'size': _sizeToMap(size, _maxWidthDpi),
-      'isAutoloadEnabled': _isAutoloadEnabled,
-      'refreshInterval': _refreshInterval,
+      'size': _sizeToMap(size, widget.maxWidthDpi),
+      'isAutoloadEnabled': widget.isAutoloadEnabled,
+      'refreshInterval': widget.refreshInterval,
     };
 
-    dynamic widget;
+    dynamic platformWidget;
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        widget = AndroidView(
+        platformWidget = AndroidView(
           viewType: _viewType,
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
@@ -166,21 +172,21 @@ class _BannerWidgetState extends BannerWidgetState with MappedObjectImpl {
         );
         break;
       case TargetPlatform.iOS:
-        widget = UiKitView(
+        platformWidget = UiKitView(
           viewType: _viewType,
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
         );
         break;
       default:
-        widget = const Text("Platform is not supported");
+        platformWidget = const Text("Platform is not supported");
         break;
     }
 
     return SizedBox(
-        width: _size.width.toDouble(),
-        height: _size.height.toDouble(),
-        child: widget);
+        width: size.width.toDouble(),
+        height: size.height.toDouble(),
+        child: platformWidget);
   }
 
   @override
@@ -191,12 +197,17 @@ class _BannerWidgetState extends BannerWidgetState with MappedObjectImpl {
 
   @override
   void setAdListener(AdViewListener listener) {
-    _listener = listener;
+    _listenerField = listener;
   }
 
   @override
-  Future<void> setSize(AdSize size) {
-    return invokeMethod('setSize', _sizeToMap(size, _maxWidthDpi));
+  Future<void> setSize(AdSize size) async {
+    if (size is FutureAdSize) {
+      size = await size.future;
+    }
+    _size = size;
+    _sizeChanged = true;
+    return invokeMethod('setSize', _sizeToMap(size, widget.maxWidthDpi));
   }
 
   @override
@@ -234,6 +245,7 @@ class _BannerWidgetState extends BannerWidgetState with MappedObjectImpl {
 
   @override
   Future<void> loadNextAd() {
+    if (_sizeChanged) setState(() {});
     return invokeMethod('loadNextAd');
   }
 
@@ -241,7 +253,7 @@ class _BannerWidgetState extends BannerWidgetState with MappedObjectImpl {
     return <String, dynamic>{
       'width': size.width,
       'height': size.height,
-      'mode': size.mode,
+      'mode': (size as AdSizeBase).mode,
       'maxWidthDpi': maxWidthDpi,
       'isAdaptive': size == AdSize.Adaptive
     };
