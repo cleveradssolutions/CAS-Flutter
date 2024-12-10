@@ -32,13 +32,13 @@ class AdSizeMethodHandler: MethodHandler {
     }
 
     private func getAdaptiveBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturnResult<Int, Int>("maxWidthDp", "orientation", result) { (maxWidthDp: Int, _: Int) in
+        call.getArgAndReturnResult<Int>("maxWidthDp", result) { (maxWidthDp: Int) in
             CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidthDp)).toMap()
         }
     }
 
     private func getAdaptiveBannerInScreen(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        result(CASSize.getAdaptiveBanner(inWindow: UIApplication.shared.delegate!.window!!))
+        result(CASSize.getAdaptiveBanner(inWindow: UIApplication.shared.delegate!.window!!).toMap())
     }
 
     private func getSmartBanner(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
