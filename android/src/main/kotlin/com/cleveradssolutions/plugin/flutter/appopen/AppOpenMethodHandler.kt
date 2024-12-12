@@ -27,16 +27,11 @@ class AppOpenMethodHandler(
         result: MethodChannel.Result
     ) {
         when (call.method) {
-            "getManagerId" -> getManagerId(instance, result)
             "load" -> load(instance, result)
             "isLoaded" -> isLoaded(instance, result)
             "show" -> show(instance, call, result)
             else -> super.onMethodCall(instance, call, result)
         }
-    }
-
-    private fun getManagerId(appOpen: CASAppOpen, result: MethodChannel.Result) {
-        result.success(appOpen.managerId)
     }
 
     private fun load(appOpen: CASAppOpen, result: MethodChannel.Result) {

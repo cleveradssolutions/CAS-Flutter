@@ -12,7 +12,7 @@ import '../banner/internal/internal_cas_banner_view.dart';
 import '../banner/internal/internal_listener_container.dart';
 import '../mediation_manager.dart';
 
-class InternalMediationManager implements MediationManager {
+class MediationManagerImpl implements MediationManager {
   static const MethodChannel _channel =
       MethodChannel("cleveradssolutions/mediation_manager");
 
@@ -24,7 +24,7 @@ class InternalMediationManager implements MediationManager {
   static final InternalListenerContainer _listenerContainer =
       InternalListenerContainer(_channel);
 
-  InternalMediationManager() {
+  MediationManagerImpl() {
     _channel.setMethodCallHandler(handleMethodCall);
   }
 

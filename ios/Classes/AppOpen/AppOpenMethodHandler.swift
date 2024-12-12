@@ -24,16 +24,11 @@ class AppOpenMethodHandler: MappedMethodHandler<AppOpenMethodHandler.AppOpenHold
 
     override func onMethodCall(_ appOpen: AppOpenHolder, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
-        case "getManagerId": getManagerId(appOpen.ad, result)
         case "load": load(appOpen.ad, result)
         case "isLoaded": isLoaded(appOpen.ad, result)
         case "show": show(appOpen.ad, call, result)
         default: super.onMethodCall(call, result)
         }
-    }
-
-    private func getManagerId(_ appOpen: CASAppOpen, _ result: @escaping FlutterResult) {
-        result(appOpen.managerId)
     }
 
     private func load(_ appOpen: CASAppOpen, _ result: @escaping FlutterResult) {

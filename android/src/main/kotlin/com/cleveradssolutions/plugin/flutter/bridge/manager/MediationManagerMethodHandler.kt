@@ -38,6 +38,7 @@ class MediationManagerMethodHandler(
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
+            "getManagerID" -> getManagerID(result)
             "loadAd" -> loadAd(call, result)
             "isReadyAd" -> isReadyAd(call, result)
             "showAd" -> showAd(call, result)
@@ -50,6 +51,10 @@ class MediationManagerMethodHandler(
             "hideBanner" -> hideBanner(call, result)
             "setBannerPosition" -> setBannerPosition(call, result)
         }
+    }
+
+    private fun getManagerID(result: MethodChannel.Result) {
+        result.success(manager?.managerID)
     }
 
     override fun onAdLoaded(type: AdType) {
