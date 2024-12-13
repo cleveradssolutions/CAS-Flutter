@@ -1,3 +1,8 @@
+## 0.7.3
+### Bug Fixes
+- Fixed an issue with creating AppOpen ads via MediationManager.
+- Fixed an issue where Banner events were received only by the last banner listener.
+
 ## 0.7.2
 ### Changes
 - Reworked AdSize so the BannerWidget constructor can accept the result of AdSize methods.
