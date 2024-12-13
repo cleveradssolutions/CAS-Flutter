@@ -22,7 +22,7 @@ class BannerView(
 
         id = args?.get("id") as? String ?: ""
         methodHandler[id] = this
-        banner.adListener = methodHandler
+        banner.adListener = BannerCallback(methodHandler, id)
 
         (args?.get("size") as? Map<*, *>)?.let { size ->
             if (size["isAdaptive"] == true) {

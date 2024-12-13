@@ -32,7 +32,7 @@ class AppOpenMethodHandler: MappedMethodHandler<AppOpenMethodHandler.AppOpenHold
     }
 
     private func load(_ appOpen: CASAppOpen, _ result: @escaping FlutterResult) {
-        appOpen.loadAd(completionHandler: createAdCompletionCallback())
+        appOpen.loadAd(completionHandler: createAdCompletionCallback(appOpen.managerId))
         result(nil)
     }
 
@@ -49,12 +49,12 @@ class AppOpenMethodHandler: MappedMethodHandler<AppOpenMethodHandler.AppOpenHold
         }
     }
 
-    private func createAdCompletionCallback() -> CASAppOpenAdCompletionHandler {
+    private func createAdCompletionCallback(_ id: String) -> CASAppOpenAdCompletionHandler {
         return { [weak self] _, error in
             if let error = error {
-                self?.invokeMethod("onAdFailedToLoad", error)
+                self?.invokeMethod(id, "onAdFailedToLoad", ["error": error])
             } else {
-                self?.invokeMethod("onAdLoaded")
+                self?.invokeMethod(id, "onAdLoaded")
             }
         }
     }

@@ -163,8 +163,10 @@ class MediationManagerMethodHandler(
     }
 
 
+    @Deprecated("Old implementation")
     private val banners = mutableMapOf<Int, CASViewWrapper?>()
 
+    @Deprecated("Old implementation")
     private fun showBanner(call: MethodCall, result: MethodChannel.Result) {
         val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
 
@@ -182,6 +184,7 @@ class MediationManagerMethodHandler(
         result.success()
     }
 
+    @Deprecated("Old implementation")
     private fun hideBanner(call: MethodCall, result: MethodChannel.Result) {
         val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
         val banner = banners[sizeId]
@@ -192,6 +195,7 @@ class MediationManagerMethodHandler(
         result.success()
     }
 
+    @Deprecated("Old implementation")
     private fun setBannerPosition(call: MethodCall, result: MethodChannel.Result) {
         val sizeId = call.getArgAndCheckNull<Int>("sizeId", result) ?: return
         val banner = banners[sizeId]

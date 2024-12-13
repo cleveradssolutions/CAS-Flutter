@@ -11,7 +11,7 @@ import Foundation
 
 private let channelName = "cleveradssolutions/banner"
 
-class BannerMethodHandler: MappedMethodHandler<BannerView>, CASBannerDelegate {
+class BannerMethodHandler: MappedMethodHandler<BannerView> {
     init(with registrar: FlutterPluginRegistrar) {
         super.init(with: registrar, on: channelName)
     }
@@ -25,22 +25,6 @@ class BannerMethodHandler: MappedMethodHandler<BannerView>, CASBannerDelegate {
         case "dispose": dispose(bannerView, call, result)
         default: super.onMethodCall(call, result)
         }
-    }
-
-    func bannerAdViewDidLoad(_ view: CASBannerView) {
-        invokeMethod("onAdViewLoaded")
-    }
-
-    func bannerAdView(_ adView: CASBannerView, didFailWith error: CASError) {
-        invokeMethod("onAdViewFailed", error.message)
-    }
-
-    func bannerAdView(_ adView: CASBannerView, willPresent impression: CASImpression) {
-        invokeMethod("onAdViewPresented", impression.toDict())
-    }
-
-    func bannerAdViewDidRecordClick(_ adView: CASBannerView) {
-        invokeMethod("onAdViewClicked")
     }
 
     private func isAdReady(_ bannerView: CASBannerView, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
