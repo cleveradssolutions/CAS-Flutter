@@ -10,7 +10,7 @@ import Flutter
 
 class BannerView: NSObject, FlutterPlatformView {
     let banner: CASBannerView
-    private let methodHandler: BannerMethodHandler
+    private let bannerCallback: BannerCallback
     let id: String
 
     init(
@@ -20,15 +20,14 @@ class BannerView: NSObject, FlutterPlatformView {
         manager: CASMediationManager?,
         methodHandler: BannerMethodHandler
     ) {
-        self.methodHandler = methodHandler
-
         banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
         banner.tag = Int(viewId)
 
         id = args?["id"] as? String ?? ""
+        self.bannerCallback = BannerCallback(methodHandler, id)
         super.init()
         methodHandler[id] = self
-        banner.adDelegate = methodHandler
+        banner.adDelegate = bannerCallback
 
         if let isAutoloadEnabled = args?["isAutoloadEnabled"] as? Bool {
             banner.isAutoloadEnabled = isAutoloadEnabled

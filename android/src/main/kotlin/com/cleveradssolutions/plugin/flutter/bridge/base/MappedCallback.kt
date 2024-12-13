@@ -5,7 +5,7 @@ abstract class MappedCallback(
     private val id: String
 ) {
 
-    fun invokeMethod(methodName: String, args: Map<String, Any?>) {
+    fun invokeMethod(methodName: String, args: Map<String, Any?>? = null) {
         handler.invokeMethod(id, methodName, args)
     }
 

@@ -6,6 +6,7 @@ import com.cleveradssolutions.plugin.flutter.util.toMap
 import com.cleversolutions.ads.AdError
 import com.cleversolutions.ads.AdStatusHandler
 
+@Deprecated("Old implementation")
 internal class BannerListener(
     private val handler: MethodHandler,
     sizeId: Int

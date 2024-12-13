@@ -24,7 +24,6 @@ class AppOpenMethodHandler: MappedMethodHandler<AppOpenMethodHandler.AppOpenHold
 
     override func onMethodCall(_ appOpen: AppOpenHolder, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
-        case "getManagerId": getManagerId(appOpen.ad, result)
         case "load": load(appOpen.ad, result)
         case "isLoaded": isLoaded(appOpen.ad, result)
         case "show": show(appOpen.ad, call, result)
@@ -32,12 +31,8 @@ class AppOpenMethodHandler: MappedMethodHandler<AppOpenMethodHandler.AppOpenHold
         }
     }
 
-    private func getManagerId(_ appOpen: CASAppOpen, _ result: @escaping FlutterResult) {
-        result(appOpen.managerId)
-    }
-
     private func load(_ appOpen: CASAppOpen, _ result: @escaping FlutterResult) {
-        appOpen.loadAd(completionHandler: createAdCompletionCallback())
+        appOpen.loadAd(completionHandler: createAdCompletionCallback(appOpen.managerId))
         result(nil)
     }
 
@@ -54,12 +49,12 @@ class AppOpenMethodHandler: MappedMethodHandler<AppOpenMethodHandler.AppOpenHold
         }
     }
 
-    private func createAdCompletionCallback() -> CASAppOpenAdCompletionHandler {
+    private func createAdCompletionCallback(_ id: String) -> CASAppOpenAdCompletionHandler {
         return { [weak self] _, error in
             if let error = error {
-                self?.invokeMethod("onAdFailedToLoad", error)
+                self?.invokeMethod(id, "onAdFailedToLoad", ["error": error])
             } else {
-                self?.invokeMethod("onAdLoaded")
+                self?.invokeMethod(id, "onAdLoaded")
             }
         }
     }

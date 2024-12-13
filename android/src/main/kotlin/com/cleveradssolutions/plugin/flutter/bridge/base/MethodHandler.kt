@@ -27,10 +27,12 @@ abstract class MethodHandler(
     }
 
     fun invokeMethod(methodName: String, args: Any? = null) {
+//        Log.d(LOG_TAG, "Invoke method $methodName on channel '$channelName' with '$args'")
         channel.invokeMethod(methodName, args, null)
     }
 
     fun invokeMethod(methodName: String, vararg args: Pair<String, Any?>) {
+//        Log.d(LOG_TAG, "Invoke method $methodName on channel '$channelName' with '$args'")
         channel.invokeMethod(methodName, args.toMap(), null)
     }
 

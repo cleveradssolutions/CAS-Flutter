@@ -26,6 +26,7 @@ class MediationManagerMethodHandler: MethodHandler, CASLoadDelegate {
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         switch call.method {
+        case "getManagerID": getManagerID(result)
 //        case "setLastPageContent": setLastPageContent(call, result)
         case "loadAd": loadAd(call, result)
         case "isReadyAd": isReadyAd(call, result)
@@ -40,6 +41,10 @@ class MediationManagerMethodHandler: MethodHandler, CASLoadDelegate {
         case "setBannerPosition": setBannerPosition(call, result)
         default: super.onMethodCall(call, result)
         }
+    }
+
+    private func getManagerID(_ result: @escaping FlutterResult) {
+        result(manager?.managerID)
     }
 
     public func onAdLoaded(_ adType: CASType) {

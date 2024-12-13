@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 
 import '../consent_flow.dart';
 import '../init_config.dart';
-import '../internal/internal_mediation_manager.dart';
 import '../manager_builder.dart';
 import '../mediation_manager.dart';
 import 'mapped_object.dart';
+import 'mediation_manager_impl.dart';
 
-class InternalManagerBuilder extends ManagerBuilder {
+class ManagerBuilderImpl extends ManagerBuilder {
   static const MethodChannel _channel =
       MethodChannel('cleveradssolutions/manager_builder');
 
@@ -17,7 +17,7 @@ class InternalManagerBuilder extends ManagerBuilder {
 
   String _casId = "demo";
 
-  InternalManagerBuilder(String pluginVersion) {
+  ManagerBuilderImpl(String pluginVersion) {
     _channel.setMethodCallHandler(handleMethodCall);
     _channel.invokeMethod('withFramework', {'pluginVersion': pluginVersion});
   }
@@ -84,7 +84,7 @@ class InternalManagerBuilder extends ManagerBuilder {
   @override
   MediationManager build() {
     _channel.invokeMethod('build', {'id': _casId});
-    return InternalMediationManager();
+    return MediationManagerImpl();
   }
 
   @override

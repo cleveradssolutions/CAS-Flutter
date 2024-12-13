@@ -37,6 +37,10 @@ class _SplashScreenState extends State<SplashScreen> {
   bool _isVisibleAppOpenAd = false;
   bool _isCompletedSplash = false;
 
+  // Time remaining for simulated application resource loading
+  int _timeLeft = 6;
+  String _timerText = '';
+
   @override
   void initState() {
     super.initState();
@@ -75,10 +79,10 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              '',
+            Text(
+              _timerText,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 30,
               ),
@@ -148,11 +152,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _simulationLongAppResourcesLoading() async {
     _isLoadingAppResources = true;
-    // Simulation of long application resources loading for 5 seconds.
-    await Future.delayed(const Duration(seconds: 15));
-    setState(() {
-      _isLoadingAppResources = false;
-      _openNextScreen();
-    });
+    Timer.periodic(
+      const Duration(seconds: 1),
+      (Timer timer) {
+        if (_timeLeft == 0) {
+          timer.cancel();
+          setState(() {
+            _isLoadingAppResources = false;
+            _openNextScreen();
+          });
+        } else {
+          setState(() {
+            _timeLeft--;
+            _timerText = '$_timeLeft seconds left';
+          });
+        }
+      },
+    );
   }
 }

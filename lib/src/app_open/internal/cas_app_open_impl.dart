@@ -16,10 +16,9 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
   AppOpenAdListener? contentCallback;
 
   CASAppOpenImpl(this.managerId)
-      : super('cleveradssolutions/app_open', managerId) {
-    channel.setMethodCallHandler(handleMethodCall);
-  }
+      : super('cleveradssolutions/app_open', managerId);
 
+  @override
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'onAdLoaded':

@@ -87,18 +87,17 @@ class _HomeScreenState extends State<HomeScreen>
                     onPressed: _isRewardedReady ? _showRewarded : null,
                     child: const Text('Show rewarded'),
                   ),
-                  if (_isReady)
+                  if (_isReady) ...[
                     BannerWidget(
                       size: AdSize.mediumRectangle,
-                      refreshInterval: 30,
-                      listener: BannerListener("mediumRectangle"),
+                      refreshInterval: 60,
+                      listener: BannerListener('mediumRectangle'),
                     ),
-                  if (_isReady)
                     BannerWidget(
                       size: AdSize.getAdaptiveBannerInScreen(),
-                      refreshInterval: 30,
-                      listener: BannerListener("adaptiveInScreen"),
+                      listener: BannerListener('adaptiveInScreen'),
                     ),
+                  ],
                 ],
               ),
             ),
@@ -220,7 +219,7 @@ class AdListener extends AdCallback {
 }
 
 class BannerListener extends AdViewListener {
-  final String? _name;
+  final String _name;
 
   BannerListener(this._name);
 
@@ -252,6 +251,6 @@ class BannerListener extends AdViewListener {
 
 void logDebug(String message) {
   if (kDebugMode) {
-    debugPrint("CAS.AI.Flutter.Example: $message");
+    debugPrint('CAS.AI.Flutter.Example: $message');
   }
 }
