@@ -93,9 +93,11 @@ class _HomeScreenState extends State<HomeScreen>
                       refreshInterval: 60,
                       listener: BannerListener('mediumRectangle'),
                     ),
-                    BannerWidget(
-                      size: AdSize.getAdaptiveBannerInScreen(),
-                      listener: BannerListener('adaptiveInScreen'),
+                    LayoutBuilder(
+                      builder: (_, BoxConstraints constraints) => BannerWidget(
+                        size: AdSize.getAdaptiveBanner(constraints.maxWidth),
+                        listener: BannerListener('adaptive'),
+                      ),
                     ),
                   ],
                 ],

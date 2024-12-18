@@ -8,10 +8,14 @@
 import CleverAdsSolutions
 import Flutter
 
+private let logTag = "[BannerView]"
+
 class BannerView: NSObject, FlutterPlatformView {
+    let id: String
+
     let banner: CASBannerView
     private let bannerCallback: BannerCallback
-    let id: String
+    private let sizeListener: BannerSizeListener
 
     init(
         frame: CGRect,
@@ -20,21 +24,28 @@ class BannerView: NSObject, FlutterPlatformView {
         manager: CASMediationManager?,
         methodHandler: BannerMethodHandler
     ) {
+        id = args?["id"] as? String ?? ""
+
         banner = CASBannerView(adSize: BannerView.getAdSize(args, frame), manager: manager)
         banner.tag = Int(viewId)
-
-        id = args?["id"] as? String ?? ""
-        self.bannerCallback = BannerCallback(methodHandler, id)
-        super.init()
-        methodHandler[id] = self
+        bannerCallback = BannerCallback(methodHandler, id)
         banner.adDelegate = bannerCallback
+        sizeListener = BannerSizeListener(banner, methodHandler, id)
 
-        if let isAutoloadEnabled = args?["isAutoloadEnabled"] as? Bool {
-            banner.isAutoloadEnabled = isAutoloadEnabled
-        }
+        super.init()
 
-        if let refreshInterval = args?["refreshInterval"] as? Int {
-            banner.refreshInterval = refreshInterval
+        methodHandler[id] = self
+
+        if let args = args {
+            if let isAutoloadEnabled = args["isAutoloadEnabled"] as? Bool {
+                banner.isAutoloadEnabled = isAutoloadEnabled
+            }
+
+            if let refreshInterval = args["refreshInterval"] as? Int {
+                banner.refreshInterval = refreshInterval
+            }
+        } else {
+            print("\(logTag) BannerView args is nil")
         }
     }
 

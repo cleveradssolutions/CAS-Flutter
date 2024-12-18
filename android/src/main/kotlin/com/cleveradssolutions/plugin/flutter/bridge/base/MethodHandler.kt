@@ -6,7 +6,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val LOG_TAG = "MethodHandler"
+private const val LOG_TAG = "CAS.AI.Flutter/MethodHandler"
 
 abstract class MethodHandler(
     binding: FlutterPluginBinding,
