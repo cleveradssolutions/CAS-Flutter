@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +20,9 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
 
   AdSize? _size;
   bool _sizeChanged = false;
+
+  double _width = 0;
+  double _height = 0;
 
   @override
   void initState() {
@@ -61,18 +66,32 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
       case 'onAdViewClicked':
         _listener?.onClicked();
         break;
+
+      case 'updateWidgetSize':
+        final completer = Completer<void>();
+
+        setState(() {
+          final data = call.arguments;
+          _width = data['width'] as double;
+          _height = data['height'] as double;
+        });
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          completer.complete();
+        });
+
+        return completer.future;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final AdSize? size;
-    if (_size == null) {
+    AdSize? size = _size;
+    if (size == null) {
       return const SizedBox.shrink();
-    } else if (_size == AdSize.Smart) {
+    }
+    if (size == AdSize.Smart) {
       size = AdSize.getSmartBanner(context);
-    } else {
-      size = _size!;
     }
 
     Map<String, dynamic> creationParams = <String, dynamic>{
@@ -100,14 +119,31 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
         );
         break;
       default:
-        platformWidget = const Text('Platform is not supported');
-        break;
+        return SizedBox(
+          width: size.width.toDouble(),
+          height: size.height.toDouble(),
+          child: const Center(child: Text('Platform is not supported')),
+        );
+    }
+
+    final isSizeCalculated = _width != 0;
+    double width;
+    double height;
+    if (isSizeCalculated) {
+      width = _width;
+      height = _height;
+    } else {
+      final dpr = MediaQuery.of(context).devicePixelRatio;
+      final pixel = 1.0 / dpr;
+      width = pixel;
+      height = pixel;
     }
 
     return SizedBox(
-        width: size.width.toDouble(),
-        height: size.height.toDouble(),
-        child: platformWidget);
+      width: width,
+      height: height,
+      child: platformWidget,
+    );
   }
 
   @override

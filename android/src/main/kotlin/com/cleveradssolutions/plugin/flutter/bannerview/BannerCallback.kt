@@ -9,12 +9,14 @@ import com.cleversolutions.ads.AdViewListener
 import com.cleversolutions.ads.android.CASBannerView
 
 class BannerCallback(
+    private val sizeListener: BannerSizeListener,
     handler: MappedMethodHandler<*>,
     id: String
 ) : MappedCallback(handler, id), AdViewListener {
 
     override fun onAdViewLoaded(view: CASBannerView) {
         invokeMethod("onAdViewLoaded")
+        sizeListener.updateSize(view.size)
     }
 
     override fun onAdViewFailed(view: CASBannerView, error: AdError) {

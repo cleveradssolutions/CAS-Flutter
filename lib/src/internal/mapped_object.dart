@@ -69,7 +69,7 @@ mixin MappedObjectImpl {
             'Handle method call on channel \'${channel.name}\', error: object not found in map');
         return;
       }
-      object.handleMethodCall(call);
+      return object.handleMethodCall(call);
     });
     return entry;
   }
