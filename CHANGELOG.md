@@ -1,7 +1,8 @@
 ## 0.7.4
 ### Features
 - Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.8 SDK.
-- When the ad content is smaller than the banner widget's original size, the banner widget adjusts its size to match the dimensions of the received ad content.
+- The `BannerWidget` is invisible when no ad is loaded.
+- When the ad content is smaller than the requested `AdSize` of the `BannerWidget`, the widget adjusts its size to match the received ad content.
 
 ## 0.7.3
 ### Bug Fixes
