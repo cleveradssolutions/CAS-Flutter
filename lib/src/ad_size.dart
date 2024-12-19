@@ -22,10 +22,10 @@ abstract class AdSize {
   static const AdSize MediumRectangle = mediumRectangle;
 
   @Deprecated("Use AdSize.getAdaptiveBanner() instead")
-  static const AdSize Adaptive = AdSizeImpl(728, 90, 2);
+  static const AdSize Adaptive = AdSizeImpl(-1, -1, 2);
 
   @Deprecated("Use AdSize.getSmartBanner() instead")
-  static const AdSize Smart = AdSizeImpl(320, 50);
+  static const AdSize Smart = AdSizeImpl(-2, -2);
 
   int get width;
 
@@ -56,7 +56,7 @@ abstract class AdSize {
   /// - The height of adaptive banners cannot be less than 50 dp and more than 250 dp.
   /// - The width of adaptive banners cannot be less than 300 dp.
   /// - The adaptive banners use fixed aspect ratios instead of fixed heights.
-  factory AdSize.getAdaptiveBanner(int maxWidthDp) =>
+  factory AdSize.getAdaptiveBanner(double maxWidthDp) =>
       AdSizeFactory.getAdaptiveBanner(maxWidthDp);
 
   /// Create Adaptive AdSize with screen width for current screen orientation.

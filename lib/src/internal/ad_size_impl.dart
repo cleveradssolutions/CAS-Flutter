@@ -1,5 +1,5 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../ad_size.dart';
 import 'log.dart';
@@ -26,9 +26,9 @@ extension AdSizeFactory on AdSize {
     return AdSizeImpl(width, maxHeight, 3);
   }
 
-  static AdSize getAdaptiveBanner(int maxWidthDp) {
+  static AdSize getAdaptiveBanner(double maxWidthDp) {
     return FutureAdSize(_channel.invokeMethod<Map>("getAdaptiveBanner",
-        {"maxWidthDp": maxWidthDp}).then(AdSizeImpl._parseMap));
+        {"maxWidthDp": maxWidthDp.round()}).then(AdSizeImpl._parseMap));
   }
 
   static AdSize getAdaptiveBannerInScreen() {
