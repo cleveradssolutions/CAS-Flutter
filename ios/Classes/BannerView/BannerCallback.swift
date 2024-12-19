@@ -8,8 +8,16 @@
 import CleverAdsSolutions
 
 class BannerCallback: MappedCallback, CASBannerDelegate {
+    private let sizeListener: BannerSizeListener
+
+    init(_ sizeListener: BannerSizeListener, _ handler: AnyMappedMethodHandler, _ id: String) {
+        self.sizeListener = sizeListener
+        super.init(handler, id)
+    }
+
     func bannerAdViewDidLoad(_ view: CASBannerView) {
         invokeMethod("onAdViewLoaded")
+        sizeListener.updateSize(view.intrinsicContentSize)
     }
 
     func bannerAdView(_ adView: CASBannerView, didFailWith error: CASError) {

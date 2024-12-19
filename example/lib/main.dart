@@ -64,21 +64,19 @@ class _HomeScreenState extends State<HomeScreen>
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
               child: Column(
                 children: [
-                  if (_isReady) ...[
-                    BannerWidget(
-                      key: _bannerKey,
-                      listener: BannerListener('banner'),
-                    ),
-                    ElevatedButton(
-                      child: const Text('Load next ad on upper widget'),
-                      onPressed: () => _bannerKey.currentState?.loadNextAd(),
-                    ),
-                    BannerWidget(
-                      size: AdSize.leaderboard,
-                      refreshInterval: 20,
-                      listener: BannerListener('leaderboard'),
-                    ),
-                  ],
+                  BannerWidget(
+                    key: _bannerKey,
+                    listener: BannerListener('banner'),
+                  ),
+                  ElevatedButton(
+                    child: const Text('Load next ad on upper widget'),
+                    onPressed: () => _bannerKey.currentState?.loadNextAd(),
+                  ),
+                  BannerWidget(
+                    size: AdSize.leaderboard,
+                    refreshInterval: 20,
+                    listener: BannerListener('leaderboard'),
+                  ),
                   ElevatedButton(
                     onPressed: _isInterstitialReady ? _showInterstitial : null,
                     child: const Text('Show interstitial'),
@@ -87,19 +85,17 @@ class _HomeScreenState extends State<HomeScreen>
                     onPressed: _isRewardedReady ? _showRewarded : null,
                     child: const Text('Show rewarded'),
                   ),
-                  if (_isReady) ...[
-                    BannerWidget(
-                      size: AdSize.mediumRectangle,
-                      refreshInterval: 60,
-                      listener: BannerListener('mediumRectangle'),
+                  BannerWidget(
+                    size: AdSize.mediumRectangle,
+                    refreshInterval: 60,
+                    listener: BannerListener('mediumRectangle'),
+                  ),
+                  LayoutBuilder(
+                    builder: (_, BoxConstraints constraints) => BannerWidget(
+                      size: AdSize.getAdaptiveBanner(constraints.maxWidth),
+                      listener: BannerListener('adaptive'),
                     ),
-                    LayoutBuilder(
-                      builder: (_, BoxConstraints constraints) => BannerWidget(
-                        size: AdSize.getAdaptiveBanner(constraints.maxWidth),
-                        listener: BannerListener('adaptive'),
-                      ),
-                    ),
-                  ],
+                  ),
                 ],
               ),
             ),

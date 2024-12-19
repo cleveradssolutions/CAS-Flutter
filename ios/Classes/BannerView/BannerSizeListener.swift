@@ -7,33 +7,30 @@
 
 class BannerSizeListener: MappedCallback {
     private let banner: UIView
-    private var observer: NSKeyValueObservation?
+
+    private var lastWidth: CGFloat = 0
+    private var lastHeight: CGFloat = 0
 
     init(_ banner: UIView, _ handler: BannerMethodHandler, _ id: String) {
         self.banner = banner
         super.init(handler, id)
-
-        observer = banner.observe(\.bounds) { [weak self] _, change in
-            let newBounds = change.newValue
-            let oldBounds = change.oldValue
-            let newWidth = newBounds?.width ?? 0
-            let newHeight = newBounds?.height ?? 0
-            let oldWidth = oldBounds?.width ?? 0
-            let oldHeight = oldBounds?.height ?? 0
-
-            if newWidth != oldWidth || newHeight != oldHeight {
-                self?.invokeMethod(
-                    "updateWidgetSize",
-                    [
-                        "width": newWidth.pxToDp(),
-                        "height": newHeight.pxToDp(),
-                    ]
-                )
-            }
-        }
     }
 
-    deinit {
-        observer?.invalidate()
+    func updateSize(_ size: CGSize) {
+        let currentWidth = size.width
+        let currentHeight = size.height
+
+        if currentWidth != lastWidth || currentHeight != lastHeight {
+            lastWidth = currentWidth
+            lastHeight = currentHeight
+
+            invokeMethod(
+                "updateWidgetSize",
+                [
+                    "width": currentWidth,
+                    "height": currentHeight,
+                ]
+            )
+        }
     }
 }

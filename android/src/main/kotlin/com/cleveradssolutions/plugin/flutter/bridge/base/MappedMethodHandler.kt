@@ -49,12 +49,26 @@ abstract class MappedMethodHandler<T>(
 
     fun remove(id: String) = map.remove(id)
 
-    fun invokeMethod(id: String, methodName: String, args: Map<String, Any?>? = null) {
-        invokeMethod(methodName, if (args == null) mapOf("id" to id) else args + ("id" to id))
+    fun invokeMethod(
+        id: String,
+        methodName: String,
+        args: Map<String, Any?>? = null,
+        callback: MethodChannel.Result? = null
+    ) {
+        invokeMethod(
+            methodName,
+            if (args == null) mapOf("id" to id) else args + ("id" to id),
+            callback
+        )
     }
 
-    fun invokeMethod(id: String, methodName: String, vararg args: Pair<String, Any?>) {
-        invokeMethod(methodName, args.toMap() + ("id" to id))
+    fun invokeMethod(
+        id: String,
+        methodName: String,
+        vararg args: Pair<String, Any?>,
+        callback: MethodChannel.Result? = null
+    ) {
+        invokeMethod(methodName, args.toMap() + ("id" to id), callback)
     }
 
 }

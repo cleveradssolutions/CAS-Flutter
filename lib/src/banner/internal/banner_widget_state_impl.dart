@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,12 +68,19 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
         break;
 
       case 'updateWidgetSize':
+        final completer = Completer<void>();
+
         setState(() {
           final data = call.arguments;
           _width = data['width'] as double;
           _height = data['height'] as double;
         });
-        break;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          completer.complete();
+        });
+
+        return completer.future;
     }
   }
 
@@ -124,8 +133,10 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
       width = _width;
       height = _height;
     } else {
-      width = size.width.toDouble();
-      height = size.height.toDouble();
+      final dpr = MediaQuery.of(context).devicePixelRatio;
+      final pixel = 1.0 / dpr;
+      width = pixel;
+      height = pixel;
     }
 
     return SizedBox(

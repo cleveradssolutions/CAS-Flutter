@@ -5,6 +5,9 @@ import android.view.ViewTreeObserver
 import com.cleveradssolutions.plugin.flutter.bridge.base.MappedCallback
 import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
 import com.cleveradssolutions.plugin.flutter.util.pxToDp
+import com.cleversolutions.ads.AdSize
+import io.flutter.plugin.common.MethodChannel
+import kotlin.math.roundToInt
 
 class BannerSizeListener(
     private val banner: View,
@@ -15,7 +18,11 @@ class BannerSizeListener(
     private var lastWidth: Int = 0
     private var lastHeight: Int = 0
 
+    private var isWaitingFlutter = false
+
     override fun onGlobalLayout() {
+        if (isWaitingFlutter) return
+
         val currentWidth = banner.width
         val currentHeight = banner.height
 
@@ -28,6 +35,42 @@ class BannerSizeListener(
                 "updateWidgetSize",
                 "width" to currentWidth.pxToDp(context),
                 "height" to currentHeight.pxToDp(context)
+            )
+        }
+    }
+
+    fun updateSize(size: AdSize) {
+        isWaitingFlutter = true
+
+        val currentWidth = size.width
+        val currentHeight = size.height
+
+        val context = banner.context
+        val lastWidthDp = lastWidth.pxToDp(context).roundToInt()
+        val lastHeightDp = lastHeight.pxToDp(context).roundToInt()
+
+        if (currentWidth != lastWidthDp || currentHeight != lastHeightDp) {
+            invokeMethod(
+                "updateWidgetSize",
+                "width" to currentWidth.toFloat(),
+                "height" to currentHeight.toFloat(),
+                callback = object : MethodChannel.Result {
+                    override fun success(result: Any?) {
+                        lastWidth = currentWidth
+                        lastHeight = currentHeight
+                        isWaitingFlutter = false
+                        banner.invalidate()
+                    }
+
+                    override fun error(
+                        errorCode: String,
+                        errorMessage: String?,
+                        errorDetails: Any?
+                    ) {
+                    }
+
+                    override fun notImplemented() {}
+                }
             )
         }
     }

@@ -25,7 +25,7 @@ class BannerView(
 
     init {
         banner.id = viewId
-        banner.adListener = BannerCallback(methodHandler, id)
+        banner.adListener = BannerCallback(sizeListener, methodHandler, id)
         banner.viewTreeObserver.addOnGlobalLayoutListener(sizeListener)
 
         methodHandler[id] = this
