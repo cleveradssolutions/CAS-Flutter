@@ -1,3 +1,8 @@
+## 0.7.4
+### Features
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.8 SDK.
+- When the ad content is smaller than the banner widget's original size, the banner widget adjusts its size to match the dimensions of the received ad content.
+
 ## 0.7.3
 ### Bug Fixes
 - Fixed an issue with creating AppOpen ads via MediationManager.
@@ -25,7 +30,7 @@
 
 ## 0.6.3
 ### Features
-- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.7 SDK
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.7 SDK.
 ### Bug Fixes
 - Fixed a crash on banner disposal.
 
@@ -39,11 +44,11 @@
 
 ## 0.6.1
 ### Features
-- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.6 SDK
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.6 SDK.
 
 ## 0.6.0
 ### Features
-- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.5 SDK
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.5 SDK.
 ### Changes
 - Methods for configuring ads settings and targeting options in the `CAS` class deprecated.
   Use dedicated singletons of the `AdsSettings` and `TargetingOptions` classes in CAS:
@@ -68,12 +73,12 @@
   - ⚠️ [SDK] The minimum Android Gradle plugin version is now 7.0.
 
 ## 0.5.1
-- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.2 SDK
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.2 SDK.
 ### Bug Fixes
 - [Android] No longer requires to add ads repositories to your project-level build.gradle.
 
 ## 0.5.0
-- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.1 SDK
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.1 SDK.
 ### Changes
 - [Android] Requires a minimum `compileSdkVersion` of 34.
 - [iOS] Requires apps to build with Xcode 15.3 or above.
@@ -88,7 +93,7 @@ Please use `import 'package:clever_ads_solutions/clever_ads_solutions.dart';` in
 ## 0.4.0
 
 ### Features
-- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.8.1 SDK
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.8.1 SDK.
 - Added `import 'package:clever_ads_solutions/clever_ads_solutions.dart';` which includes all package imports.
 ### New ads networks support in closed beta
 - CASExchange - is a cutting-edge exchange platform designed to extend our SDK, enabling integration with Demand Side Platforms (DSPs).
@@ -98,13 +103,13 @@ Please use `import 'package:clever_ads_solutions/clever_ads_solutions.dart';` in
 - [Android] Fixed `IllegalArgumentException` from BannerView (#10)
 
 ## 0.3.1
-- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.7.3 SDK
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.7.3 SDK.
 ### Bug Fixes
 - Added compatibility with CAS 3.7.0+ for iOS
 - Fixed rarely issue `Unhandled Exception: PlatformException(CASFlutterBridgeError, failed to get manager, null, null)`
 
 ## 0.3.0
-- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.6.0 SDK
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.6.0 SDK.
 ### Features
 - Added banner ads as widgets
 ### Bug Fixes
