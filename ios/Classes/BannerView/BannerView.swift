@@ -15,7 +15,6 @@ class BannerView: NSObject, FlutterPlatformView {
 
     let banner: CASBannerView
     private let bannerCallback: BannerCallback
-    private let sizeListener: BannerSizeListener
 
     init(
         frame: CGRect,
@@ -30,7 +29,6 @@ class BannerView: NSObject, FlutterPlatformView {
         banner.tag = Int(viewId)
         bannerCallback = BannerCallback(methodHandler, id)
         banner.adDelegate = bannerCallback
-        sizeListener = BannerSizeListener(banner, methodHandler, id)
 
         super.init()
 
