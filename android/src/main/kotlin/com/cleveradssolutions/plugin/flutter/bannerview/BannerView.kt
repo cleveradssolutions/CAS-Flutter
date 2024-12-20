@@ -2,7 +2,6 @@ package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
 import android.util.Log
-import android.view.ViewGroup
 import com.cleversolutions.ads.AdSize
 import com.cleversolutions.ads.MediationManager
 import com.cleversolutions.ads.android.CASBannerView
