@@ -1,3 +1,7 @@
+## 0.7.5
+### Features
+- Fixed a bug where `OnDismissListener` callback was not called.
+
 ## 0.7.4
 ### Features
 - Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.8 SDK.

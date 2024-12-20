@@ -15,9 +15,9 @@ class ConsentFlowImpl extends MappedObject implements ConsentFlow {
   ConsentFlow withDismissListener(OnDismissListener listener) {
     channel.setMethodCallHandler((call) async {
       switch (call.method) {
-        case 'OnDismissListener':
+        case 'onDismiss':
           {
-            listener.onConsentFlowDismissed(call.arguments);
+            listener.onConsentFlowDismissed(call.arguments['status']);
             break;
           }
       }
