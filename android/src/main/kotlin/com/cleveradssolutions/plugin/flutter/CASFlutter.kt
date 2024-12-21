@@ -1,6 +1,7 @@
 package com.cleveradssolutions.plugin.flutter
 
 import com.cleveradssolutions.plugin.flutter.appopen.AppOpenMethodHandler
+import com.cleveradssolutions.plugin.flutter.bannerview.BannerMethodHandler
 import com.cleveradssolutions.plugin.flutter.bannerview.BannerViewFactory
 import com.cleveradssolutions.plugin.flutter.bridge.AdSizeMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.AdsSettingsMethodHandler
@@ -27,6 +28,7 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         AdSizeMethodHandler(binding, context)
         AdsSettingsMethodHandler(binding)
         AppOpenMethodHandler(binding, context)
+        BannerMethodHandler(binding)
         CASMethodHandler(binding, context)
         ManagerBuilderMethodHandler(
             binding,
