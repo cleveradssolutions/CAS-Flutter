@@ -1,5 +1,5 @@
 ## 0.7.5
-### Features
+### Bug Fixes
 - Fixed a bug where `OnDismissListener` callback was not called.
 
 ## 0.7.4
