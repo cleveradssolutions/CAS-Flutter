@@ -46,7 +46,7 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
         _listener?.onLoaded();
         break;
       case 'onAdViewFailed':
-        _listener?.onFailed(call.arguments);
+        _listener?.onFailed(call.arguments['error']);
         break;
       case 'onAdViewPresented':
         _listener?.onAdViewPresented();
