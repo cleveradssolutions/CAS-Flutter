@@ -3,7 +3,7 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
-    id("com.cleveradssolutions.gradle-plugin") version "3.9.8"
+    id("com.cleveradssolutions.gradle-plugin") version "3.9.8.2"
 }
 
 cas {
@@ -67,6 +67,27 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+        }
+    }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        free {
+            dimension "default"
+            applicationId "com.unrealgames.RacinginCar2020"
+        }
+        demo {
+            dimension "default"
+            applicationId "com.unrealgames.RacinginCar2020"
+        }
+        paid {
+            dimension "default"
+            applicationId "com.brawl.stars.box.simulator.gifts.chests"
+        }
+        mega {
+            dimension "default"
+            applicationId "com.brawl.stars.box.simulator.gifts.chests"
         }
     }
 }
