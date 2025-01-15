@@ -5,9 +5,7 @@ import android.view.ViewTreeObserver
 import com.cleveradssolutions.plugin.flutter.bridge.base.MappedCallback
 import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
 import com.cleveradssolutions.plugin.flutter.util.pxToDp
-import com.cleversolutions.ads.AdSize
 import io.flutter.plugin.common.MethodChannel
-import kotlin.math.roundToInt
 
 class BannerSizeListener(
     private val banner: View,
@@ -15,51 +13,48 @@ class BannerSizeListener(
     id: String
 ) : MappedCallback(handler, id), ViewTreeObserver.OnGlobalLayoutListener {
 
-    private var lastWidth: Int = 0
-    private var lastHeight: Int = 0
-
-    private var isWaitingFlutter = false
+    private var lastWidth: Float = 0f
+    private var lastHeight: Float = 0f
 
     override fun onGlobalLayout() {
-        if (isWaitingFlutter) return
+        banner.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-        val currentWidth = banner.width
-        val currentHeight = banner.height
+        val context = banner.context
+        val currentWidth = banner.width.pxToDp(context)
+        val currentHeight = banner.height.pxToDp(context)
 
         if (currentWidth != lastWidth || currentHeight != lastHeight) {
             lastWidth = currentWidth
             lastHeight = currentHeight
 
-            val context = banner.context
             invokeMethod(
                 "updateWidgetSize",
-                "width" to currentWidth.pxToDp(context),
-                "height" to currentHeight.pxToDp(context)
+                "width" to currentWidth,
+                "height" to currentHeight
             )
         }
     }
 
-    fun updateSize(size: AdSize) {
-        isWaitingFlutter = true
+    fun updateSize(widthInt: Int, heightInt: Int) {
+        val width = widthInt.toFloat()
+        val height = heightInt.toFloat()
 
-        val currentWidth = size.width
-        val currentHeight = size.height
+        if (width != lastWidth || height != lastHeight) {
+            lastWidth = width
+            lastHeight = width
 
-        val context = banner.context
-        val lastWidthDp = lastWidth.pxToDp(context).roundToInt()
-        val lastHeightDp = lastHeight.pxToDp(context).roundToInt()
-
-        if (currentWidth != lastWidthDp || currentHeight != lastHeightDp) {
             invokeMethod(
                 "updateWidgetSize",
-                "width" to currentWidth.toFloat(),
-                "height" to currentHeight.toFloat(),
+                "width" to width,
+                "height" to height,
                 callback = object : MethodChannel.Result {
                     override fun success(result: Any?) {
-                        lastWidth = currentWidth
-                        lastHeight = currentHeight
-                        isWaitingFlutter = false
-                        banner.invalidate()
+                        if (width > 0) {
+                            banner.post {
+                                banner.viewTreeObserver.addOnGlobalLayoutListener(this@BannerSizeListener)
+                                banner.invalidate()
+                            }
+                        }
                     }
 
                     override fun error(

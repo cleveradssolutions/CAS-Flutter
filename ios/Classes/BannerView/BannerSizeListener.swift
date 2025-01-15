@@ -16,19 +16,16 @@ class BannerSizeListener: MappedCallback {
         super.init(handler, id)
     }
 
-    func updateSize(_ size: CGSize) {
-        let currentWidth = size.width
-        let currentHeight = size.height
-
-        if currentWidth != lastWidth || currentHeight != lastHeight {
-            lastWidth = currentWidth
-            lastHeight = currentHeight
+    func updateSize(_ width: Double, _ height: Double) {
+        if width != lastWidth || height != lastHeight {
+            lastWidth = width
+            lastHeight = height
 
             invokeMethod(
                 "updateWidgetSize",
                 [
-                    "width": currentWidth,
-                    "height": currentHeight,
+                    "width": width,
+                    "height": height,
                 ]
             )
         }

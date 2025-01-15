@@ -25,7 +25,6 @@ class BannerView(
     init {
         banner.id = viewId
         banner.adListener = BannerCallback(sizeListener, methodHandler, id)
-        banner.viewTreeObserver.addOnGlobalLayoutListener(sizeListener)
 
         methodHandler[id] = this
 
@@ -73,7 +72,6 @@ class BannerView(
     }
 
     override fun dispose() {
-        banner.viewTreeObserver.removeOnGlobalLayoutListener(sizeListener)
         banner.destroy()
     }
 
