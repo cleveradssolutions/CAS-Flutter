@@ -16,11 +16,15 @@ class BannerCallback(
 
     override fun onAdViewLoaded(view: CASBannerView) {
         invokeMethod("onAdViewLoaded")
-        sizeListener.updateSize(view.size)
+
+        val size = view.size
+        sizeListener.updateSize(size.width, size.height)
     }
 
     override fun onAdViewFailed(view: CASBannerView, error: AdError) {
         invokeMethod("onAdViewFailed", "error" to error.message)
+
+        sizeListener.updateSize(0, 0)
     }
 
     override fun onAdViewPresented(view: CASBannerView, info: AdImpression) {

@@ -36,12 +36,10 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         )
         TargetingOptionsMethodHandler(binding)
 
+        val bannerViewFactory = BannerViewFactory(binding, mediationManagerMethodHandler)
         binding
             .platformViewRegistry
-            .registerViewFactory(
-                "<cas-banner-view>",
-                BannerViewFactory(binding, mediationManagerMethodHandler)
-            )
+            .registerViewFactory("<cas-banner-view>", bannerViewFactory)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPluginBinding) {}

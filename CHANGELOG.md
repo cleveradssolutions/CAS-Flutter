@@ -1,5 +1,15 @@
-## 0.7.5
+## 0.7.6
 ### Features
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.9 SDK.
+### Changes
+- [Android] (From DTExchange SDK update) Fixed usage of Android Advertising ID to be compliant with Google Play Ads policy.
+- [iOS] Requires apps to build with Xcode 16.1 or above.
+### Bug Fixes
+- Fixed an issue where the banner was white.
+- Fixed an issue with the wrong argument type in the `onAdViewFailed` method.
+
+## 0.7.5
+### Bug Fixes
 - Fixed a bug where `OnDismissListener` callback was not called.
 
 ## 0.7.4

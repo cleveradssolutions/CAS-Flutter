@@ -1,6 +1,6 @@
 name: clever_ads_solutions
 description: The CAS.AI Flutter plugin allows you to easily monetize your apps for iOS and Android using lot of Ads SDKs in mediation.
-version: 0.7.5
+version: 0.7.6
 repository: https://github.com/cleveradssolutions/CAS-Flutter
 documentation: https://github.com/cleveradssolutions/CAS-Flutter/wiki
 
@@ -16,7 +16,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   plugin:
