@@ -69,27 +69,6 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-
-    flavorDimensions "default"
-
-    productFlavors {
-        free {
-            dimension "default"
-            applicationId "com.unrealgames.RacinginCar2020"
-        }
-        demo {
-            dimension "default"
-            applicationId "com.unrealgames.RacinginCar2020"
-        }
-        paid {
-            dimension "default"
-            applicationId "com.brawl.stars.box.simulator.gifts.chests"
-        }
-        mega {
-            dimension "default"
-            applicationId "com.brawl.stars.box.simulator.gifts.chests"
-        }
-    }
 }
 
 flutter {
