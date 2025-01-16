@@ -1,3 +1,11 @@
+## 0.7.6
+### Changes
+- [Android] (From DTExchange SDK update) Fixed usage of Android Advertising ID to be compliant with Google Play Ads policy.
+- [iOS] Requires apps to build with Xcode 16.1 or above
+### Bug Fixes
+- Fixed an issue where the banner was white.
+- Fixed an issue with the wrong argument type in the `onAdViewFailed` method.
+
 ## 0.7.5
 ### Bug Fixes
 - Fixed a bug where `OnDismissListener` callback was not called.
