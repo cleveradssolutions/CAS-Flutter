@@ -1,6 +1,29 @@
 package com.cleveradssolutions.plugin.flutter.util
 
+import com.cleveradssolutions.sdk.AdContent
+import com.cleversolutions.ads.AdError
 import com.cleversolutions.ads.AdImpression
+
+fun AdError.toMap(): Map<String, Any?> {
+    return mapOf(
+        "code" to code,
+        "message" to message
+    )
+}
+
+fun AdContent.toMap(): Map<String, Any?> {
+    return mapOf(
+        "format" to format,
+        "sourceName" to sourceName,
+        "sourceId" to sourceId,
+        "sourceUnitId" to sourceUnitId,
+        "creativeId" to creativeId,
+        "revenue" to revenue,
+        "revenuePrecision" to revenuePrecision,
+        "impressionDepth" to impressionDepth,
+        "revenueTotal" to revenueTotal
+    )
+}
 
 fun AdImpression.toMap(): Map<String, Any?> {
     return mapOf(

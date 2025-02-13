@@ -1,6 +1,5 @@
 package com.cleveradssolutions.plugin.flutter
 
-import com.cleveradssolutions.plugin.flutter.appopen.AppOpenMethodHandler
 import com.cleveradssolutions.plugin.flutter.bannerview.BannerViewFactory
 import com.cleveradssolutions.plugin.flutter.bridge.AdSizeMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.AdsSettingsMethodHandler
@@ -9,6 +8,9 @@ import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.TargetingOptionsMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.manager.ManagerBuilderMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.manager.MediationManagerMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.screen.AppOpenMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.screen.InterstitialMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.screen.RewardedMethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -28,12 +30,14 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         AdsSettingsMethodHandler(binding)
         AppOpenMethodHandler(binding, context)
         CASMethodHandler(binding, context)
+        InterstitialMethodHandler(binding, context)
         ManagerBuilderMethodHandler(
             binding,
             consentFlowMethodHandler,
             mediationManagerMethodHandler,
             context
         )
+        RewardedMethodHandler(binding, context)
         TargetingOptionsMethodHandler(binding)
 
         val bannerViewFactory = BannerViewFactory(binding, mediationManagerMethodHandler)

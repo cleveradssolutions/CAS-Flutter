@@ -81,3 +81,9 @@ inline fun Result.errorInvalidArg(call: MethodCall, name: String) = error(
     "Method: '${call.method}', error: argument '$name' is invalid",
     null
 )
+
+inline fun Result.errorActivityIsNull(call: MethodCall) = error(
+    "MethodCallError",
+    "Method: '${call.method}', error: Activity is null",
+    null
+)

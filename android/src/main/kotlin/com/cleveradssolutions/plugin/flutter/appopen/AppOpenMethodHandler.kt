@@ -8,7 +8,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "cleveradssolutions/app_open"
+private const val CHANNEL_NAME = "cleveradssolutions/app_open_old"
 
 class AppOpenMethodHandler(
     binding: FlutterPluginBinding,

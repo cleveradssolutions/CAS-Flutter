@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '0.7.6'
+version = '0.8.0'
 
 buildscript {
     ext.kotlin_version = '1.8.22'
@@ -18,6 +18,11 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            name = "CASBetaRepo"
+            url = "https://repo.repsy.io/mvn/cleveradssolutions/beta"
+            content { it.includeGroup("com.cleveradssolutions") }
+        }
         maven {
             name = "IronSourceAdsRepo"
             url = "https://android-sdk.is.com/"
@@ -97,5 +102,5 @@ android {
 }
 
 dependencies {
-    implementation 'com.cleveradssolutions:cas-sdk:3.9.9'
+    implementation 'com.cleveradssolutions:cas-sdk:4.0.1-rc2'
 }
