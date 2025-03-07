@@ -3,7 +3,6 @@ package com.cleveradssolutions.plugin.flutter.sdk.screen
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
-import com.cleveradssolutions.plugin.flutter.util.errorActivityIsNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
 import com.cleveradssolutions.sdk.screen.CASAppOpen
@@ -33,12 +32,12 @@ class AppOpenMethodHandler(
     ) {
         when (call.method) {
             "isAutoloadEnabled" -> isAutoloadEnabled(instance, result)
-            "setAutoloadEnabled" -> setAutoloadEnabled(instance,call,  result)
+            "setAutoloadEnabled" -> setAutoloadEnabled(instance, call, result)
             "isAutoshowEnabled" -> isAutoshowEnabled(instance, result)
             "setAutoshowEnabled" -> setAutoshowEnabled(instance, call, result)
             "isLoaded" -> isLoaded(instance, result)
             "load" -> load(instance, result)
-            "show" -> show(instance, call, result)
+            "show" -> show(instance, result)
             "destroy" -> destroy(instance, result)
             else -> super.onMethodCall(instance, call, result)
         }
@@ -48,7 +47,11 @@ class AppOpenMethodHandler(
         result.success(appOpen.isAutoloadEnabled)
     }
 
-    private fun setAutoloadEnabled(appOpen: CASAppOpen, call: MethodCall, result: MethodChannel.Result) {
+    private fun setAutoloadEnabled(
+        appOpen: CASAppOpen,
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
         call.getArgAndReturn<Boolean>("isEnabled", result) {
             appOpen.isAutoloadEnabled = it
         }
@@ -60,7 +63,11 @@ class AppOpenMethodHandler(
         result.success(appOpen.isAutoshowEnabled)
     }
 
-    private fun setAutoshowEnabled(appOpen: CASAppOpen, call: MethodCall, result: MethodChannel.Result) {
+    private fun setAutoshowEnabled(
+        appOpen: CASAppOpen,
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
         call.getArgAndReturn<Boolean>("isEnabled", result) {
             appOpen.isAutoshowEnabled = it
         }
@@ -78,9 +85,8 @@ class AppOpenMethodHandler(
         result.success()
     }
 
-    private fun show(appOpen: CASAppOpen, call: MethodCall, result: MethodChannel.Result) {
-        val activity = contextService.getActivityOrError(call, result)
-            ?: return result.errorActivityIsNull(call)
+    private fun show(appOpen: CASAppOpen, result: MethodChannel.Result) {
+        val activity = contextService.getActivity()
 
         appOpen.show(activity)
 

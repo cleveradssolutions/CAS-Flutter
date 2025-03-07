@@ -1,4 +1,5 @@
-import '../ad_content.dart';
+import '../../ad_error.dart';
+import '../ad_content_info.dart';
 import '../ad_format.dart';
 
 /// A callback class for handling events related to ad content.
@@ -14,7 +15,7 @@ class ScreenAdContentCallback {
   /// such as preparing the ad for display.
   ///
   /// @param ad The ad content that has been successfully loaded.
-  final void Function(AdContent ad) onAdLoaded;
+  final void Function(AdContentInfo ad) onAdLoaded;
 
   /// Called when the ad content fails to load.
   ///
@@ -32,7 +33,7 @@ class ScreenAdContentCallback {
   /// such as logging or UI updates.
   ///
   /// @param ad The ad content that has been successfully shown.
-  final void Function(AdContent ad) onAdShowed;
+  final void Function(AdContentInfo ad) onAdShowed;
 
   /// Called when the ad content fails to show.
   ///
@@ -49,7 +50,7 @@ class ScreenAdContentCallback {
   /// such as tracking click events or updating the UI.
   ///
   /// @param ad The ad content that was clicked by the user.
-  final void Function(AdContent ad) onAdClicked;
+  final void Function(AdContentInfo ad) onAdClicked;
 
   /// Called when the ad content is dismissed.
   ///
@@ -57,13 +58,13 @@ class ScreenAdContentCallback {
   /// any necessary actions after the ad has been dismissed, such as cleaning up resources or updating the UI.
   ///
   /// @param ad The ad content that was dismissed.
-  final void Function(AdContent ad) onAdDismissed;
+  final void Function(AdContentInfo ad) onAdDismissed;
 
   ScreenAdContentCallback(
-      {required Function(AdContent ad) this.onAdLoaded,
+      {required Function(AdContentInfo ad) this.onAdLoaded,
       required Function(AdFormat format, AdError error) this.onAdFailedToLoad,
-      required Function(AdContent ad) this.onAdShowed,
+      required Function(AdContentInfo ad) this.onAdShowed,
       required Function(AdFormat format, AdError error) this.onAdFailedToShow,
-      required Function(AdContent ad) this.onAdClicked,
-      required Function(AdContent ad) this.onAdDismissed});
+      required Function(AdContentInfo ad) this.onAdClicked,
+      required Function(AdContentInfo ad) this.onAdDismissed});
 }

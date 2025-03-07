@@ -1,5 +1,6 @@
 import '../../app_open/internal/cas_app_open_impl.dart';
-import '../../mediation_manager.dart';
+import '../on_ad_impression_listener.dart';
+import 'screen_ad_content_callback.dart';
 
 /// Manages an app open ad, allowing for loading, showing, and destroying the ad content.
 ///

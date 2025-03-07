@@ -19,7 +19,11 @@ class ScreenAdContentCallbackHandler(
     }
 
     override fun onAdFailedToLoad(format: AdFormat, error: AdError) {
-        invokeMethod("onAdFailedToLoad", error.toMap())
+        invokeMethod(
+            "onAdFailedToLoad",
+            "format" to format.toMap(),
+            "error" to error.toMap()
+        )
     }
 
     override fun onAdShowed(ad: AdContent) {
@@ -27,7 +31,11 @@ class ScreenAdContentCallbackHandler(
     }
 
     override fun onAdFailedToShow(format: AdFormat, error: AdError) {
-        invokeMethod("onAdFailedToShow", error.toMap())
+        invokeMethod(
+            "onAdFailedToShow",
+            "format" to format.toMap(),
+            "error" to error.toMap()
+        )
     }
 
     override fun onAdClicked(ad: AdContent) {

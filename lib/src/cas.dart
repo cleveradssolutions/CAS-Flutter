@@ -51,8 +51,8 @@ class CAS {
   }
 
   static Future<String> getSDKVersion() async {
-    String? sdkVersion = await _channel.invokeMethod<String>('getSDKVersion');
-    return sdkVersion ?? "";
+    final String? sdkVersion = await _channel.invokeMethod<String>('getSDKVersion');
+    return sdkVersion ?? '';
   }
 
   static String getPluginVersion() {

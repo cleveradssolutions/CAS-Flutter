@@ -17,7 +17,8 @@ mixin MappedObjectImpl {
   late final MethodChannel channel;
   late final String id;
 
-  void init(String channelName, [String? id, bool isWidget = false]) {
+  void init(String channelName, [String? id, bool isAutoManaged = false]) {
+  // void init(String channelName, [String? id, bool isWidget = false]) {
     this.id = id ??= UniqueKey().toString();
 
     final _ChannelEntry entry =
@@ -27,7 +28,7 @@ mixin MappedObjectImpl {
     final objects = entry.value;
     objects[id] = this;
 
-    if (!isWidget) {
+    if (!isAutoManaged) {
       final finalizer = _finalizers[channelName] ??= Finalizer((id) {
         channel.invokeMethod('dispose', {'id': id});
         objects.remove(id);

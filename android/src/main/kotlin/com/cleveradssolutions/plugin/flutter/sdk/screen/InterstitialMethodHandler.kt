@@ -3,7 +3,6 @@ package com.cleveradssolutions.plugin.flutter.sdk.screen
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
-import com.cleveradssolutions.plugin.flutter.util.errorActivityIsNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
 import com.cleveradssolutions.sdk.screen.CASInterstitial
@@ -38,7 +37,7 @@ class InterstitialMethodHandler(
             "setAutoshowEnabled" -> setAutoshowEnabled(instance, call, result)
             "isLoaded" -> isLoaded(instance, result)
             "load" -> load(instance, result)
-            "show" -> show(instance, call, result)
+            "show" -> show(instance, result)
             "destroy" -> destroy(instance, result)
             "getMinInterval" -> getMinInterval(instance, result)
             "setMinInterval" -> setMinInterval(instance, call, result)
@@ -89,13 +88,8 @@ class InterstitialMethodHandler(
         result.success()
     }
 
-    private fun show(
-        interstitial: CASInterstitial,
-        call: MethodCall,
-        result: MethodChannel.Result
-    ) {
-        val activity = contextService.getActivityOrError(call, result)
-            ?: return result.errorActivityIsNull(call)
+    private fun show(interstitial: CASInterstitial, result: MethodChannel.Result) {
+        val activity = contextService.getActivity()
 
         interstitial.show(activity)
 

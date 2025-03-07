@@ -1,4 +1,4 @@
-import 'ad_content.dart';
+import 'ad_content_info.dart';
 
 /// A functional interface for listening to ad impression events.
 /// Implement this interface to handle actions when an ad impression is recorded.
@@ -9,7 +9,7 @@ class OnAdImpressionListener {
   ///           about the ad, including format, source, and revenue information.
   ///
   /// This method is guaranteed to be called on the main thread.
-  final void Function(AdContent ad) onAdImpression;
+  final void Function(AdContentInfo ad) onAdImpression;
 
-  OnAdImpressionListener({required Function(AdContent ad) this.onAdImpression});
+  OnAdImpressionListener({required Function(AdContentInfo ad) this.onAdImpression});
 }

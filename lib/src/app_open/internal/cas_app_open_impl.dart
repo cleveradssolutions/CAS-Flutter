@@ -14,7 +14,7 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
   LoadAdCallback? _loadCallback;
   @override
   AppOpenAdListener? contentCallback;
-
+]
   CASAppOpenImpl(this.managerId)
       : super('cleveradssolutions/app_open', managerId);
 

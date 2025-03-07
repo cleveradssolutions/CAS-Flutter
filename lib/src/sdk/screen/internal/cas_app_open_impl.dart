@@ -1,8 +1,10 @@
+import 'package:clever_ads_solutions/src/internal/ad_error_extensions.dart';
+import 'package:clever_ads_solutions/src/sdk/internal/ad_content_info_impl.dart';
+import 'package:clever_ads_solutions/src/sdk/internal/ad_format_extensions.dart';
 import 'package:flutter/services.dart';
 
 import '../../../internal/mapped_object.dart';
-import '../../ad_content.dart';
-import '../../ad_format.dart';
+import '../../ad_content_info.dart';
 import '../../on_ad_impression_listener.dart';
 import '../cas_app_open.dart';
 import '../screen_ad_content_callback.dart';
@@ -20,28 +22,34 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'onAdLoaded':
-        contentCallback?.onAdLoaded(AdContent.tryParse(call));
+        final int? adContentInfoId = call.arguments['adContentInfo'];
+
+        contentCallback?.onAdLoaded(adContentInfo);
         break;
       case 'onAdFailedToLoad':
-        final arguments = call.arguments
-        contentCallback?.onAdFailedToLoad(AdFormat(arguments), AdError(arguments));
+        final arguments = call.arguments;
+        contentCallback?.onAdFailedToLoad(
+            AdFormatExtensions.fromArguments(arguments),
+            AdErrorExtensions.fromArguments(arguments));
         break;
       case 'onAdShowed':
-        contentCallback?.onAdShowed(AdContent.tryParse(call));
+        contentCallback?.onAdShowed(adContentInfo);
         break;
       case 'onAdFailedToShow':
-        final arguments = call.arguments
-        contentCallback?.onAdFailedToShow(AdFormat(arguments), AdError(arguments));
+        final arguments = call.arguments;
+        contentCallback?.onAdFailedToShow(
+            AdFormatExtensions.fromArguments(arguments),
+            AdErrorExtensions.fromArguments(arguments));
         break;
       case 'onAdClicked':
-        contentCallback?.onAdClicked(AdContent.tryParse(call));
+        contentCallback?.onAdClicked(adContentInfo);
         break;
       case 'onAdDismissed':
-        contentCallback?.onAdDismissed(AdContent.tryParse(call));
+        contentCallback?.onAdDismissed(adContentInfo);
         break;
 
       case 'onAdImpression':
-        impressionListener?.onAdImpression(AdContent.tryParse(call));
+        impressionListener?.onAdImpression(adContentInfo);
         break;
     }
   }
