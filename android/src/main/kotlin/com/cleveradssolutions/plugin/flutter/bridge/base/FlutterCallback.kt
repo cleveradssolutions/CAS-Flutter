@@ -2,7 +2,7 @@ package com.cleveradssolutions.plugin.flutter.bridge.base
 
 import io.flutter.plugin.common.MethodChannel
 
-interface IMappedCallback {
+interface FlutterCallback {
 
     fun invokeMethod(
         methodName: String,

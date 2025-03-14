@@ -24,7 +24,7 @@ class BannerMethodHandler(binding: FlutterPluginBinding) :
             "setBannerAdRefreshRate" -> setBannerAdRefreshRate(instance.view, call, result)
             "disableBannerRefresh" -> disableBannerRefresh(instance.view, result)
             "dispose" -> dispose(instance, result)
-            else -> super.onMethodCall(call, result)
+            else -> super.onMethodCall(instance, call, result)
         }
     }
 

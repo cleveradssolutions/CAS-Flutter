@@ -3,15 +3,16 @@ import '../ad_content_info.dart';
 import '../ad_format.dart';
 import '../ad_revenue_precision.dart';
 import '../ad_source_id.dart';
-import 'ad_format_extensions.dart';
+import 'ad_format_factory.dart';
 
 class AdContentInfoImpl extends MappedObject implements AdContentInfo {
-  AdContentInfoImpl() : super('cleveradssolutions/ad_content_info');
+  AdContentInfoImpl(String id)
+      : super('cleveradssolutions/ad_content_info', id, true);
 
   @override
   Future<AdFormat> getFormat() async {
     final int? value = await invokeMethod<int>('getFormat');
-    return AdFormatExtensions.fromValue(value);
+    return AdFormatFactory.fromValue(value);
   }
 
   @override

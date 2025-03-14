@@ -14,7 +14,7 @@ class BannerView(
     viewId: Int,
     args: Map<*, *>?,
     manager: MediationManager?,
-    methodHandler: BannerMethodHandler
+    private val methodHandler: BannerMethodHandler
 ) : PlatformView {
 
     val id: String = args?.get("id") as? String ?: ""
@@ -72,6 +72,7 @@ class BannerView(
     }
 
     override fun dispose() {
+        methodHandler.remove(id)
         banner.destroy()
     }
 

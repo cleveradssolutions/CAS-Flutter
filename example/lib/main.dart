@@ -107,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _initialize() {
     // Set Ads Settings
+    CAS.settings.setTestDeviceId('250B851807B25F2887D4A7A420C579DA');
     CAS.settings.setDebugMode(true);
     CAS.settings.setTaggedAudience(Audience.notChildren);
 
@@ -116,8 +117,9 @@ class _HomeScreenState extends State<HomeScreen>
     // Initialize SDK
     _manager = CAS
         .buildManager()
-        .withCasId('demo')
+        .withCasId('com.FailGames.RusCarsCrash')
         .withTestMode(true)
+        .withMediationExtras("testMediationData", "{\"admob_app_id\":\"ca-app-pub-3940256099942544~3347511713\",\"admob_app_open_ad\":\"ca-app-pub-3940256099942544\\/9257395921\",\"applovin_app_id\":\"TxhDiMQVbncc9h4M1QzqCMODZz7gMzTwuF8bbT6CKipTPuqQJoFV8dihbrNzpxthA0ImTOyt6mLWeAxyyBS5q9\",\"providers\":[{\"net\":\"Vungle\",\"label\":\"Bid\",\"lvl\":0,\"settings\":\"{\\\"ApplicationID\\\":\\\"6694f35c4d6765df32fed8c4\\\",\\\"AccountID\\\":\\\"5c657afed9e6e60012bab5d9\\\",\\\"banner_rtb\\\":\\\"B_BID-4817686\\\",\\\"banner_rtbMREC\\\":\\\"B_MREC_BID-8528832\\\",\\\"inter_rtb\\\":\\\"I_BID-5522832\\\",\\\"reward_rtb\\\":\\\"V_BID-8760313\\\",\\\"appopen_rtb\\\":\\\"O_BID-0247338\\\",\\\"native_rtb\\\":\\\"N_BID-3340641\\\"}\"}],\"bEcpm\":[0.01],\"iEcpm\":[0.01],\"rEcpm\":[0.01],\"oEcpm\":[0.01],\"nEcpm\":[0.01]}\n")
         .withAdTypes(AdTypeFlags.banner |
             AdTypeFlags.interstitial |
             AdTypeFlags.rewarded)

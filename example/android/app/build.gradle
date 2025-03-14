@@ -3,12 +3,13 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
-    id("com.cleveradssolutions.gradle-plugin") version "4.0.1-rc2"
+    id("com.cleveradssolutions.gradle-plugin") version "4.0.1-rc4"
 }
 
 cas {
     adapters {
-        googleAds = true
+//        googleAds = true
+        liftoffMonetize = true
         // Include more adapters here
     }
     // Instead of defining each adapter separately,

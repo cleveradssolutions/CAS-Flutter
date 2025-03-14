@@ -2,6 +2,7 @@ package com.cleveradssolutions.plugin.flutter.sdk.screen
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
 import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -14,7 +15,8 @@ private const val CHANNEL_NAME = "cleveradssolutions/interstitial"
 
 class InterstitialMethodHandler(
     binding: FlutterPlugin.FlutterPluginBinding,
-    private val contextService: CASFlutterContext
+    private val contextService: CASFlutterContext,
+    private val adContentInfoHandler: AdContentInfoHandler
 ) : MappedMethodHandler<CASInterstitial>(binding, CHANNEL_NAME) {
 
     override fun initInstance(id: String): CASInterstitial {

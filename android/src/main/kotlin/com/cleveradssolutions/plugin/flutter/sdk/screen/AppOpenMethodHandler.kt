@@ -2,6 +2,7 @@ package com.cleveradssolutions.plugin.flutter.sdk.screen
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
 import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -14,18 +15,20 @@ private const val CHANNEL_NAME = "cleveradssolutions/app_open"
 
 class AppOpenMethodHandler(
     binding: FlutterPlugin.FlutterPluginBinding,
-    private val contextService: CASFlutterContext
+    private val contextService: CASFlutterContext,
+    private val adContentInfoHandler: AdContentInfoHandler
 ) : MappedMethodHandler<CASAppOpen>(binding, CHANNEL_NAME) {
 
     override fun initInstance(id: String): CASAppOpen {
         val context = contextService.getContext()
         val appOpen = CASAppOpen(context, id)
-        appOpen.contentCallback = ScreenAdContentCallbackHandler(this, id)
-        appOpen.onImpressionListener = OnAdImpressionListenerHandler(this, id)
+        appOpen.contentCallback = ScreenAdContentCallbackHandler(this, id, adContentInfoHandler)
+        appOpen.onImpressionListener = OnAdImpressionListenerHandler(this, id, adContentInfoHandler)
         return appOpen
     }
 
     override fun onMethodCall(
+        id: String,
         instance: CASAppOpen,
         call: MethodCall,
         result: MethodChannel.Result
@@ -38,8 +41,8 @@ class AppOpenMethodHandler(
             "isLoaded" -> isLoaded(instance, result)
             "load" -> load(instance, result)
             "show" -> show(instance, result)
-            "destroy" -> destroy(instance, result)
-            else -> super.onMethodCall(instance, call, result)
+            "destroy" -> destroy(id, instance, result)
+            else -> super.onMethodCall(id, instance, call, result)
         }
     }
 
@@ -93,8 +96,9 @@ class AppOpenMethodHandler(
         result.success()
     }
 
-    private fun destroy(appOpen: CASAppOpen, result: MethodChannel.Result) {
+    private fun destroy(id: String, appOpen: CASAppOpen, result: MethodChannel.Result) {
         appOpen.destroy()
+        adContentInfoHandler.remove(id)
 
         result.success()
     }

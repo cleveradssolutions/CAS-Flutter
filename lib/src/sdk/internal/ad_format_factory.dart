@@ -1,6 +1,6 @@
 import '../ad_format.dart';
 
-extension AdFormatExtensions on AdFormat {
+class AdFormatFactory {
   static AdFormat fromValue(int? index) {
     if (index == null) {
       return AdFormat.banner;

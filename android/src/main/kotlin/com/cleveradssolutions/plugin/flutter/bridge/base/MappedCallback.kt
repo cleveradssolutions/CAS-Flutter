@@ -5,7 +5,7 @@ import io.flutter.plugin.common.MethodChannel
 open class MappedCallback(
     private val handler: MappedMethodHandler<*>,
     private val id: String
-) : IMappedCallback {
+) : FlutterCallback {
 
     override fun invokeMethod(
         methodName: String,

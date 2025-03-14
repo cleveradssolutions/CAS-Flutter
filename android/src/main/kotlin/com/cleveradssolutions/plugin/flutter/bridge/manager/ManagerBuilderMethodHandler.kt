@@ -16,9 +16,9 @@ private const val CHANNEL_NAME = "cleveradssolutions/manager_builder"
 
 class ManagerBuilderMethodHandler(
     binding: FlutterPluginBinding,
+    private val contextService: CASFlutterContext,
     private val consentFlowMethodHandler: ConsentFlowMethodHandler,
-    private val mediationManagerMethodHandler: MediationManagerMethodHandler,
-    private val contextService: CASFlutterContext
+    private val mediationManagerMethodHandler: MediationManagerMethodHandler
 ) : MethodHandler(binding, CHANNEL_NAME) {
 
     @Volatile

@@ -115,13 +115,15 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
-  Future<void> setTestDeviceId(String deviceIds) {
-    return _channel.invokeMethod("setTestDeviceIds", {"devices": deviceIds});
+  Future<void> setTestDeviceId(String deviceId) {
+    return _channel.invokeMethod("setTestDeviceIds", {
+      "deviceIds": {deviceId}
+    });
   }
 
   @override
   Future<void> setTestDeviceIds(Set<String> deviceIds) {
-    return _channel.invokeMethod("setTestDeviceIds", {"devices": deviceIds});
+    return _channel.invokeMethod("setTestDeviceIds", {"deviceIds": deviceIds});
   }
 
   @override

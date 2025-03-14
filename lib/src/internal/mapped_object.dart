@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 abstract class MappedObject with MappedObjectImpl {
-  MappedObject(String channelName, [String? id, bool isWidget = false]) {
-    init(channelName, id, isWidget);
+  MappedObject(String channelName, [String? id, bool isManagedByNative = false]) {
+    init(channelName, id, isManagedByNative);
   }
 }
 
@@ -17,8 +17,7 @@ mixin MappedObjectImpl {
   late final MethodChannel channel;
   late final String id;
 
-  void init(String channelName, [String? id, bool isAutoManaged = false]) {
-  // void init(String channelName, [String? id, bool isWidget = false]) {
+  void init(String channelName, [String? id, bool isManagedByNative = false]) {
     this.id = id ??= UniqueKey().toString();
 
     final _ChannelEntry entry =
@@ -28,7 +27,7 @@ mixin MappedObjectImpl {
     final objects = entry.value;
     objects[id] = this;
 
-    if (!isAutoManaged) {
+    if (!isManagedByNative) {
       final finalizer = _finalizers[channelName] ??= Finalizer((id) {
         channel.invokeMethod('dispose', {'id': id});
         objects.remove(id);
