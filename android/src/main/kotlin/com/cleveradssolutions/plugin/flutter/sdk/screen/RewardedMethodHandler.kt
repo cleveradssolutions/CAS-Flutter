@@ -24,13 +24,14 @@ class RewardedMethodHandler(
     override fun initInstance(id: String): CASRewarded {
         val context = contextService.getContext()
         val rewarded = CASRewarded(context, id)
-        rewarded.contentCallback = ScreenAdContentCallbackHandler(this, id)
+        rewarded.contentCallback = ScreenAdContentCallbackHandler(this, id, adContentInfoHandler)
         rewarded.onImpressionListener = OnAdImpressionListenerHandler(this, id)
         onRewardEarnedListener = OnRewardEarnedListenerHandler(this, id)
         return rewarded
     }
 
     override fun onMethodCall(
+        id: String,
         instance: CASRewarded,
         call: MethodCall,
         result: MethodChannel.Result
@@ -48,7 +49,7 @@ class RewardedMethodHandler(
             "load" -> load(instance, result)
             "show" -> show(instance, result)
             "destroy" -> destroy(instance, result)
-            else -> super.onMethodCall(instance, call, result)
+            else -> super.onMethodCall(id, instance, call, result)
         }
     }
 

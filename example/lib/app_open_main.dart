@@ -106,39 +106,44 @@ class _SplashScreenState extends State<SplashScreen> {
     final appOpenAd = CASAppOpen.create(_casId);
 
     // Handle fullscreen callback events
-    appOpenAd.contentCallback = AppOpenAdListener(
-      onShown: (adImpression) => logDebug('App open ad shown: $adImpression'),
-      onShowFailed: (message) {
-        logDebug('App open ad show failed: $message');
+    appOpenAd.contentCallback = ScreenAdContentCallback(
+      onAdLoaded: (ad) async {
+        logDebug('App open ad loaded: ${await ad.getSourceName()}');
 
-        _isVisibleAppOpenAd = false;
-        _openNextScreen();
-      },
-      onClicked: () => logDebug('App open ad clicked'),
-      onImpression: (adImpression) =>
-          logDebug('App open ad did impression: $adImpression!'),
-      onClosed: () {
-        logDebug('App open ad closed');
-
-        _isVisibleAppOpenAd = false;
-        _openNextScreen();
-      },
-    );
-
-    // Load the Ad
-    appOpenAd.load(LoadAdCallback(
-      onAdLoaded: () {
-        logDebug('App Open Ad loaded');
         if (_isLoadingAppResources) {
           _isVisibleAppOpenAd = true;
           appOpenAd.show();
         }
       },
-      onAdFailedToLoad: (adError) {
-        logDebug('App Open Ad failed to load: ${adError.message}');
+      onAdFailedToLoad: (_, error) {
+        logDebug('App open ad failed to load: $error');
+
         _openNextScreen();
       },
-    ));
+      onAdShowed: (ad) async =>
+          logDebug('App open ad shown: ${await ad.getSourceName()}'),
+      onAdFailedToShow: (_, error) {
+        logDebug('App open ad show failed: $error');
+
+        _isVisibleAppOpenAd = false;
+        _openNextScreen();
+      },
+      onAdClicked: (ad) async =>
+          logDebug('App open ad clicked: ${await ad.getSourceName()}'),
+      onAdDismissed: (ad) async {
+        logDebug('App open ad dismissed: ${await ad.getSourceName()}');
+
+        _isVisibleAppOpenAd = false;
+        _openNextScreen();
+      },
+    );
+    appOpenAd.impressionListener = OnAdImpressionListener(
+      onAdImpression: (ad) async =>
+          logDebug('App open ad make impression: ${await ad.getSourceName()}'),
+    );
+
+    // Load the Ad
+    appOpenAd.load();
   }
 
   void _openNextScreen() {

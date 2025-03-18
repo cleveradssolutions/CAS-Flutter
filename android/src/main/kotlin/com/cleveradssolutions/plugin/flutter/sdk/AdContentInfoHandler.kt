@@ -1,6 +1,7 @@
 package com.cleveradssolutions.plugin.flutter.sdk
 
 import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
+import com.cleveradssolutions.sdk.AdContentInfo
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel

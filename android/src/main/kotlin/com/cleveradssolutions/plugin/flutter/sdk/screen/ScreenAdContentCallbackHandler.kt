@@ -26,19 +26,19 @@ class ScreenAdContentCallbackHandler(
     override fun onAdFailedToLoad(format: AdFormat, error: AdError) {
         invokeMethod(
             "onAdFailedToLoad",
-            "format" to format.toMap(),
+            "format" to format.value,
             "error" to error.toMap()
         )
     }
 
     override fun onAdShowed(ad: AdContentInfo) {
-        invokeMethod("onAdShowed","adContentInfoId" to adContentInfoId)
+        invokeMethod("onAdShowed", "adContentInfoId" to adContentInfoId)
     }
 
     override fun onAdFailedToShow(format: AdFormat, error: AdError) {
         invokeMethod(
             "onAdFailedToShow",
-            "format" to format.toMap(),
+            "format" to format.value,
             "error" to error.toMap()
         )
     }

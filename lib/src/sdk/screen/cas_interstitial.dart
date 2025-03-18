@@ -1,17 +1,17 @@
 import '../ad_content_info.dart';
 import '../on_ad_impression_listener.dart';
-import 'internal/cas_app_open_impl.dart';
+import 'internal/cas_interstitial_impl.dart';
 import 'screen_ad_content_callback.dart';
 
-/// Manages an app open ad, allowing for loading, showing, and destroying the ad content.
+/// Manages an interstitial ad, allowing for loading, showing, and destroying the ad content.
 ///
-/// This class handles app open ads, which are full-screen ads shown when the user opens the app. These ads are
-/// designed to capture the user's attention and are typically displayed when the app is launched or resumed.
+/// This class provides functionality to handle interstitial ads, which are full-screen ads that cover the entire
+/// screen and are typically used at natural transition points within an app.
 ///
 /// [casId] The unique identifier for the CAS content, typically an application bundle name.
-abstract class CASAppOpen {
-  static CASAppOpen create(String casId) {
-    return CASAppOpenImpl(casId);
+abstract class CASInterstitial {
+  static CASInterstitial create(String casId) {
+    return CASInterstitialImpl(casId);
   }
 
   /// Gets or sets the callback for handling ad content events.
@@ -56,20 +56,44 @@ abstract class CASAppOpen {
   /// This property is `null` if the ad has not been loaded yet or has been destroyed.
   Future<AdContentInfo?> getContentInfo();
 
-  /// Loads the app open ad content.
+  /// Loads the interstitial ad content.
   ///
   /// Initiates the process of loading ad content.
   /// This method should be called before attempting to show the ad.
   Future<void> load();
 
-  /// Shows the app open ad to the user.
+  /// Shows the interstitial ad to the user.
   ///
-  /// Displays the ad from the given activity context.
-  /// This method should be called after the ad has been loaded and is ready to be shown.
+  /// Displays the ad from the given activity context. This method should be called after the ad has been loaded
+  /// and is ready to be shown.
+  ///
+  /// @param activity The activity context from which the ad is shown.
   Future<void> show();
 
   /// Destroys the ad content and releases any associated resources.
   ///
   /// Call this method when the ad is no longer needed to clean up resources and prevent memory leaks.
   Future<void> destroy();
+
+  /// The minimum interval between showing interstitial ads, in seconds.
+  ///
+  /// Attempting to show a new interstitial ad before the interval has passed after the previous one was closed
+  /// will trigger a call to [ScreenAdContentCallback.onAdFailedToShow] with [AdErrorCode.NOT_PASSED_INTERVAL].
+  ///
+  /// Note that the timer for the minimum interval is shared across all interstitial ad instances, but the minimum
+  /// interval value may differ for each ad instance.
+  ///
+  /// If you need to reset the minimum interval timer after showing a Rewarded Ad or an AppOpen Ad, you can
+  /// call the [restartInterval] method in the [ScreenAdContentCallback.onAdDismissed] for these ad formats.
+  ///
+  /// By default, this interval is set to 0 seconds.
+  Future<int> getMinInterval();
+
+  Future<void> setMinInterval(int minInterval);
+
+  /// Restarts the interval countdown until the next interstitial ad display.
+  ///
+  /// By default, the interval before the first interstitial ad impression is ignored. Use this method to delay
+  /// displaying the ad by restarting the interval countdown.
+  Future<void> restartInterval();
 }

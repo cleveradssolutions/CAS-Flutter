@@ -23,7 +23,7 @@ class AppOpenMethodHandler(
         val context = contextService.getContext()
         val appOpen = CASAppOpen(context, id)
         appOpen.contentCallback = ScreenAdContentCallbackHandler(this, id, adContentInfoHandler)
-        appOpen.onImpressionListener = OnAdImpressionListenerHandler(this, id, adContentInfoHandler)
+        appOpen.onImpressionListener = OnAdImpressionListenerHandler(this, id)
         return appOpen
     }
 

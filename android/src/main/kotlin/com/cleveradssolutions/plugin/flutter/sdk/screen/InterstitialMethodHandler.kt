@@ -22,12 +22,15 @@ class InterstitialMethodHandler(
     override fun initInstance(id: String): CASInterstitial {
         val context = contextService.getContext()
         val interstitial = CASInterstitial(context, id)
-        interstitial.contentCallback = ScreenAdContentCallbackHandler(this, id)
-        interstitial.onImpressionListener = OnAdImpressionListenerHandler(this, id)
+        interstitial.contentCallback =
+            ScreenAdContentCallbackHandler(this, id, adContentInfoHandler)
+        interstitial.onImpressionListener =
+            OnAdImpressionListenerHandler(this, id)
         return interstitial
     }
 
     override fun onMethodCall(
+        id: String,
         instance: CASInterstitial,
         call: MethodCall,
         result: MethodChannel.Result
@@ -44,7 +47,7 @@ class InterstitialMethodHandler(
             "getMinInterval" -> getMinInterval(instance, result)
             "setMinInterval" -> setMinInterval(instance, call, result)
             "restartInterval" -> restartInterval(instance, result)
-            else -> super.onMethodCall(instance, call, result)
+            else -> super.onMethodCall(id, instance, call, result)
         }
     }
 

@@ -3,6 +3,7 @@ import 'app_open_ad_listener.dart';
 import 'internal/cas_app_open_impl.dart';
 import 'load_ad_callback.dart';
 
+@Deprecated('Use sdk/screen/cas_app_open.dart instead')
 abstract class CASAppOpen {
   static CASAppOpen create(String managerId) {
     return CASAppOpenImpl(managerId);

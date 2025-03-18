@@ -1,3 +1,4 @@
+import 'package:clever_ads_solutions/src/sdk/screen/cas_interstitial.dart';
 import 'package:flutter/services.dart';
 
 import '../../../internal/ad_error_factory.dart';
@@ -6,17 +7,17 @@ import '../../ad_content_info.dart';
 import '../../internal/ad_content_info_impl.dart';
 import '../../internal/ad_format_factory.dart';
 import '../../on_ad_impression_listener.dart';
-import '../cas_app_open.dart';
 import '../screen_ad_content_callback.dart';
 
-class CASAppOpenImpl extends MappedObject implements CASAppOpen {
+class CASInterstitialImpl extends MappedObject implements CASInterstitial {
   @override
   ScreenAdContentCallback? contentCallback;
 
   @override
   OnAdImpressionListener? impressionListener;
 
-  CASAppOpenImpl(String casId) : super('cleveradssolutions/app_open', casId);
+  CASInterstitialImpl(String casId)
+      : super('cleveradssolutions/interstitial', casId);
 
   AdContentInfo? _contentInfo;
   String? _contentInfoId;
@@ -102,6 +103,21 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
     _contentInfo = null;
     _contentInfoId = null;
     return invokeMethod('destroy');
+  }
+
+  @override
+  Future<int> getMinInterval() async {
+    return await invokeMethod<int>('getMinInterval') ?? 0;
+  }
+
+  @override
+  Future<void> setMinInterval(int minInterval) {
+    return invokeMethod('setMinInterval', {'minInterval': minInterval});
+  }
+
+  @override
+  Future<void> restartInterval() {
+    return invokeMethod('restartInterval');
   }
 
   AdContentInfo _getContentInfo(MethodCall call) {

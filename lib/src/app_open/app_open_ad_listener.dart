@@ -1,5 +1,6 @@
 import '../ad_impression.dart';
 
+@Deprecated('Use sdk/screen/screen_ad_content_callback.dart instead')
 class AppOpenAdListener {
   /// Executed when the ad is displayed.
   final void Function(AdImpression? adImpression) onShown;

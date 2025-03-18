@@ -1,5 +1,6 @@
 import '../ad_error.dart';
 
+@Deprecated('Use sdk/screen/screen_ad_content_callback.dart instead')
 class LoadAdCallback {
   /// Executed when the ad loaded and ready to present.
   final void Function() onAdLoaded;

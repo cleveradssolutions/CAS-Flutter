@@ -1,3 +1,5 @@
+import 'package:clever_ads_solutions/src/sdk/screen/cas_rewarded.dart';
+import 'package:clever_ads_solutions/src/sdk/screen/on_reward_earned_listener.dart';
 import 'package:flutter/services.dart';
 
 import '../../../internal/ad_error_factory.dart';
@@ -6,17 +8,18 @@ import '../../ad_content_info.dart';
 import '../../internal/ad_content_info_impl.dart';
 import '../../internal/ad_format_factory.dart';
 import '../../on_ad_impression_listener.dart';
-import '../cas_app_open.dart';
 import '../screen_ad_content_callback.dart';
 
-class CASAppOpenImpl extends MappedObject implements CASAppOpen {
+class CASRewardedImpl extends MappedObject implements CASRewarded {
   @override
   ScreenAdContentCallback? contentCallback;
 
   @override
   OnAdImpressionListener? impressionListener;
 
-  CASAppOpenImpl(String casId) : super('cleveradssolutions/app_open', casId);
+  OnRewardEarnedListener? _onRewardEarnedListener;
+
+  CASRewardedImpl(String casId) : super('cleveradssolutions/rewarded', casId);
 
   AdContentInfo? _contentInfo;
   String? _contentInfoId;
@@ -52,6 +55,10 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
       case 'onAdImpression':
         impressionListener?.onAdImpression(_getContentInfo(call));
         break;
+
+      case 'onUserEarnedReward':
+        _onRewardEarnedListener?.onUserEarnedReward(_getContentInfo(call));
+        break;
     }
   }
 
@@ -66,13 +73,15 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
   }
 
   @override
-  Future<bool> isAutoshowEnabled() async {
-    return await invokeMethod<bool>('isAutoshowEnabled') ?? false;
+  Future<bool> isExtraFillInterstitialAdEnabled() async {
+    return await invokeMethod<bool>('isExtraFillInterstitialAdEnabled') ??
+        false;
   }
 
   @override
-  Future<void> setAutoshowEnabled(bool isEnabled) {
-    return invokeMethod('setAutoshowEnabled', {'isEnabled': isEnabled});
+  Future<void> setExtraFillInterstitialAdEnabled(bool isEnabled) {
+    return invokeMethod(
+        'setExtraFillInterstitialAdEnabled', {'isEnabled': isEnabled});
   }
 
   @override
@@ -91,7 +100,8 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
   }
 
   @override
-  Future<void> show() {
+  Future<void> show(OnRewardEarnedListener listener) {
+    _onRewardEarnedListener = listener;
     return invokeMethod('show');
   }
 
@@ -99,6 +109,7 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
   Future<void> destroy() {
     contentCallback = null;
     impressionListener = null;
+    _onRewardEarnedListener = null;
     _contentInfo = null;
     _contentInfoId = null;
     return invokeMethod('destroy');

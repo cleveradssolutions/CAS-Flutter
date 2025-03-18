@@ -14,6 +14,7 @@ class BannerMethodHandler(binding: FlutterPluginBinding) :
     MappedMethodHandler<BannerView>(binding, CHANNEL_NAME) {
 
     override fun onMethodCall(
+        id: String,
         instance: BannerView,
         call: MethodCall,
         result: MethodChannel.Result
@@ -24,7 +25,7 @@ class BannerMethodHandler(binding: FlutterPluginBinding) :
             "setBannerAdRefreshRate" -> setBannerAdRefreshRate(instance.view, call, result)
             "disableBannerRefresh" -> disableBannerRefresh(instance.view, result)
             "dispose" -> dispose(instance, result)
-            else -> super.onMethodCall(instance, call, result)
+            else -> super.onMethodCall(id, instance, call, result)
         }
     }
 

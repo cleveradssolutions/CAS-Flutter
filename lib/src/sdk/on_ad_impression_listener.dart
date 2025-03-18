@@ -5,7 +5,7 @@ import 'ad_content_info.dart';
 class OnAdImpressionListener {
   /// Called when an ad impression occurs.
   ///
-  /// @param ad The ad content associated with the impression. This object contains details
+  /// [ad] The ad content associated with the impression. This object contains details
   ///           about the ad, including format, source, and revenue information.
   ///
   /// This method is guaranteed to be called on the main thread.

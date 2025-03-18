@@ -22,6 +22,7 @@ class ConsentFlowMethodHandler(
             .withDismissListener(createDismissListener(id))
 
     override fun onMethodCall(
+        id: String,
         instance: ConsentFlow,
         call: MethodCall,
         result: MethodChannel.Result
@@ -30,7 +31,7 @@ class ConsentFlowMethodHandler(
             "withPrivacyPolicy" -> withPrivacyPolicy(instance, call, result)
             "disable" -> disable(instance, result)
             "show" -> show(instance, call, result)
-            else -> super.onMethodCall(instance, call, result)
+            else -> super.onMethodCall(id, instance, call, result)
         }
     }
 
