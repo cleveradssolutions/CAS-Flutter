@@ -29,12 +29,12 @@ abstract class MappedMethodHandler<T>(
 
             else -> {
                 val instance = map[id] ?: return result.errorFieldNull(call, "$id in $this")
-                onMethodCall(id, instance, call, result)
+                onMethodCall(instance, call, result)
             }
         }
     }
 
-    open fun onMethodCall(id: String, instance: T, call: MethodCall, result: MethodChannel.Result) {
+    open fun onMethodCall(instance: T, call: MethodCall, result: MethodChannel.Result) {
         super.onMethodCall(call, result)
     }
 

@@ -8,15 +8,18 @@ import '../../ad_impression.dart';
 import '../../ad_size.dart';
 import '../../internal/ad_size_impl.dart';
 import '../../internal/mapped_object.dart';
+import '../../sdk/screen/internal/ad_mapped_object.dart';
 import '../ad_view_listener.dart';
 import '../banner_widget.dart';
 
 const String _viewType = '<cas-banner-view>';
 
-class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
-  AdViewListener? _listenerField;
+class BannerWidgetStateImpl extends BannerWidgetState
+    with MappedObjectImpl, AdMappedObject {
+  AdViewListener? _adListenerField;
 
-  AdViewListener? get _listener => _listenerField ?? widget.listener;
+  AdViewListener? get _adListener =>
+      _adListenerField ?? widget.adListener ?? widget.listener;
 
   AdSize? _size;
   bool _sizeChanged = false;
@@ -43,15 +46,15 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'onAdViewLoaded':
-        _listener?.onLoaded();
+        _adListener?.onLoaded();
         break;
       case 'onAdViewFailed':
-        _listener?.onFailed(call.arguments['error']);
+        _adListener?.onFailed(call.arguments['error']);
         break;
       case 'onAdViewPresented':
-        _listener?.onAdViewPresented();
+        _adListener?.onAdViewPresented();
         final data = call.arguments;
-        _listener?.onImpression(AdImpression(
+        _adListener?.onImpression(AdImpression(
           data['adType'] as int,
           data['cpm'] as double,
           data['networkName'] as String,
@@ -64,7 +67,12 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
         ));
         break;
       case 'onAdViewClicked':
-        _listener?.onClicked();
+        _adListener?.onClicked();
+        break;
+
+      case 'onAdImpression':
+        widget.onImpressionListener
+            ?.onAdImpression(getContentInfoFromCall(call));
         break;
 
       case 'updateWidgetSize':
@@ -147,14 +155,19 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
   }
 
   @override
-  Future<void> dispose() {
-    super.dispose();
-    return invokeMethod('dispose');
+  Future<String> getCASId() async {
+    final String? casId = await invokeMethod<String>('getCASId');
+    return casId ?? '';
+  }
+
+  @override
+  Future<void> setCASId(String casId) {
+    return invokeMethod('setCASId', {'casId': casId});
   }
 
   @override
   void setAdListener(AdViewListener listener) {
-    _listenerField = listener;
+    _adListenerField = listener;
   }
 
   @override
@@ -168,9 +181,9 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
   }
 
   @override
-  Future<bool> isAdReady() async {
-    final bool? isAdReady = await invokeMethod<bool>('isAdReady');
-    return isAdReady ?? false;
+  Future<bool> isLoaded() async {
+    final bool? isLoaded = await invokeMethod<bool>('isLoaded');
+    return isLoaded ?? false;
   }
 
   @override
@@ -182,6 +195,15 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
   @override
   Future<void> setAutoloadEnabled(bool isEnabled) {
     return invokeMethod('setAutoloadEnabled', {'isEnabled': isEnabled});
+  }
+
+  @override
+  Future<void> load() {
+    if (_sizeChanged) {
+      _sizeChanged = false;
+      setState(() {});
+    }
+    return invokeMethod('load');
   }
 
   @override
@@ -197,16 +219,14 @@ class BannerWidgetStateImpl extends BannerWidgetState with MappedObjectImpl {
 
   @override
   Future<void> disableAdRefresh() {
-    return invokeMethod('disableBannerRefresh');
+    return invokeMethod('disableAdRefresh');
   }
 
   @override
-  Future<void> loadNextAd() {
-    if (_sizeChanged) {
-      _sizeChanged = false;
-      setState(() {});
-    }
-    return invokeMethod('loadNextAd');
+  Future<void> dispose() {
+    destroy();
+    super.dispose();
+    return invokeMethod('dispose');
   }
 
   Map<String, dynamic> _sizeToMap(AdSize size, int? maxWidthDpi) {

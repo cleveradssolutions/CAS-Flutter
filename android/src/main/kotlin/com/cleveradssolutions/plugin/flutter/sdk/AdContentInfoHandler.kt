@@ -12,7 +12,6 @@ class AdContentInfoHandler(binding: FlutterPluginBinding) :
     MappedMethodHandler<AdContentInfo>(binding, CHANNEL_NAME) {
 
     override fun onMethodCall(
-        id: String,
         instance: AdContentInfo,
         call: MethodCall,
         result: MethodChannel.Result
@@ -28,7 +27,7 @@ class AdContentInfoHandler(binding: FlutterPluginBinding) :
                 "getRevenuePrecision" -> revenuePrecision
                 "getImpressionDepth" -> impressionDepth
                 "getRevenueTotal" -> revenueTotal
-                else -> return super.onMethodCall(id, instance, call, result)
+                else -> return super.onMethodCall(instance, call, result)
             }
         }
         result.success(value)

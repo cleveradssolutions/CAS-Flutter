@@ -24,25 +24,25 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         val context = CASFlutterContext(binding.applicationContext)
         contextService = context
 
-        val adContentInfoHandler = AdContentInfoHandler(binding)
+        val contentInfoHandler = AdContentInfoHandler(binding)
         val consentFlowMethodHandler = ConsentFlowMethodHandler(binding, context)
         val mediationManagerMethodHandler = MediationManagerMethodHandler(binding, context)
 
         AdSizeMethodHandler(binding, context)
         AdsSettingsMethodHandler(binding)
-        AppOpenMethodHandler(binding, context, adContentInfoHandler)
+        AppOpenMethodHandler(binding, context, contentInfoHandler)
         CASMethodHandler(binding, context)
-        InterstitialMethodHandler(binding, context, adContentInfoHandler)
+        InterstitialMethodHandler(binding, context, contentInfoHandler)
         ManagerBuilderMethodHandler(
             binding,
             context,
             consentFlowMethodHandler,
             mediationManagerMethodHandler
         )
-        RewardedMethodHandler(binding, context, adContentInfoHandler)
+        RewardedMethodHandler(binding, context, contentInfoHandler)
         TargetingOptionsMethodHandler(binding)
 
-        val bannerViewFactory = BannerViewFactory(binding, mediationManagerMethodHandler)
+        val bannerViewFactory = BannerViewFactory(binding, contentInfoHandler)
         binding
             .platformViewRegistry
             .registerViewFactory("<cas-banner-view>", bannerViewFactory)

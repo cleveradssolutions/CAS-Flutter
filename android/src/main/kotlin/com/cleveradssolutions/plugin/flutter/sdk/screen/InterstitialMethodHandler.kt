@@ -1,7 +1,7 @@
 package com.cleveradssolutions.plugin.flutter.sdk.screen
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
-import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.base.AdMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
 import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
@@ -16,38 +16,37 @@ private const val CHANNEL_NAME = "cleveradssolutions/interstitial"
 class InterstitialMethodHandler(
     binding: FlutterPlugin.FlutterPluginBinding,
     private val contextService: CASFlutterContext,
-    private val adContentInfoHandler: AdContentInfoHandler
-) : MappedMethodHandler<CASInterstitial>(binding, CHANNEL_NAME) {
+    contentInfoHandler: AdContentInfoHandler
+) : AdMethodHandler<CASInterstitial>(binding, CHANNEL_NAME, contentInfoHandler) {
 
-    override fun initInstance(id: String): CASInterstitial {
+    override fun initInstance(id: String): Ad<CASInterstitial> {
         val context = contextService.getContext()
         val interstitial = CASInterstitial(context, id)
-        interstitial.contentCallback =
-            ScreenAdContentCallbackHandler(this, id, adContentInfoHandler)
-        interstitial.onImpressionListener =
-            OnAdImpressionListenerHandler(this, id)
-        return interstitial
+        val contentInfoId = "interstitial_$id"
+        interstitial.contentCallback = ScreenAdContentCallbackHandler(this, id, contentInfoId)
+        interstitial.onImpressionListener = OnAdImpressionListenerHandler(this, id, contentInfoId)
+        return Ad(interstitial, id, contentInfoId)
     }
 
     override fun onMethodCall(
-        id: String,
-        instance: CASInterstitial,
+        instance: Ad<CASInterstitial>,
         call: MethodCall,
         result: MethodChannel.Result
     ) {
         when (call.method) {
-            "isAutoloadEnabled" -> isAutoloadEnabled(instance, result)
-            "setAutoloadEnabled" -> setAutoloadEnabled(instance, call, result)
-            "isAutoshowEnabled" -> isAutoshowEnabled(instance, result)
-            "setAutoshowEnabled" -> setAutoshowEnabled(instance, call, result)
-            "isLoaded" -> isLoaded(instance, result)
-            "load" -> load(instance, result)
-            "show" -> show(instance, result)
+            "isAutoloadEnabled" -> isAutoloadEnabled(instance.ad, result)
+            "setAutoloadEnabled" -> setAutoloadEnabled(instance.ad, call, result)
+            "isAutoshowEnabled" -> isAutoshowEnabled(instance.ad, result)
+            "setAutoshowEnabled" -> setAutoshowEnabled(instance.ad, call, result)
+            "isLoaded" -> isLoaded(instance.ad, result)
+            "getContentInfo" -> getContentInfo(instance.contentInfoId, result)
+            "load" -> load(instance.ad, result)
+            "show" -> show(instance.ad, result)
             "destroy" -> destroy(instance, result)
-            "getMinInterval" -> getMinInterval(instance, result)
-            "setMinInterval" -> setMinInterval(instance, call, result)
-            "restartInterval" -> restartInterval(instance, result)
-            else -> super.onMethodCall(id, instance, call, result)
+            "getMinInterval" -> getMinInterval(instance.ad, result)
+            "setMinInterval" -> setMinInterval(instance.ad, call, result)
+            "restartInterval" -> restartInterval(instance.ad, result)
+            else -> super.onMethodCall(instance, call, result)
         }
     }
 
@@ -87,6 +86,10 @@ class InterstitialMethodHandler(
         result.success(interstitial.isLoaded)
     }
 
+    private fun getContentInfo(contentInfoId: String, result: MethodChannel.Result) {
+        result.success(contentInfoId)
+    }
+
     private fun load(interstitial: CASInterstitial, result: MethodChannel.Result) {
         interstitial.load(contextService.getContext())
 
@@ -101,8 +104,9 @@ class InterstitialMethodHandler(
         result.success()
     }
 
-    private fun destroy(interstitial: CASInterstitial, result: MethodChannel.Result) {
-        interstitial.destroy()
+    private fun destroy(ad: Ad<CASInterstitial>, result: MethodChannel.Result) {
+        destroy(ad)
+        ad.ad.destroy()
 
         result.success()
     }

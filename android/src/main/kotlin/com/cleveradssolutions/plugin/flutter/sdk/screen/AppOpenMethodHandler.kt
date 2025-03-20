@@ -1,7 +1,7 @@
 package com.cleveradssolutions.plugin.flutter.sdk.screen
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
-import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.base.AdMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
 import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
@@ -16,33 +16,34 @@ private const val CHANNEL_NAME = "cleveradssolutions/app_open"
 class AppOpenMethodHandler(
     binding: FlutterPlugin.FlutterPluginBinding,
     private val contextService: CASFlutterContext,
-    private val adContentInfoHandler: AdContentInfoHandler
-) : MappedMethodHandler<CASAppOpen>(binding, CHANNEL_NAME) {
+    contentInfoHandler: AdContentInfoHandler
+) : AdMethodHandler<CASAppOpen>(binding, CHANNEL_NAME, contentInfoHandler) {
 
-    override fun initInstance(id: String): CASAppOpen {
+    override fun initInstance(id: String): Ad<CASAppOpen> {
         val context = contextService.getContext()
         val appOpen = CASAppOpen(context, id)
-        appOpen.contentCallback = ScreenAdContentCallbackHandler(this, id, adContentInfoHandler)
-        appOpen.onImpressionListener = OnAdImpressionListenerHandler(this, id)
-        return appOpen
+        val contentInfoId = "app_open_$id"
+        appOpen.contentCallback = ScreenAdContentCallbackHandler(this, id, contentInfoId)
+        appOpen.onImpressionListener = OnAdImpressionListenerHandler(this, id, contentInfoId)
+        return Ad(appOpen, id, contentInfoId)
     }
 
     override fun onMethodCall(
-        id: String,
-        instance: CASAppOpen,
+        instance: Ad<CASAppOpen>,
         call: MethodCall,
         result: MethodChannel.Result
     ) {
         when (call.method) {
-            "isAutoloadEnabled" -> isAutoloadEnabled(instance, result)
-            "setAutoloadEnabled" -> setAutoloadEnabled(instance, call, result)
-            "isAutoshowEnabled" -> isAutoshowEnabled(instance, result)
-            "setAutoshowEnabled" -> setAutoshowEnabled(instance, call, result)
-            "isLoaded" -> isLoaded(instance, result)
-            "load" -> load(instance, result)
-            "show" -> show(instance, result)
-            "destroy" -> destroy(id, instance, result)
-            else -> super.onMethodCall(id, instance, call, result)
+            "isAutoloadEnabled" -> isAutoloadEnabled(instance.ad, result)
+            "setAutoloadEnabled" -> setAutoloadEnabled(instance.ad, call, result)
+            "isAutoshowEnabled" -> isAutoshowEnabled(instance.ad, result)
+            "setAutoshowEnabled" -> setAutoshowEnabled(instance.ad, call, result)
+            "isLoaded" -> isLoaded(instance.ad, result)
+            "getContentInfo" -> getContentInfo(instance.contentInfoId, result)
+            "load" -> load(instance.ad, result)
+            "show" -> show(instance.ad, result)
+            "destroy" -> destroy(instance, result)
+            else -> super.onMethodCall(instance, call, result)
         }
     }
 
@@ -82,6 +83,10 @@ class AppOpenMethodHandler(
         result.success(appOpen.isLoaded)
     }
 
+    private fun getContentInfo(contentInfoId: String, result: MethodChannel.Result) {
+        result.success(contentInfoId)
+    }
+
     private fun load(appOpen: CASAppOpen, result: MethodChannel.Result) {
         appOpen.load(contextService.getContext())
 
@@ -96,9 +101,9 @@ class AppOpenMethodHandler(
         result.success()
     }
 
-    private fun destroy(id: String, appOpen: CASAppOpen, result: MethodChannel.Result) {
-        appOpen.destroy()
-        adContentInfoHandler.remove(id)
+    private fun destroy(ad: Ad<CASAppOpen>, result: MethodChannel.Result) {
+        destroy(ad)
+        ad.ad.destroy()
 
         result.success()
     }

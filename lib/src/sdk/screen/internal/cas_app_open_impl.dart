@@ -2,14 +2,15 @@ import 'package:flutter/services.dart';
 
 import '../../../internal/ad_error_factory.dart';
 import '../../../internal/mapped_object.dart';
-import '../../ad_content_info.dart';
-import '../../internal/ad_content_info_impl.dart';
 import '../../internal/ad_format_factory.dart';
 import '../../on_ad_impression_listener.dart';
 import '../cas_app_open.dart';
 import '../screen_ad_content_callback.dart';
+import 'ad_mapped_object.dart';
 
-class CASAppOpenImpl extends MappedObject implements CASAppOpen {
+class CASAppOpenImpl extends MappedObject
+    with AdMappedObject
+    implements CASAppOpen {
   @override
   ScreenAdContentCallback? contentCallback;
 
@@ -18,14 +19,11 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
 
   CASAppOpenImpl(String casId) : super('cleveradssolutions/app_open', casId);
 
-  AdContentInfo? _contentInfo;
-  String? _contentInfoId;
-
   @override
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'onAdLoaded':
-        contentCallback?.onAdLoaded(_getContentInfo(call));
+        contentCallback?.onAdLoaded(getContentInfoFromCall(call));
         break;
       case 'onAdFailedToLoad':
         final arguments = call.arguments;
@@ -34,7 +32,7 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
             AdErrorFactory.fromArguments(arguments));
         break;
       case 'onAdShowed':
-        contentCallback?.onAdShowed(_getContentInfo(call));
+        contentCallback?.onAdShowed(getContentInfoFromCall(call));
         break;
       case 'onAdFailedToShow':
         final arguments = call.arguments;
@@ -43,14 +41,14 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
             AdErrorFactory.fromArguments(arguments));
         break;
       case 'onAdClicked':
-        contentCallback?.onAdClicked(_getContentInfo(call));
+        contentCallback?.onAdClicked(getContentInfoFromCall(call));
         break;
       case 'onAdDismissed':
-        contentCallback?.onAdDismissed(_getContentInfo(call));
+        contentCallback?.onAdDismissed(getContentInfoFromCall(call));
         break;
 
       case 'onAdImpression':
-        impressionListener?.onAdImpression(_getContentInfo(call));
+        impressionListener?.onAdImpression(getContentInfoFromCall(call));
         break;
     }
   }
@@ -81,11 +79,6 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
   }
 
   @override
-  Future<AdContentInfo?> getContentInfo() async {
-    return _contentInfo;
-  }
-
-  @override
   Future<void> load() {
     return invokeMethod('load');
   }
@@ -97,19 +90,9 @@ class CASAppOpenImpl extends MappedObject implements CASAppOpen {
 
   @override
   Future<void> destroy() {
+    destroy();
     contentCallback = null;
     impressionListener = null;
-    _contentInfo = null;
-    _contentInfoId = null;
     return invokeMethod('destroy');
-  }
-
-  AdContentInfo _getContentInfo(MethodCall call) {
-    final String id = call.arguments['contentInfoId'] ?? '';
-    if (id != _contentInfoId) {
-      _contentInfo = AdContentInfoImpl(id);
-      _contentInfoId = id;
-    }
-    return _contentInfo!;
   }
 }

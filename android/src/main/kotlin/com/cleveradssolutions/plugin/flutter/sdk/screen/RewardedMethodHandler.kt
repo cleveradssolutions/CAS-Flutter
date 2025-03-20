@@ -1,7 +1,7 @@
 package com.cleveradssolutions.plugin.flutter.sdk.screen
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
-import com.cleveradssolutions.plugin.flutter.bridge.base.MappedMethodHandler
+import com.cleveradssolutions.plugin.flutter.bridge.base.AdMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
 import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
@@ -16,40 +16,41 @@ private const val CHANNEL_NAME = "cleveradssolutions/rewarded"
 class RewardedMethodHandler(
     binding: FlutterPlugin.FlutterPluginBinding,
     private val contextService: CASFlutterContext,
-    private val adContentInfoHandler: AdContentInfoHandler
-) : MappedMethodHandler<CASRewarded>(binding, CHANNEL_NAME) {
+    contentInfoHandler: AdContentInfoHandler
+) : AdMethodHandler<CASRewarded>(binding, CHANNEL_NAME, contentInfoHandler) {
 
     private lateinit var onRewardEarnedListener: OnRewardEarnedListenerHandler
 
-    override fun initInstance(id: String): CASRewarded {
+    override fun initInstance(id: String): Ad<CASRewarded> {
         val context = contextService.getContext()
         val rewarded = CASRewarded(context, id)
-        rewarded.contentCallback = ScreenAdContentCallbackHandler(this, id, adContentInfoHandler)
-        rewarded.onImpressionListener = OnAdImpressionListenerHandler(this, id)
-        onRewardEarnedListener = OnRewardEarnedListenerHandler(this, id)
-        return rewarded
+        val contentInfoId = "rewarded_$id"
+        rewarded.contentCallback = ScreenAdContentCallbackHandler(this, id, contentInfoId)
+        rewarded.onImpressionListener = OnAdImpressionListenerHandler(this, id, contentInfoId)
+        onRewardEarnedListener = OnRewardEarnedListenerHandler(this, id, contentInfoId)
+        return Ad(rewarded, id, contentInfoId)
     }
 
     override fun onMethodCall(
-        id: String,
-        instance: CASRewarded,
+        instance: Ad<CASRewarded>,
         call: MethodCall,
         result: MethodChannel.Result
     ) {
         when (call.method) {
-            "isAutoloadEnabled" -> isAutoloadEnabled(instance, result)
-            "setAutoloadEnabled" -> setAutoloadEnabled(instance, call, result)
+            "isAutoloadEnabled" -> isAutoloadEnabled(instance.ad, result)
+            "setAutoloadEnabled" -> setAutoloadEnabled(instance.ad, call, result)
             "isExtraFillInterstitialAdEnabled" ->
-                isExtraFillInterstitialAdEnabled(instance, result)
+                isExtraFillInterstitialAdEnabled(instance.ad, result)
 
             "setExtraFillInterstitialAdEnabled" ->
-                setExtraFillInterstitialAdEnabled(instance, call, result)
+                setExtraFillInterstitialAdEnabled(instance.ad, call, result)
 
-            "isLoaded" -> isLoaded(instance, result)
-            "load" -> load(instance, result)
-            "show" -> show(instance, result)
+            "isLoaded" -> isLoaded(instance.ad, result)
+            "getContentInfo" -> getContentInfo(instance.contentInfoId, result)
+            "load" -> load(instance.ad, result)
+            "show" -> show(instance.ad, result)
             "destroy" -> destroy(instance, result)
-            else -> super.onMethodCall(id, instance, call, result)
+            else -> super.onMethodCall(instance, call, result)
         }
     }
 
@@ -92,6 +93,10 @@ class RewardedMethodHandler(
         result.success(rewarded.isLoaded)
     }
 
+    private fun getContentInfo(contentInfoId: String, result: MethodChannel.Result) {
+        result.success(contentInfoId)
+    }
+
     private fun load(rewarded: CASRewarded, result: MethodChannel.Result) {
         rewarded.load(contextService.getContext())
 
@@ -106,8 +111,9 @@ class RewardedMethodHandler(
         result.success()
     }
 
-    private fun destroy(rewarded: CASRewarded, result: MethodChannel.Result) {
-        rewarded.destroy()
+    private fun destroy(ad: Ad<CASRewarded>, result: MethodChannel.Result) {
+        destroy(ad)
+        ad.ad.destroy()
 
         result.success()
     }
