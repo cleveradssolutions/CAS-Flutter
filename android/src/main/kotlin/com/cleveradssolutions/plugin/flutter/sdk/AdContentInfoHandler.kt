@@ -18,7 +18,7 @@ class AdContentInfoHandler(binding: FlutterPluginBinding) :
     ) {
         val value = with(instance) {
             when (call.method) {
-                "getFormat" -> format
+                "getFormat" -> format.value
                 "getSourceName" -> sourceName
                 "getSourceId" -> sourceId
                 "getSourceUnitId" -> sourceUnitId

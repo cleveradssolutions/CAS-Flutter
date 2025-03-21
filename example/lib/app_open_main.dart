@@ -121,9 +121,9 @@ class _SplashScreenState extends State<SplashScreen> {
         _openNextScreen();
       },
       onAdShowed: (ad) async =>
-          logDebug('App open ad shown: ${await ad.getSourceName()}'),
+          logDebug('App open ad showed: ${await ad.getSourceName()}'),
       onAdFailedToShow: (_, error) {
-        logDebug('App open ad show failed: $error');
+        logDebug('App open ad failed to show: $error');
 
         _isVisibleAppOpenAd = false;
         _openNextScreen();
@@ -139,7 +139,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
     appOpenAd.impressionListener = OnAdImpressionListener(
       onAdImpression: (ad) async =>
-          logDebug('App open ad make impression: ${await ad.getSourceName()}'),
+          logDebug('App open ad impression: ${await ad.getSourceName()}'),
     );
 
     // Load the Ad

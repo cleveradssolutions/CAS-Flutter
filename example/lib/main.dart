@@ -2,6 +2,8 @@ import 'package:clever_ads_solutions/clever_ads_solutions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+const String _casId = 'demo';
+
 void main() {
   runApp(const MyApp());
 }
@@ -24,13 +26,15 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    implements AdLoadCallback, OnDismissListener {
+class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
   final GlobalKey<BannerWidgetState> _bannerKey = GlobalKey();
-  MediationManager? _manager;
 
+  CASInterstitial? _interstitial;
   bool _isInterstitialReady = false;
+
+  CASRewarded? _rewarded;
   bool _isRewardedReady = false;
+
   String? _sdkVersion;
 
   @override
@@ -69,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   ElevatedButton(
                     child: const Text('Load next ad on upper widget'),
-                    onPressed: () => _bannerKey.currentState?.loadNextAd(),
+                    onPressed: () => _bannerKey.currentState?.load(),
                   ),
                   BannerWidget(
                     size: AdSize.leaderboard,
@@ -113,12 +117,10 @@ class _HomeScreenState extends State<HomeScreen>
     // CAS.settings.setLoadingMode(LoadingManagerMode.manual);
 
     // Initialize SDK
-    _manager = CAS
+    CAS
         .buildManager()
-        .withCasId('com.FailGames.RusCarsCrash')
+        .withCasId(_casId)
         .withTestMode(true)
-        .withMediationExtras("testMediationData",
-            "{\"admob_app_id\":\"ca-app-pub-3940256099942544~3347511713\",\"admob_app_open_ad\":\"ca-app-pub-3940256099942544\\/9257395921\",\"applovin_app_id\":\"TxhDiMQVbncc9h4M1QzqCMODZz7gMzTwuF8bbT6CKipTPuqQJoFV8dihbrNzpxthA0ImTOyt6mLWeAxyyBS5q9\",\"providers\":[{\"net\":\"Vungle\",\"label\":\"Bid\",\"lvl\":0,\"settings\":\"{\\\"ApplicationID\\\":\\\"6694f35c4d6765df32fed8c4\\\",\\\"AccountID\\\":\\\"5c657afed9e6e60012bab5d9\\\",\\\"banner_rtb\\\":\\\"B_BID-4817686\\\",\\\"banner_rtbMREC\\\":\\\"B_MREC_BID-8528832\\\",\\\"inter_rtb\\\":\\\"I_BID-5522832\\\",\\\"reward_rtb\\\":\\\"V_BID-8760313\\\",\\\"appopen_rtb\\\":\\\"O_BID-0247338\\\",\\\"native_rtb\\\":\\\"N_BID-3340641\\\"}\"}],\"bEcpm\":[0.01],\"iEcpm\":[0.01],\"rEcpm\":[0.01],\"oEcpm\":[0.01],\"nEcpm\":[0.01]}\n")
         .withAdTypes(AdTypeFlags.banner |
             AdTypeFlags.interstitial |
             AdTypeFlags.rewarded)
@@ -137,7 +139,17 @@ class _HomeScreenState extends State<HomeScreen>
     }
     logDebug('Ad manager initialized');
 
-    _manager?.setAdLoadCallback(this);
+    final interstitial = CASInterstitial.create(_casId);
+    interstitial.contentCallback = ContentCallback('Interstitial', _onAdLoaded);
+    interstitial.impressionListener = ImpressionListener('Interstitial');
+    interstitial.load();
+    _interstitial = interstitial;
+
+    final rewarded = CASRewarded.create(_casId);
+    rewarded.contentCallback = ContentCallback('Rewarded', _onAdLoaded);
+    rewarded.impressionListener = ImpressionListener('Rewarded');
+    rewarded.load();
+    _rewarded = rewarded;
 
     final String sdkVersion = await CAS.getSDKVersion();
     setState(() {
@@ -150,67 +162,54 @@ class _HomeScreenState extends State<HomeScreen>
     logDebug('Consent flow dismissed: $status');
   }
 
-  @override
-  void onAdLoaded(AdType adType) {
-    if (adType == AdType.Interstitial) {
-      setState(() {
+  void _onAdLoaded(AdFormat adFormat) {
+    setState(() {
+      if (adFormat == AdFormat.interstitial) {
         _isInterstitialReady = true;
-      });
-    } else if (adType == AdType.Rewarded) {
-      setState(() {
+      } else if (adFormat == AdFormat.rewarded) {
         _isRewardedReady = true;
-      });
-    }
-  }
-
-  @override
-  void onAdFailedToLoad(AdType adType, String? error) {
-    logDebug('Ad ${adType.name} failed to load: $error');
+      }
+    });
   }
 
   void _showInterstitial() {
-    _manager?.showInterstitial(AdListener('Interstitial'));
+    _interstitial?.show();
   }
 
   void _showRewarded() {
-    _manager?.showRewarded(AdListener('Rewarded'));
+    _rewarded?.show(OnRewardEarnedListener(onUserEarnedReward: (ad) async {
+      logDebug('Rewarded ad earned reward: ${await ad.getSourceName()}');
+    }));
   }
 }
 
-class AdListener extends AdCallback {
-  final String? _name;
+class ContentCallback extends ScreenAdContentCallback {
+  ContentCallback(String name, void Function(AdFormat) onAdLoaded)
+      : super(
+          onAdLoaded: (ad) async {
+            onAdLoaded(await ad.getFormat());
 
-  AdListener(this._name);
+            logDebug('$name ad loaded: ${await ad.getSourceName()}');
+          },
+          onAdFailedToLoad: (_, error) =>
+              logDebug('$name ad failed to load: $error'),
+          onAdShowed: (ad) async =>
+              logDebug('$name ad showed: ${await ad.getSourceName()}'),
+          onAdFailedToShow: (_, error) =>
+              logDebug('$name ad failed to show: $error'),
+          onAdClicked: (ad) async =>
+              logDebug('$name ad clicked: ${await ad.getSourceName()}'),
+          onAdDismissed: (ad) async =>
+              logDebug('$name ad dismissed: ${await ad.getSourceName()}'),
+        );
+}
 
-  @override
-  void onClicked() {
-    logDebug('$_name ad was pressed!');
-  }
-
-  @override
-  void onClosed() {
-    logDebug('$_name ad was closed!');
-  }
-
-  @override
-  void onComplete() {
-    logDebug('$_name ad was complete!');
-  }
-
-  @override
-  void onImpression(AdImpression? adImpression) {
-    logDebug('$_name ad did impression: $adImpression!');
-  }
-
-  @override
-  void onShowFailed(String? message) {
-    logDebug('$_name ad failed to show: $message!');
-  }
-
-  @override
-  void onShown() {
-    logDebug('$_name ad shown!');
-  }
+class ImpressionListener extends OnAdImpressionListener {
+  ImpressionListener(String name)
+      : super(
+          onAdImpression: (ad) async =>
+              logDebug('$name ad impression: ${await ad.getSourceName()}'),
+        );
 }
 
 class BannerListener extends AdViewListener {
@@ -220,17 +219,17 @@ class BannerListener extends AdViewListener {
 
   @override
   void onAdViewPresented() {
-    logDebug('Banner $_name ad was presented!');
+    logDebug('Banner $_name ad presented!');
   }
 
   @override
   void onClicked() {
-    logDebug('Banner $_name ad was pressed!');
+    logDebug('Banner $_name ad clicked!');
   }
 
   @override
   void onFailed(String? message) {
-    logDebug('Banner $_name error! $message');
+    logDebug('Banner $_name failed! $message');
   }
 
   @override
@@ -240,7 +239,7 @@ class BannerListener extends AdViewListener {
 
   @override
   void onLoaded() {
-    logDebug('Banner $_name ad was loaded!');
+    logDebug('Banner $_name ad loaded!');
   }
 }
 
