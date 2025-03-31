@@ -4,7 +4,7 @@ import sys
 
 
 # To run, execute the command:
-# python version_updater.py CAS_VERSION=4.0.1-rc4 FLUTTER_PLUGIN_VERSION=0.8.0
+# python version_updater.py CAS_VERSION=4.0.1-rc5 FLUTTER_PLUGIN_VERSION=0.8.0
 
 def parse_args(args):
     cas_version = None
@@ -27,7 +27,7 @@ def update_version_in_file(file_path, version_prefix, new_version, file_descript
         content = file.read()
 
     content, count = re.subn(
-        rf"{re.escape(version_prefix)}(\d+\.\d+\.\d+)",
+        rf"{re.escape(version_prefix)}(\d+\.\d+\.\d+(?:-[\w\d]+)?)",
         f"{version_prefix}{new_version}",
         content,
         count=1

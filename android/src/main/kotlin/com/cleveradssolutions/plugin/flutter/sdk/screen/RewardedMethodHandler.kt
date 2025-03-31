@@ -2,7 +2,7 @@ package com.cleveradssolutions.plugin.flutter.sdk.screen
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.AdMethodHandler
-import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
+import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -16,10 +16,8 @@ private const val CHANNEL_NAME = "cleveradssolutions/rewarded"
 class RewardedMethodHandler(
     binding: FlutterPlugin.FlutterPluginBinding,
     private val contextService: CASFlutterContext,
-    contentInfoHandler: AdContentInfoHandler
+    contentInfoHandler: AdContentInfoMethodHandler
 ) : AdMethodHandler<CASRewarded>(binding, CHANNEL_NAME, contentInfoHandler) {
-
-    private lateinit var onRewardEarnedListener: OnRewardEarnedListenerHandler
 
     override fun initInstance(id: String): Ad<CASRewarded> {
         val context = contextService.getContext()
@@ -27,7 +25,6 @@ class RewardedMethodHandler(
         val contentInfoId = "rewarded_$id"
         rewarded.contentCallback = ScreenAdContentCallbackHandler(this, id, contentInfoId)
         rewarded.onImpressionListener = OnAdImpressionListenerHandler(this, id, contentInfoId)
-        onRewardEarnedListener = OnRewardEarnedListenerHandler(this, id, contentInfoId)
         return Ad(rewarded, id, contentInfoId)
     }
 
@@ -48,7 +45,7 @@ class RewardedMethodHandler(
             "isLoaded" -> isLoaded(instance.ad, result)
             "getContentInfo" -> getContentInfo(instance.contentInfoId, result)
             "load" -> load(instance.ad, result)
-            "show" -> show(instance.ad, result)
+            "show" -> show(instance, result)
             "destroy" -> destroy(instance, result)
             else -> super.onMethodCall(instance, call, result)
         }
@@ -66,8 +63,6 @@ class RewardedMethodHandler(
         call.getArgAndReturn<Boolean>("isEnabled", result) {
             rewarded.isAutoloadEnabled = it
         }
-
-        result.success()
     }
 
     private fun isExtraFillInterstitialAdEnabled(
@@ -85,8 +80,6 @@ class RewardedMethodHandler(
         call.getArgAndReturn<Boolean>("isEnabled", result) {
             rewarded.isExtraFillInterstitialAdEnabled = it
         }
-
-        result.success()
     }
 
     private fun isLoaded(rewarded: CASRewarded, result: MethodChannel.Result) {
@@ -103,10 +96,11 @@ class RewardedMethodHandler(
         result.success()
     }
 
-    private fun show(rewarded: CASRewarded, result: MethodChannel.Result) {
+    private fun show(ad: Ad<CASRewarded>, result: MethodChannel.Result) {
         val activity = contextService.getActivity()
 
-        rewarded.show(activity, onRewardEarnedListener)
+        val onRewardEarnedListener = OnRewardEarnedListenerHandler(this, ad.id, ad.contentInfoId)
+        ad.ad.show(activity, onRewardEarnedListener)
 
         result.success()
     }

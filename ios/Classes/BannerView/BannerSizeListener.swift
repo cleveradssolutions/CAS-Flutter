@@ -1,5 +1,5 @@
 //
-//  AppOpenMethodHandler.swift
+//  BannerSizeListener.swift
 //  clever_ads_solutions
 //
 //  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.

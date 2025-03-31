@@ -1,5 +1,5 @@
 //
-//  MethodHandler.swift
+//  MappedMethodHandler.swift
 //  clever_ads_solutions
 //
 //  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
@@ -7,11 +7,11 @@
 
 import Flutter
 
-protocol AnyMappedMethodHandler: AnyObject {
+protocol MappedMethodHandlerProtocol: AnyObject {
     func invokeMethod(_ id: String, _ methodName: String, _ args: [String: Any?]?)
 }
 
-class MappedMethodHandler<T>: MethodHandler, AnyMappedMethodHandler {
+class MappedMethodHandler<T>: MethodHandler, MappedMethodHandlerProtocol {
     private var map: [String: T] = [:]
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

@@ -2,7 +2,7 @@ package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
 import com.cleveradssolutions.plugin.flutter.bridge.base.AdMethodHandler
-import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
+import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoMethodHandler
 import com.cleveradssolutions.plugin.flutter.util.errorArgNull
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -16,7 +16,7 @@ private const val CHANNEL_NAME = "cleveradssolutions/banner"
 
 class BannerMethodHandler(
     binding: FlutterPluginBinding,
-    contentInfoHandler: AdContentInfoHandler
+    contentInfoHandler: AdContentInfoMethodHandler
 ) : AdMethodHandler<BannerView>(binding, CHANNEL_NAME, contentInfoHandler) {
 
     override fun onMethodCall(

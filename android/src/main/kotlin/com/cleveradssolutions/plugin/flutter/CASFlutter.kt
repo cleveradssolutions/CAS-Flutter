@@ -8,7 +8,7 @@ import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.TargetingOptionsMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.manager.ManagerBuilderMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.manager.MediationManagerMethodHandler
-import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
+import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.screen.AppOpenMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.screen.InterstitialMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.screen.RewardedMethodHandler
@@ -24,7 +24,7 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         val context = CASFlutterContext(binding.applicationContext)
         contextService = context
 
-        val contentInfoHandler = AdContentInfoHandler(binding)
+        val contentInfoHandler = AdContentInfoMethodHandler(binding)
         val consentFlowMethodHandler = ConsentFlowMethodHandler(binding, context)
         val mediationManagerMethodHandler = MediationManagerMethodHandler(binding, context)
 

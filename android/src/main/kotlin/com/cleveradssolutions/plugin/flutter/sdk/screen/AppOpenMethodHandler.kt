@@ -2,7 +2,7 @@ package com.cleveradssolutions.plugin.flutter.sdk.screen
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.base.AdMethodHandler
-import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
+import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoMethodHandler
 import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
 import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
 import com.cleveradssolutions.plugin.flutter.util.success
@@ -16,7 +16,7 @@ private const val CHANNEL_NAME = "cleveradssolutions/app_open"
 class AppOpenMethodHandler(
     binding: FlutterPlugin.FlutterPluginBinding,
     private val contextService: CASFlutterContext,
-    contentInfoHandler: AdContentInfoHandler
+    contentInfoHandler: AdContentInfoMethodHandler
 ) : AdMethodHandler<CASAppOpen>(binding, CHANNEL_NAME, contentInfoHandler) {
 
     override fun initInstance(id: String): Ad<CASAppOpen> {
@@ -59,8 +59,6 @@ class AppOpenMethodHandler(
         call.getArgAndReturn<Boolean>("isEnabled", result) {
             appOpen.isAutoloadEnabled = it
         }
-
-        result.success()
     }
 
     private fun isAutoshowEnabled(appOpen: CASAppOpen, result: MethodChannel.Result) {
@@ -75,8 +73,6 @@ class AppOpenMethodHandler(
         call.getArgAndReturn<Boolean>("isEnabled", result) {
             appOpen.isAutoshowEnabled = it
         }
-
-        result.success()
     }
 
     private fun isLoaded(appOpen: CASAppOpen, result: MethodChannel.Result) {

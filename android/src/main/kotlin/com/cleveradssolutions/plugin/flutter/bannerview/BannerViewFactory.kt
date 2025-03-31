@@ -1,7 +1,7 @@
 package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
-import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoHandler
+import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoMethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
@@ -9,7 +9,7 @@ import io.flutter.plugin.platform.PlatformViewFactory
 
 class BannerViewFactory(
     binding: FlutterPluginBinding,
-    contentInfoHandler: AdContentInfoHandler
+    contentInfoHandler: AdContentInfoMethodHandler
 ) : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
     private val methodHandler = BannerMethodHandler(binding, contentInfoHandler)

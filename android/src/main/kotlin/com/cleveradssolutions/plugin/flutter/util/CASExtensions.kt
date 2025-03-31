@@ -1,6 +1,5 @@
 package com.cleveradssolutions.plugin.flutter.util
 
-import com.cleveradssolutions.sdk.AdContentInfo
 import com.cleversolutions.ads.AdError
 import com.cleversolutions.ads.AdImpression
 

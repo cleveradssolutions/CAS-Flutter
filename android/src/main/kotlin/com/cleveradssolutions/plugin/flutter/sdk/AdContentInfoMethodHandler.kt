@@ -8,7 +8,7 @@ import io.flutter.plugin.common.MethodChannel
 
 private const val CHANNEL_NAME = "cleveradssolutions/ad_content_info"
 
-class AdContentInfoHandler(binding: FlutterPluginBinding) :
+class AdContentInfoMethodHandler(binding: FlutterPluginBinding) :
     MappedMethodHandler<AdContentInfo>(binding, CHANNEL_NAME) {
 
     override fun onMethodCall(

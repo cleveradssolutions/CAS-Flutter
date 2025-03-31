@@ -1,3 +1,10 @@
+//
+//  CASFlutter.swift
+//  clever_ads_solutions
+//
+//  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
+//
+
 import CleverAdsSolutions
 import Flutter
 
