@@ -8,7 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "cleveradssolutions/intertitial"
+private let channelName = "cleveradssolutions/interstitial"
 
 class InterstitialMethodHandler: AdMethodHandler<CASInterstitial> {
     private var contentDelegate: ScreenContentDelegateHandler?
@@ -56,7 +56,7 @@ class InterstitialMethodHandler: AdMethodHandler<CASInterstitial> {
             setMinInterval(instance.ad, call, result)
         case "restartInterval":
             restartInterval(instance.ad, result)
-        default: super.onMethodCall(call, result)
+        default: super.onMethodCall(instance, call, result)
         }
     }
 

@@ -50,7 +50,7 @@ class AppOpenMethodHandler: AdMethodHandler<CASAppOpen> {
             show(instance.ad, result)
         case "destroy":
             destroy(instance, result)
-        default: super.onMethodCall(call, result)
+        default: super.onMethodCall(instance, call, result)
         }
     }
 

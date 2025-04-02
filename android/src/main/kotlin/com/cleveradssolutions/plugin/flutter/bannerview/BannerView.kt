@@ -35,7 +35,7 @@ class BannerView(
             Log.e(LOG_TAG, "BannerView args is null")
         } else {
             (args["size"] as? Map<*, *>)?.let { size ->
-                banner.size = BannerMethodHandler.parseSize(context, size)
+                banner.size = BannerMethodHandler.getAdSize(context, size)
             }
 
             (args["isAutoloadEnabled"] as? Boolean)?.let {

@@ -61,7 +61,7 @@ class BannerMethodHandler(
         result: MethodChannel.Result
     ) {
         val map = call.arguments as? Map<*, *> ?: return result.errorArgNull(call, "arguments")
-        val adSize = parseSize(bannerView.context, map)
+        val adSize = getAdSize(bannerView.context, map)
         bannerView.size = adSize
 
         result.success()
@@ -121,7 +121,7 @@ class BannerMethodHandler(
     }
 
     companion object {
-        fun parseSize(context: Context, size: Map<*, *>): AdSize {
+        fun getAdSize(context: Context, size: Map<*, *>): AdSize {
             if (size["isAdaptive"] == true) {
                 return (size["maxWidthDpi"] as? Int).let {
                     if (it == null || it == 0) {
@@ -132,12 +132,15 @@ class BannerMethodHandler(
                 }
             } else {
                 val width = size["width"] as Int
-                val height = size["height"] as Int
                 val mode = size["mode"] as Int
 
                 return when (mode) {
                     2 -> AdSize.getAdaptiveBanner(context, width)
-                    3 -> AdSize.getInlineBanner(width, height)
+                    3 -> {
+                        val height = size["height"] as Int
+                        AdSize.getInlineBanner(width, height)
+                    }
+
                     else -> when (width) {
                         300 -> AdSize.MEDIUM_RECTANGLE
                         728 -> AdSize.LEADERBOARD

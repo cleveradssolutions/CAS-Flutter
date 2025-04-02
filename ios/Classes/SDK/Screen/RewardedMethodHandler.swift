@@ -13,7 +13,7 @@ private let channelName = "cleveradssolutions/rewarded"
 class RewardedMethodHandler: AdMethodHandler<CASRewarded> {
     private var contentDelegate: ScreenContentDelegateHandler?
     private var impressionDelegate: ImpressionDelegateHandler?
-    
+
     init(with registrar: FlutterPluginRegistrar, _ contentInfoMethodHandler: AdContentInfoMethodHandler) {
         super.init(with: registrar, on: channelName, contentInfoMethodHandler)
     }
@@ -50,7 +50,7 @@ class RewardedMethodHandler: AdMethodHandler<CASRewarded> {
             show(instance, result)
         case "destroy":
             destroy(instance, result)
-        default: super.onMethodCall(call, result)
+        default: super.onMethodCall(instance, call, result)
         }
     }
 
@@ -93,10 +93,10 @@ class RewardedMethodHandler: AdMethodHandler<CASRewarded> {
     }
 
     private func show(_ ad: AdMethodHandler<CASRewarded>.Ad, _ result: @escaping FlutterResult) {
-        let userDidEarnRewardHandler = UserDidEarnRewardDelegateHandler(self, ad.id, ad.contentInfoId)
+        let contentInfoId = ad.contentInfoId
         let id = ad.id
-        ad.ad.present(userDidEarnRewardHandler: { info in
-            invokeMethod("onUserEarnedReward", ["contentInfoId": contentInfoId])
+        ad.ad.present(userDidEarnRewardHandler: { [weak self] _ in
+            self?.invokeMethod("onUserEarnedReward", ["id": id, "contentInfoId": contentInfoId])
         })
 
         result(nil)

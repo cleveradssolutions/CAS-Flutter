@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 abstract class MappedObject with MappedObjectImpl {
-  MappedObject(String channelName, [String? id, bool isManagedByNative = false]) {
+  MappedObject(String channelName,
+      [String? id, bool isManagedByNative = false]) {
     init(channelName, id, isManagedByNative);
   }
 }
@@ -60,13 +61,13 @@ mixin MappedObjectImpl {
       final id = call.arguments['id'];
       if (id == null) {
         logDebug(
-            'Handle method call on channel \'${channel.name}\', error: id == null');
+            'Handle method \'${call.method}\' call on channel \'${channel.name}\', error: id == null');
         return;
       }
       final object = objects[id];
       if (object == null) {
         logDebug(
-            'Handle method call on channel \'${channel.name}\', error: object not found in map');
+            'Handle method \'${call.method}\' call on channel \'${channel.name}\', error: object not found in map');
         return;
       }
       return object.handleMethodCall(call);
