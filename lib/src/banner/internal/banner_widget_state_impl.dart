@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clever_ads_solutions/src/internal/log.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,11 +35,46 @@ class BannerWidgetStateImpl extends BannerWidgetState
 
     final size = widget.size;
     if (size is FutureAdSize) {
-      size.future.then((value) => setState(() {
-            _size = value;
-          }));
+      size.future.then((value) {
+        setState(() {
+          logDebug(
+              'BannerWidgetStateImpl -> initState() -> await future size, setState()');
+          _size = value;
+        });
+      });
     } else {
       _size = size;
+    }
+  }
+
+  @override
+  void didUpdateWidget(BannerWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // final size = widget.size;
+    // if (oldWidget.size != size) {
+    //   setSize(size);
+    // }
+    _updateSize();
+  }
+
+  void _updateSize() async {
+    logDebug(
+        'BannerWidgetStateImpl -> _updateSize()');
+    final oldSize = _size;
+    _size = null;
+
+    AdSize size = widget.size;
+    if (size is FutureAdSize) {
+      size = await size.future;
+    }
+    if (size != oldSize) {
+      await setSize(size);
+      setState(() {
+        logDebug(
+            'BannerWidgetStateImpl -> _updateSize() -> widget size changed, setState()');
+      });
+    } else {
+      _size = oldSize;
     }
   }
 
@@ -82,6 +118,8 @@ class BannerWidgetStateImpl extends BannerWidgetState
           final data = call.arguments;
           _width = data['width'] as double;
           _height = data['height'] as double;
+          logDebug(
+              'BannerWidgetStateImpl -> handleMethodCall() -> Set widget state with width $_width and height $_height, setState()');
         });
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -91,6 +129,13 @@ class BannerWidgetStateImpl extends BannerWidgetState
         return completer.future;
     }
   }
+
+  final GlobalKey _sizedBoxKey = GlobalKey();
+  final GlobalKey _androidViewKey = GlobalKey();
+  final GlobalKey _uiKitViewKey = GlobalKey();
+  final GlobalKey _placeholderKey = GlobalKey();
+
+  int _updates = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +158,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         platformWidget = AndroidView(
+          key: _androidViewKey,
           viewType: _viewType,
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
@@ -121,6 +167,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
         break;
       case TargetPlatform.iOS:
         platformWidget = UiKitView(
+          key: _uiKitViewKey,
           viewType: _viewType,
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
@@ -128,6 +175,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
         break;
       default:
         return SizedBox(
+          key: _placeholderKey,
           width: size.width.toDouble(),
           height: size.height.toDouble(),
           child: const Center(child: Text('Platform is not supported')),
@@ -147,11 +195,35 @@ class BannerWidgetStateImpl extends BannerWidgetState
       height = pixel;
     }
 
-    return SizedBox(
+    // змінюється розмір SizedBox, і в child стає неправильна позиція
+    final parent = SizedBox(
+      key: _sizedBoxKey,
       width: width,
       height: height,
       child: platformWidget,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      logDebug('>   >   >   >   >   >   >   >   >   >   >');
+      logDebug('Build[${++_updates}] widget with size $width $height');
+      _printWidgetInfo(_sizedBoxKey, "SizedBox");
+      _printWidgetInfo(_androidViewKey, "AndroidView");
+      _printWidgetInfo(_uiKitViewKey, "UiKitView");
+      _printWidgetInfo(_placeholderKey, "Placeholder");
+      logDebug('_   _   _   _   _   _   _   _   _   _   _');
+    });
+
+    return parent;
+  }
+
+  void _printWidgetInfo(GlobalKey key, String name) {
+    final context = key.currentContext;
+    if (context != null) {
+      final RenderBox renderBox = context.findRenderObject() as RenderBox;
+      final position = renderBox.localToGlobal(Offset.zero);
+      logDebug('$name position: (${position.dx}, ${position.dy})');
+      logDebug('$name size: ${renderBox.size}');
+    }
   }
 
   @override
@@ -201,7 +273,9 @@ class BannerWidgetStateImpl extends BannerWidgetState
   Future<void> load() {
     if (_sizeChanged) {
       _sizeChanged = false;
-      setState(() {});
+      setState(() {
+        logDebug('BannerWidgetStateImpl -> load() -> setState()');
+      });
     }
     return invokeMethod('load');
   }

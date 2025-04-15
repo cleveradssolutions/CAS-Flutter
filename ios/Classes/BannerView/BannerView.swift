@@ -11,12 +11,12 @@ import Flutter
 private let logTag = "[BannerView]"
 
 class BannerView: NSObject, FlutterPlatformView {
+    private let methodHandler: BannerMethodHandler
+
     let id: String
 
     let banner: CASBannerView
-    let frame: CGRect
     private let bannerCallback: BannerCallback
-    private let sizeListener: BannerSizeListener
 
     init(
         frame: CGRect,
@@ -24,13 +24,15 @@ class BannerView: NSObject, FlutterPlatformView {
         args: [String: Any?]?,
         methodHandler: BannerMethodHandler
     ) {
-        id = args?["id"] as? String ?? ""
-        let contentInfoId = "banner_$id"
+        self.methodHandler = methodHandler
 
-        self.frame = frame
-        banner = CASBannerView(casID: id, size: BannerMethodHandler.getAdSize(args, frame))
+        id = args?["id"] as? String ?? ""
+        let contentInfoId = "banner_\(id)"
+
+        let size = if let map = args?["size"] as? [String: Any?] { BannerMethodHandler.getAdSize(map, frame) } else { CASSize.banner }
+        banner = CASBannerView(casID: id, size: size)
         banner.tag = Int(viewId)
-        sizeListener = BannerSizeListener(banner, methodHandler, id)
+        let sizeListener = BannerSizeListener(banner, methodHandler, id)
         bannerCallback = BannerCallback(sizeListener, methodHandler, id)
         banner.delegate = bannerCallback
 
@@ -56,6 +58,7 @@ class BannerView: NSObject, FlutterPlatformView {
     }
 
     func dispose() {
+        _ = methodHandler.remove(id)
         banner.destroy()
     }
 }

@@ -45,11 +45,11 @@ class BannerMethodHandler: AdMethodHandler<BannerView> {
     }
 
     private func setSize(_ bannerView: BannerView, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        guard let map = call.arguments as? [String: Any] else {
+        guard let map = call.arguments as? [String: Any?] else {
             result(call.errorArgNil("arguments"))
             return
         }
-        let adSize = BannerMethodHandler.getAdSize(map, bannerView.frame)
+        let adSize = BannerMethodHandler.getAdSize(map, nil) // bannerView.frame)
         bannerView.banner.adSize = adSize
 
         result(nil)
@@ -100,33 +100,34 @@ class BannerMethodHandler: AdMethodHandler<BannerView> {
         result(nil)
     }
 
-    static func getAdSize(_ args: [String: Any?]?, _ frame: CGRect) -> CASSize {
-        if let size = args?["size"] as? [String: Any?] {
-            if size["isAdaptive"] as? Bool == true {
-                if let maxWidth = size["maxWidthDpi"] as? Int,
-                   maxWidth != 0 {
-                    return CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidth))
-                } else {
-                    return CASSize.getAdaptiveBanner(forMaxWidth: frame.width)
-                }
+    static func getAdSize(_ size: [String: Any?], _ frame: CGRect?) -> CASSize {
+        if size["isAdaptive"] as? Bool == true {
+            if let maxWidth = size["maxWidthDpi"] as? Int,
+               maxWidth != 0 {
+                return CASSize.getAdaptiveBanner(forMaxWidth: CGFloat(maxWidth))
             } else {
-                let width = size["width"] as? CGFloat ?? 0
-                let mode = size["mode"] as? CGFloat ?? 0
+                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                      let window = windowScene.windows.first(where: { $0.isKeyWindow }) else {
+                    return CASSize.banner
+                }
+                return CASSize.getAdaptiveBanner(inWindow: window)
+            }
+        } else {
+            let width = size["width"] as? CGFloat ?? 0
+            let mode = size["mode"] as? CGFloat ?? 0
 
-                switch mode {
-                case 2:
-                    return CASSize.getAdaptiveBanner(forMaxWidth: width)
-                case 3:
-                    let height = size["height"] as? CGFloat ?? 0
-                    return CASSize.getInlineBanner(width: width, maxHeight: height)
-                default: switch width {
-                    case 300: return CASSize.mediumRectangle
-                    case 728: return CASSize.leaderboard
-                    default: return CASSize.banner
-                    }
+            switch mode {
+            case 2:
+                return CASSize.getAdaptiveBanner(forMaxWidth: width)
+            case 3:
+                let height = size["height"] as? CGFloat ?? 0
+                return CASSize.getInlineBanner(width: width, maxHeight: height)
+            default: switch width {
+                case 300: return CASSize.mediumRectangle
+                case 728: return CASSize.leaderboard
+                default: return CASSize.banner
                 }
             }
         }
-        return CASSize.banner
     }
 }

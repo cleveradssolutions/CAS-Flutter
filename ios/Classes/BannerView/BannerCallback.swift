@@ -23,7 +23,7 @@ class BannerCallback: MappedCallback, CASBannerDelegate {
     }
 
     func bannerAdView(_ adView: CASBannerView, didFailWith error: CASError) {
-        invokeMethod("onAdViewFailed", ["error": error.message])
+        invokeMethod("onAdViewFailed", ["error": error.description])
 
         sizeListener.updateSize(0, 0)
     }

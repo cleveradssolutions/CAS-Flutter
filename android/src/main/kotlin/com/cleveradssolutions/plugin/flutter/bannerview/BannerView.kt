@@ -19,12 +19,12 @@ class BannerView(
     val id: String = args?.get("id") as? String ?: ""
 
     private val banner = CASBannerView(context, id)
-    private val sizeListener = BannerSizeListener(banner, methodHandler, id)
 
     init {
         val contentInfoId = "banner_$id"
 
         banner.id = viewId
+        val sizeListener = BannerSizeListener(banner, methodHandler, id)
         banner.adListener = BannerCallback(sizeListener, methodHandler, id)
         banner.onImpressionListener =
             OnAdImpressionListenerHandler(methodHandler, id, contentInfoId)

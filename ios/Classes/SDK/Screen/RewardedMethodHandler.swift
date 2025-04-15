@@ -65,12 +65,14 @@ class RewardedMethodHandler: AdMethodHandler<CASRewarded> {
     }
 
     private func isExtraFillInterstitialAdEnabled(_ rewarded: CASRewarded, _ result: @escaping FlutterResult) {
+        // TODO: Uncomment when the method becomes available
 //        result(rewarded.isExtraFillInterstitialAdEnabled)
 
         result(nil)
     }
 
     private func setExtraFillInterstitialAdEnabled(_ rewarded: CASRewarded, _ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        // TODO: Uncomment when the method becomes available
 //        call.getArgAndReturn("isEnabled", result) { isEnabled in
 //            rewarded.isExtraFillInterstitialAdEnabled = isEnabled
 //        }

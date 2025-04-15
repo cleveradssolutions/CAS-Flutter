@@ -2,7 +2,8 @@ import 'package:clever_ads_solutions/clever_ads_solutions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-const String _casId = 'demo';
+const String _casId = 'com.FailGames.RusCarsCrash';
+// const String _casId = 'demo';
 
 void main() {
   runApp(const MyApp());
@@ -68,18 +69,18 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
               child: Column(
                 children: [
                   BannerWidget(
-                    key: _bannerKey,
-                    listener: BannerListener('banner'),
+                    // key: _bannerKey,
+                    listener: BannerListener('Standard'),
                   ),
                   ElevatedButton(
                     child: const Text('Load next ad on upper widget'),
                     onPressed: () => _bannerKey.currentState?.load(),
                   ),
-                  BannerWidget(
-                    size: AdSize.leaderboard,
-                    refreshInterval: 20,
-                    listener: BannerListener('leaderboard'),
-                  ),
+                  // BannerWidget(
+                  //   size: AdSize.leaderboard,
+                  //   refreshInterval: 20,
+                  //   listener: BannerListener('Leaderboard'),
+                  // ),
                   ElevatedButton(
                     onPressed: _isInterstitialReady ? _showInterstitial : null,
                     child: const Text('Show interstitial'),
@@ -88,17 +89,20 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
                     onPressed: _isRewardedReady ? _showRewarded : null,
                     child: const Text('Show rewarded'),
                   ),
-                  BannerWidget(
-                    size: AdSize.mediumRectangle,
-                    refreshInterval: 60,
-                    listener: BannerListener('mediumRectangle'),
-                  ),
-                  LayoutBuilder(
-                    builder: (_, BoxConstraints constraints) => BannerWidget(
+                  // BannerWidget(
+                  //   size: AdSize.mediumRectangle,
+                  //   refreshInterval: 60,
+                  //   listener: BannerListener('MediumRectangle'),
+                  // ),
+                  LayoutBuilder(builder: (_, BoxConstraints constraints) {
+                    logDebug(
+                        'Build layout with size ${constraints.maxWidth}-${constraints.maxHeight}');
+                    return BannerWidget(
+                      key: _bannerKey,
                       size: AdSize.getAdaptiveBanner(constraints.maxWidth),
-                      listener: BannerListener('adaptive'),
-                    ),
-                  ),
+                      listener: BannerListener('Adaptive'),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -110,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
 
   void _initialize() {
     // Set Ads Settings
+    CAS.settings.setTestDeviceId('250B851807B25F2887D4A7A420C579DA');
     CAS.settings.setDebugMode(true);
     CAS.settings.setTaggedAudience(Audience.notChildren);
 
@@ -119,8 +124,10 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
     // Initialize SDK
     CAS
         .buildManager()
-        .withCasId(_casId)
+        .withCasId('com.FailGames.RusCarsCrash')
         .withTestMode(true)
+        .withMediationExtras("testMediationData",
+            "{\"admob_app_id\":\"ca-app-pub-3940256099942544~3347511713\",\"admob_app_open_ad\":\"ca-app-pub-3940256099942544\\/9257395921\",\"applovin_app_id\":\"TxhDiMQVbncc9h4M1QzqCMODZz7gMzTwuF8bbT6CKipTPuqQJoFV8dihbrNzpxthA0ImTOyt6mLWeAxyyBS5q9\",\"providers\":[{\"net\":\"Vungle\",\"label\":\"Bid\",\"lvl\":0,\"settings\":\"{\\\"ApplicationID\\\":\\\"6694f35c4d6765df32fed8c4\\\",\\\"AccountID\\\":\\\"5c657afed9e6e60012bab5d9\\\",\\\"banner_rtb\\\":\\\"B_BID-4817686\\\",\\\"banner_rtbMREC\\\":\\\"B_MREC_BID-8528832\\\",\\\"inter_rtb\\\":\\\"I_BID-5522832\\\",\\\"reward_rtb\\\":\\\"V_BID-8760313\\\",\\\"appopen_rtb\\\":\\\"O_BID-0247338\\\",\\\"native_rtb\\\":\\\"N_BID-3340641\\\"}\"}],\"bEcpm\":[0.01],\"iEcpm\":[0.01],\"rEcpm\":[0.01],\"oEcpm\":[0.01],\"nEcpm\":[0.01]}\n")
         .withAdTypes(AdTypeFlags.banner |
             AdTypeFlags.interstitial |
             AdTypeFlags.rewarded)
@@ -219,27 +226,27 @@ class BannerListener extends AdViewListener {
 
   @override
   void onAdViewPresented() {
-    logDebug('Banner $_name ad presented!');
+    logDebug('$_name banner ad presented!');
   }
 
   @override
   void onClicked() {
-    logDebug('Banner $_name ad clicked!');
+    logDebug('$_name banner ad clicked!');
   }
 
   @override
   void onFailed(String? message) {
-    logDebug('Banner $_name failed! $message');
+    logDebug('$_name banner failed! $message');
   }
 
   @override
   void onImpression(AdImpression? adImpression) {
-    logDebug('Banner $_name impression: $adImpression');
+    logDebug('$_name banner impression: $adImpression');
   }
 
   @override
   void onLoaded() {
-    logDebug('Banner $_name ad loaded!');
+    logDebug('$_name banner ad loaded!');
   }
 }
 
