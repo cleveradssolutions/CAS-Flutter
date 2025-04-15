@@ -109,6 +109,8 @@ class AdsSettingsImpl extends AdsSettings {
     return _channel.invokeMethod("setDebugMode", {"enable": isEnable});
   }
 
+  @Deprecated(
+      "This method is not working correctly on iOS, is no longer maintained, and should not be used")
   @override
   Future<void> addTestDeviceId(String deviceId) {
     return _channel.invokeMethod("addTestDeviceId", {"deviceId": deviceId});
@@ -117,13 +119,14 @@ class AdsSettingsImpl extends AdsSettings {
   @override
   Future<void> setTestDeviceId(String deviceId) {
     return _channel.invokeMethod("setTestDeviceIds", {
-      "deviceIds": {deviceId}
+      "deviceIds": [deviceId]
     });
   }
 
   @override
   Future<void> setTestDeviceIds(Set<String> deviceIds) {
-    return _channel.invokeMethod("setTestDeviceIds", {"deviceIds": deviceIds});
+    return _channel
+        .invokeMethod("setTestDeviceIds", {"deviceIds": deviceIds.toList()});
   }
 
   @override
