@@ -29,7 +29,7 @@ class AdsSettingsMethodHandler: MethodHandler {
         case "setMutedAdSounds": setMutedAdSounds(call, result)
         case "getDebugMode": getDebugMode(result)
         case "setDebugMode": setDebugMode(call, result)
-        case "addTestDeviceId": addTestDeviceId(call, result)
+        case "addTestDeviceId": setTestDeviceId(call, result)
         case "setTestDeviceId": setTestDeviceId(call, result)
         case "setTestDeviceIds": setTestDeviceIds(call, result)
         case "getTrialAdFreeInterval": getTrialAdFreeInterval(result)

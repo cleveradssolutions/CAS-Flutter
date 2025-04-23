@@ -23,6 +23,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
       _adListenerField ?? widget.adListener ?? widget.listener;
 
   AdSize? _size;
+  AdSize? _newSize;
   bool _sizeChanged = false;
 
   double _width = 0;
@@ -50,31 +51,46 @@ class BannerWidgetStateImpl extends BannerWidgetState
   @override
   void didUpdateWidget(BannerWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // final size = widget.size;
-    // if (oldWidget.size != size) {
-    //   setSize(size);
-    // }
     _updateSize();
+    // setSize(widget.size);
   }
 
   void _updateSize() async {
-    logDebug(
-        'BannerWidgetStateImpl -> _updateSize()');
-    final oldSize = _size;
-    _size = null;
-
     AdSize size = widget.size;
     if (size is FutureAdSize) {
       size = await size.future;
     }
-    if (size != oldSize) {
-      await setSize(size);
-      setState(() {
-        logDebug(
-            'BannerWidgetStateImpl -> _updateSize() -> widget size changed, setState()');
-      });
-    } else {
-      _size = oldSize;
+    if (size != _size) {
+      // return invokeMethod('setSize', _sizeToMap(size, widget.maxWidthDpi));
+
+      switch (defaultTargetPlatform) {
+        case TargetPlatform.iOS:
+          setState(() {
+            _newSize = size;
+            _sizeChanged = true;
+            _size = null;
+            logDebug(
+                'BannerWidgetStateImpl -> _updateSize() -> iOS -> setState() -> size null');
+          });
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_sizeChanged) {
+              setState(() {
+                _sizeChanged = false;
+                _size = _newSize;
+                logDebug(
+                    'BannerWidgetStateImpl -> _updateSize() -> iOS -> setState() -> new size');
+              });
+            }
+          });
+          break;
+        default:
+          setState(() {
+            _size = size;
+            logDebug(
+                'BannerWidgetStateImpl -> _updateSize() -> Common -> setState()');
+          });
+          invokeMethod('setSize', _sizeToMap(size, widget.maxWidthDpi));
+      }
     }
   }
 
@@ -82,6 +98,16 @@ class BannerWidgetStateImpl extends BannerWidgetState
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'onAdViewLoaded':
+        if (_sizeChanged) {
+          _sizeChanged = false;
+
+          setState(() {
+            _size = _newSize;
+            logDebug(
+                'BannerWidgetStateImpl -> onAdViewLoaded() -> setState() -> new size');
+          });
+        }
+
         _adListener?.onLoaded();
         break;
       case 'onAdViewFailed':
@@ -134,8 +160,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
   final GlobalKey _androidViewKey = GlobalKey();
   final GlobalKey _uiKitViewKey = GlobalKey();
   final GlobalKey _placeholderKey = GlobalKey();
-
-  int _updates = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -195,35 +219,12 @@ class BannerWidgetStateImpl extends BannerWidgetState
       height = pixel;
     }
 
-    // змінюється розмір SizedBox, і в child стає неправильна позиція
-    final parent = SizedBox(
+    return SizedBox(
       key: _sizedBoxKey,
       width: width,
       height: height,
       child: platformWidget,
     );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      logDebug('>   >   >   >   >   >   >   >   >   >   >');
-      logDebug('Build[${++_updates}] widget with size $width $height');
-      _printWidgetInfo(_sizedBoxKey, "SizedBox");
-      _printWidgetInfo(_androidViewKey, "AndroidView");
-      _printWidgetInfo(_uiKitViewKey, "UiKitView");
-      _printWidgetInfo(_placeholderKey, "Placeholder");
-      logDebug('_   _   _   _   _   _   _   _   _   _   _');
-    });
-
-    return parent;
-  }
-
-  void _printWidgetInfo(GlobalKey key, String name) {
-    final context = key.currentContext;
-    if (context != null) {
-      final RenderBox renderBox = context.findRenderObject() as RenderBox;
-      final position = renderBox.localToGlobal(Offset.zero);
-      logDebug('$name position: (${position.dx}, ${position.dy})');
-      logDebug('$name size: ${renderBox.size}');
-    }
   }
 
   @override
@@ -247,9 +248,11 @@ class BannerWidgetStateImpl extends BannerWidgetState
     if (size is FutureAdSize) {
       size = await size.future;
     }
-    _size = size;
-    _sizeChanged = true;
-    return invokeMethod('setSize', _sizeToMap(size, widget.maxWidthDpi));
+    if (size != _size) {
+      _newSize = size;
+      _sizeChanged = true;
+      return invokeMethod('setSize', _sizeToMap(size, widget.maxWidthDpi));
+    }
   }
 
   @override
@@ -271,12 +274,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
 
   @override
   Future<void> load() {
-    if (_sizeChanged) {
-      _sizeChanged = false;
-      setState(() {
-        logDebug('BannerWidgetStateImpl -> load() -> setState()');
-      });
-    }
     return invokeMethod('load');
   }
 
@@ -301,6 +298,33 @@ class BannerWidgetStateImpl extends BannerWidgetState
     destroy();
     super.dispose();
     return invokeMethod('dispose');
+  }
+
+  void _updateWidgetSize() {
+    if (_sizeChanged) {
+      _sizeChanged = false;
+
+      // switch (defaultTargetPlatform) {
+      //   case TargetPlatform.iOS:
+      // setState(() {
+      //   _size = null;
+      //   logDebug(
+      //       'BannerWidgetStateImpl -> _updateWidgetSize() -> iOS -> setState() -> size null');
+      // });
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _size = _newSize;
+        logDebug(
+            'BannerWidgetStateImpl -> _updateWidgetSize() -> iOS -> setState() -> new size');
+      });
+      // });
+      // break;
+      // default:
+      //   setState(() {
+      //     _size = _newSize;
+      //     logDebug('BannerWidgetStateImpl -> _updateWidgetSize() -> Common -> setState()');
+      //   });
+    }
   }
 
   Map<String, dynamic> _sizeToMap(AdSize size, int? maxWidthDpi) {

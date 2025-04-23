@@ -68,10 +68,10 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
               child: Column(
                 children: [
-                  BannerWidget(
+                  // BannerWidget(
                     // key: _bannerKey,
-                    listener: BannerListener('Standard'),
-                  ),
+                    // listener: BannerListener('Standard'),
+                  // ),
                   ElevatedButton(
                     child: const Text('Load next ad on upper widget'),
                     onPressed: () => _bannerKey.currentState?.load(),
@@ -100,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
                     return BannerWidget(
                       key: _bannerKey,
                       size: AdSize.getAdaptiveBanner(constraints.maxWidth),
+                      refreshInterval: 120,
                       listener: BannerListener('Adaptive'),
                     );
                   }),
