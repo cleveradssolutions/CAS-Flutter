@@ -30,7 +30,7 @@ internal class InterstitialListener(
     }
 
     override fun onShowFailed(message: String) {
-        handler.invokeMethod("OnInterstitialAdFailedToShow", mapOf("message" to message))
+        handler.invokeMethod("OnInterstitialAdFailedToShow", message))
     }
 
     override fun onClicked() {

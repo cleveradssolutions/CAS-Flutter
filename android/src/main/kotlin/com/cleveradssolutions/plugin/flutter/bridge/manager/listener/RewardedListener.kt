@@ -31,7 +31,7 @@ internal class RewardedListener(
     }
 
     override fun onShowFailed(message: String) {
-        handler.invokeMethod("OnRewardedAdFailedToShow", mapOf("message" to message))
+        handler.invokeMethod("OnRewardedAdFailedToShow", message)
     }
 
     override fun onClicked() {
