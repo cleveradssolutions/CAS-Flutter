@@ -1,4 +1,4 @@
-import 'package:clever_ads_solutions/clever_ads_solutions.dart';
+import '../ad_error.dart';
 
 class AdErrorFactory {
   static AdError fromArguments(dynamic arguments) {

@@ -1,38 +1,16 @@
 import '../mediation_manager.dart';
-import 'app_open_ad_listener.dart';
-import 'internal/cas_app_open_impl.dart';
-import 'load_ad_callback.dart';
+import '../sdk/screen/cas_app_open.dart' as New;
+import '../sdk/screen/internal/cas_app_open_impl.dart';
 
 @Deprecated('Use sdk/screen/cas_app_open.dart instead')
 abstract class CASAppOpen {
-  static CASAppOpen create(String managerId) {
+  static New.CASAppOpen create(String managerId) {
     return CASAppOpenImpl(managerId);
   }
 
-  static Future<CASAppOpen> createFromManager(MediationManager manager) async {
+  static Future<New.CASAppOpen> createFromManager(
+      MediationManager manager) async {
     final managerId = await manager.getManagerID();
     return CASAppOpenImpl(managerId);
   }
-
-  /// Returns the ad manager ID.
-  abstract String managerId;
-
-  /// Registers a callback to be invoked when ads show and dismiss full screen content.
-  abstract AppOpenAdListener? contentCallback;
-
-  /// Loads an AppOpenAd.
-  ///
-  /// Note: You must keep a strong link throughout the ad's lifecycle.
-  ///
-  /// @param context The context.
-  /// @param callback An object that handles events for loading an app open ad.
-  Future<void> load(LoadAdCallback? callback);
-
-  /// Indicates whether the ad is currently loaded and ready to be shown.
-  Future<bool> isLoaded();
-
-  /// Shows the AppOpenAd.
-  ///
-  /// @param activity The activity from which the AppOpenAd is shown from.
-  Future<void> show();
 }
