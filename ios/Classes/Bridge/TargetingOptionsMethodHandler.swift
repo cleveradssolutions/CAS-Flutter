@@ -41,8 +41,12 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setGender(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturn("gender", result) { gender in
-            CAS.targetingOptions.gender = gender
+        guard let index: Int = call.getArgAndCheckNil("gender", result) else { return }
+        if let value = Gender(rawValue: index) {
+            CAS.targetingOptions.gender = value
+            result(nil)
+        } else {
+            result(call.errorInvalidArg("gender"))
         }
     }
 

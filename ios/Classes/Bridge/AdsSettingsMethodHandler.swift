@@ -52,10 +52,12 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setTaggedAudience(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturn("taggedAudience", result) { index in
-            if let value = CASAudience(rawValue: index) {
-                CAS.settings.taggedAudience = value
-            }
+        guard let index: Int = call.getArgAndCheckNil("taggedAudience", result) else { return }
+        if let value = CASAudience(rawValue: index) {
+            CAS.settings.taggedAudience = value
+            result(nil)
+        } else {
+            result(call.errorInvalidArg("taggedAudience"))
         }
     }
 
@@ -64,10 +66,12 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setUserConsent(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturn("userConsent", result) { index in
-            if let value = CASConsentStatus(rawValue: index) {
-                CAS.settings.userConsent = value
-            }
+        guard let index: Int = call.getArgAndCheckNil("userConsent", result) else { return }
+        if let value = CASConsentStatus(rawValue: index) {
+            CAS.settings.userConsent = value
+            result(nil)
+        } else {
+            result(call.errorInvalidArg("userConsent"))
         }
     }
 
@@ -88,10 +92,12 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setCCPAStatus(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturn("ccpa", result) { index in
-            if let value = CASCCPAStatus(rawValue: index) {
-                CAS.settings.userCCPAStatus = value
-            }
+        guard let index: Int = call.getArgAndCheckNil("ccpa", result) else { return }
+        if let value = CASCCPAStatus(rawValue: index) {
+            CAS.settings.userCCPAStatus = value
+            result(nil)
+        } else {
+            result(call.errorInvalidArg("ccpa"))
         }
     }
 
@@ -177,8 +183,12 @@ class AdsSettingsMethodHandler: MethodHandler {
     }
 
     private func setLoadingMode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturn("loadingMode", result) { loadingMode in
-            CAS.settings.setLoading(mode: loadingMode)
+        guard let index: Int = call.getArgAndCheckNil("loadingMode", result) else { return }
+        if let value = CASLoadingManagerMode(rawValue: index) {
+            CAS.settings.setLoading(mode: value)
+            result(nil)
+        } else {
+            result(call.errorInvalidArg("loadingMode"))
         }
     }
 }
