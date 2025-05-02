@@ -16,7 +16,7 @@ class BannerView(
     private val methodHandler: BannerMethodHandler
 ) : PlatformView {
 
-    val id: String = args?.get("id") as? String ?: ""
+    private val id: String = args?.get("id") as? String ?: ""
 
     private val banner = CASBannerView(context, id)
 

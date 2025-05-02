@@ -37,7 +37,7 @@ class ConsentFlowMethodHandler: MappedMethodHandler<CASConsentFlow> {
     }
 
     private func disable(_ consentFlow: CASConsentFlow, _ result: @escaping FlutterResult) {
-        consentFlow.requestGDPR = false
+        consentFlow.isEnabled = false
         result(nil)
     }
 

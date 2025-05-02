@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:clever_ads_solutions/src/internal/log.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,8 +37,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
     if (size is FutureAdSize) {
       size.future.then((value) {
         setState(() {
-          logDebug(
-              'BannerWidgetStateImpl -> initState() -> await future size, setState()');
           _size = value;
         });
       });
@@ -52,7 +49,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
   void didUpdateWidget(BannerWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateSize();
-    // setSize(widget.size);
   }
 
   void _updateSize() async {
@@ -61,24 +57,18 @@ class BannerWidgetStateImpl extends BannerWidgetState
       size = await size.future;
     }
     if (size != _size) {
-      // return invokeMethod('setSize', _sizeToMap(size, widget.maxWidthDpi));
-
       switch (defaultTargetPlatform) {
         case TargetPlatform.iOS:
           setState(() {
             _newSize = size;
             _sizeChanged = true;
             _size = null;
-            logDebug(
-                'BannerWidgetStateImpl -> _updateSize() -> iOS -> setState() -> size null');
           });
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (_sizeChanged) {
               setState(() {
                 _sizeChanged = false;
                 _size = _newSize;
-                logDebug(
-                    'BannerWidgetStateImpl -> _updateSize() -> iOS -> setState() -> new size');
               });
             }
           });
@@ -86,8 +76,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
         default:
           setState(() {
             _size = size;
-            logDebug(
-                'BannerWidgetStateImpl -> _updateSize() -> Common -> setState()');
           });
           invokeMethod('setSize', _sizeToMap(size, widget.maxWidthDpi));
       }
@@ -103,8 +91,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
 
           setState(() {
             _size = _newSize;
-            logDebug(
-                'BannerWidgetStateImpl -> onAdViewLoaded() -> setState() -> new size');
           });
         }
 
@@ -144,8 +130,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
           final data = call.arguments;
           _width = data['width'] as double;
           _height = data['height'] as double;
-          logDebug(
-              'BannerWidgetStateImpl -> handleMethodCall() -> Set widget state with width $_width and height $_height, setState()');
         });
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -155,11 +139,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
         return completer.future;
     }
   }
-
-  final GlobalKey _sizedBoxKey = GlobalKey();
-  final GlobalKey _androidViewKey = GlobalKey();
-  final GlobalKey _uiKitViewKey = GlobalKey();
-  final GlobalKey _placeholderKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +161,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         platformWidget = AndroidView(
-          key: _androidViewKey,
           viewType: _viewType,
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
@@ -191,7 +169,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
         break;
       case TargetPlatform.iOS:
         platformWidget = UiKitView(
-          key: _uiKitViewKey,
           viewType: _viewType,
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
@@ -199,7 +176,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
         break;
       default:
         return SizedBox(
-          key: _placeholderKey,
           width: size.width.toDouble(),
           height: size.height.toDouble(),
           child: const Center(child: Text('Platform is not supported')),
@@ -220,7 +196,6 @@ class BannerWidgetStateImpl extends BannerWidgetState
     }
 
     return SizedBox(
-      key: _sizedBoxKey,
       width: width,
       height: height,
       child: platformWidget,
@@ -295,36 +270,9 @@ class BannerWidgetStateImpl extends BannerWidgetState
 
   @override
   Future<void> dispose() {
-    destroy();
     super.dispose();
+    destroy();
     return invokeMethod('dispose');
-  }
-
-  void _updateWidgetSize() {
-    if (_sizeChanged) {
-      _sizeChanged = false;
-
-      // switch (defaultTargetPlatform) {
-      //   case TargetPlatform.iOS:
-      // setState(() {
-      //   _size = null;
-      //   logDebug(
-      //       'BannerWidgetStateImpl -> _updateWidgetSize() -> iOS -> setState() -> size null');
-      // });
-      // WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _size = _newSize;
-        logDebug(
-            'BannerWidgetStateImpl -> _updateWidgetSize() -> iOS -> setState() -> new size');
-      });
-      // });
-      // break;
-      // default:
-      //   setState(() {
-      //     _size = _newSize;
-      //     logDebug('BannerWidgetStateImpl -> _updateWidgetSize() -> Common -> setState()');
-      //   });
-    }
   }
 
   Map<String, dynamic> _sizeToMap(AdSize size, int? maxWidthDpi) {

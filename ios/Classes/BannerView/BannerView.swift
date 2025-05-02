@@ -13,7 +13,7 @@ private let logTag = "[BannerView]"
 class BannerView: NSObject, FlutterPlatformView {
     private let methodHandler: BannerMethodHandler
 
-    let id: String
+    private let id: String
 
     let banner: CASBannerView
     private let bannerCallback: BannerCallback

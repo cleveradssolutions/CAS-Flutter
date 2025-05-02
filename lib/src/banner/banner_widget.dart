@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../clever_ads_solutions.dart';
-import '../sdk/ad_content_info.dart';
 import 'internal/banner_widget_state_impl.dart';
 
 @Deprecated('Use BannerWidget instead')

@@ -94,12 +94,8 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
                     listener: BannerListener('MediumRectangle'),
                   ),
                   LayoutBuilder(builder: (_, BoxConstraints constraints) {
-                    logDebug(
-                        'Build layout with size ${constraints.maxWidth}-${constraints.maxHeight}');
                     return BannerWidget(
-                      key: _bannerKey,
                       size: AdSize.getAdaptiveBanner(constraints.maxWidth),
-                      refreshInterval: 120,
                       listener: BannerListener('Adaptive'),
                     );
                   }),
