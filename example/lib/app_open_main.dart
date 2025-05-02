@@ -32,7 +32,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    implements OnDismissListener {
   bool _isLoadingAppResources = false;
   bool _isVisibleAppOpenAd = false;
   bool _isCompletedSplash = false;
@@ -46,6 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _simulationLongAppResourcesLoading();
+      _initialize();
       _createAppOpenAd();
     });
   }
@@ -99,6 +101,25 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
+  }
+
+  void _initialize() {
+    // Set Ads Settings
+    CAS.settings.setDebugMode(true);
+    CAS.settings.setTaggedAudience(Audience.notChildren);
+
+    // Set Manual loading mode to disable auto requests
+    // CAS.settings.setLoadingMode(LoadingManagerMode.manual);
+
+    // Initialize SDK
+    CAS
+        .buildManager()
+        .withCasId(_casId)
+        .withTestMode(true)
+        .withConsentFlow(ConsentFlow.create()
+            .withDismissListener(this)
+            .withPrivacyPolicy('https://example.com/'))
+        .build();
   }
 
   void _createAppOpenAd() {
@@ -174,5 +195,10 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       },
     );
+  }
+
+  @override
+  void onConsentFlowDismissed(int status) {
+    logDebug('Consent flow dismissed: $status');
   }
 }
