@@ -1,3 +1,21 @@
+## 0.8.0
+### Features
+- Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 4.0.2 SDK.
+### Changes
+- The documentation will be updated soon.
+- All ad formats are now managed using a **CAS ID string** with the new `CASAppOpen`, `CASInterstitial`, and `CASRewarded` ad objects.
+  Read more about the new implementation below.
+  Previously, ad management required working with a `MediationManager` instance.
+  You can now preload and cache multiple instances of each ad format, reducing latency and improving ad display performance.
+- All ad formats have `OnAdImpressionListener` to collect impression data via new `AdContentInfo` structure.
+- Added Autoload mode for `CASAppOpen`, `CASInterstitial` and `CASRewarded` ad instances.
+- Added automatic initialization of the **Tenjin SDK** when the API key is provided in the CAS SDK initialization parameters.
+- `AdError.description` now provides more detailed error information.
+  A single error code may include multiple detailed messages.
+### Bug Fixes
+- Fixed an issue with the wrong arguments in the `setGender` and `setLoadingMode` methods.
+- Fixed an error on call `withUserId` method.
+
 ## 0.7.6
 ### Features
 - Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 3.9.9 SDK.

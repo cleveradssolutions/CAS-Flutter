@@ -64,7 +64,7 @@ class ManagerBuilderImpl extends ManagerBuilder {
 
   @override
   ManagerBuilder withUserId(String userId) {
-    _channel.invokeMethod('setUserId', {'userId': userId});
+    _channel.invokeMethod('withUserId', {'userId': userId});
     return this;
   }
 

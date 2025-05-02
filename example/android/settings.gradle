@@ -10,6 +10,15 @@ pluginManagement {
     includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
     repositories {
+        mavenLocal()
+        maven {
+            name = "CASBetaRepo"
+            url = "https://repo.repsy.io/mvn/cleveradssolutions/beta"
+            content {
+                it.includeGroup("com.cleveradssolutions")
+                it.includeGroup("com.cleveradssolutions.gradle-plugin")
+            }
+        }
         google()
         mavenCentral()
         gradlePluginPortal()

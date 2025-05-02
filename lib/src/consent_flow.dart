@@ -42,11 +42,11 @@ abstract class ConsentFlow {
 
   /// Shows the consent form only if it is required and the user has not responded previously.
   /// If the consent status is required, the SDK loads a form and immediately presents it.
-  void showIfRequired();
+  Future<void> showIfRequired();
 
   /// Force shows the form to modify user  consent at any time.
   ///
   /// When a user interacts with your UI element, call function to show the form
   /// so the user can update their privacy options at any time.
-  void show();
+  Future<void> show();
 }

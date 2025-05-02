@@ -65,7 +65,7 @@ extension FlutterMethodCall {
 
     func errorArgNil(_ name: String) -> FlutterError {
         return FlutterError(
-            code: "MethodCallArgumentNull",
+            code: "MethodCallArgumentNil",
             message: "\(logTag) Method: '\(method)', error: argument '\(name)' is nil",
             details: nil
         )
@@ -73,7 +73,7 @@ extension FlutterMethodCall {
 
     func errorFieldNil(_ name: String) -> FlutterError {
         return FlutterError(
-            code: "MethodCallArgumentNull",
+            code: "MethodCallArgumentNil",
             message: "\(logTag) Method: '\(method)', error: field '\(name)' is nil",
             details: nil
         )

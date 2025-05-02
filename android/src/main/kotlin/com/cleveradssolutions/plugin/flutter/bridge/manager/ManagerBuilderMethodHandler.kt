@@ -16,9 +16,9 @@ private const val CHANNEL_NAME = "cleveradssolutions/manager_builder"
 
 class ManagerBuilderMethodHandler(
     binding: FlutterPluginBinding,
+    private val contextService: CASFlutterContext,
     private val consentFlowMethodHandler: ConsentFlowMethodHandler,
-    private val mediationManagerMethodHandler: MediationManagerMethodHandler,
-    private val contextService: CASFlutterContext
+    private val mediationManagerMethodHandler: MediationManagerMethodHandler
 ) : MethodHandler(binding, CHANNEL_NAME) {
 
     @Volatile
@@ -35,7 +35,7 @@ class ManagerBuilderMethodHandler(
         when (call.method) {
             "withTestAdMode" -> withTestAdMode(call, result)
             "withAdTypes" -> withAdTypes(call, result)
-            "withUserId" -> setUserId(call, result)
+            "withUserId" -> withUserId(call, result)
             "withConsentFlow" -> withConsentFlow(call, result)
             "withMediationExtras" -> withMediationExtras(call, result)
             "withFramework" -> withFramework(call, result)
@@ -56,7 +56,7 @@ class ManagerBuilderMethodHandler(
         }
     }
 
-    private fun setUserId(call: MethodCall, result: MethodChannel.Result) {
+    private fun withUserId(call: MethodCall, result: MethodChannel.Result) {
         call.getArgAndReturn<String>("userId", result) {
             builder.withUserID(it)
         }

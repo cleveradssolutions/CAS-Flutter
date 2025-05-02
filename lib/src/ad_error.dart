@@ -54,9 +54,11 @@ class AdError implements Comparable<int> {
 
   final int code;
 
-  String get message => CASUtils.getAdErrorMessage(code);
+  String? _message;
 
-  AdError(this.code);
+  String get message => _message ?? CASUtils.getAdErrorMessage(code);
+
+  AdError(this.code, [this._message]);
 
   AdError.fromMessage(String message) : code = CASUtils.getAdErrorCode(message);
 

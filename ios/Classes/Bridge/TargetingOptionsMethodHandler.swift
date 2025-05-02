@@ -7,6 +7,7 @@
 
 import CleverAdsSolutions
 import Flutter
+import Foundation
 
 private let channelName = "cleveradssolutions/targeting_options"
 
@@ -40,8 +41,12 @@ class TargetingOptionsMethodHandler: MethodHandler {
     }
 
     private func setGender(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-        call.getArgAndReturn("gender", result) { gender in
-            CAS.targetingOptions.gender = gender
+        guard let index: Int = call.getArgAndCheckNil("gender", result) else { return }
+        if let value = Gender(rawValue: index) {
+            CAS.targetingOptions.gender = value
+            result(nil)
+        } else {
+            result(call.errorInvalidArg("gender"))
         }
     }
 
@@ -61,7 +66,8 @@ class TargetingOptionsMethodHandler: MethodHandler {
 
     private func setLocationLatitude(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         call.getArgAndReturn("latitude", result) { latitude in
-            CAS.targetingOptions.locationLatitude = latitude
+            let longitude = CAS.targetingOptions.location?.coordinate.longitude ?? 0.0
+            CAS.targetingOptions.setLocation(latitude: latitude, longitude: longitude)
         }
     }
 
@@ -71,7 +77,8 @@ class TargetingOptionsMethodHandler: MethodHandler {
 
     private func setLocationLongitude(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         call.getArgAndReturn("longitude", result) { longitude in
-            CAS.targetingOptions.locationLongitude = longitude
+            let latitude = CAS.targetingOptions.location?.coordinate.latitude ?? 0.0
+            CAS.targetingOptions.setLocation(latitude: latitude, longitude: longitude)
         }
     }
 

@@ -1,30 +1,35 @@
 import '../ad_impression.dart';
+import '../sdk/ad_content_info.dart';
+import '../sdk/screen/screen_ad_content_callback.dart';
 
-class AppOpenAdListener {
-  /// Executed when the ad is displayed.
-  final void Function(AdImpression? adImpression) onShown;
-
-  /// Executed when the ad is failed to display.
-  ///
-  /// [message] Error message
-  final void Function(String? message) onShowFailed;
-
-  /// Executed when the user clicks on an Ad.
-  final void Function() onClicked;
-
-  /// Executed when an ad impression is registered.
-  ///
-  /// [adImpression] Impression details
-  final void Function(AdImpression? adImpression) onImpression;
-
-  /// Executed when the Ad is closed.
-  final void Function() onClosed;
-
+@Deprecated('Use sdk/screen/screen_ad_content_callback.dart instead')
+class AppOpenAdListener extends ScreenAdContentCallback {
   AppOpenAdListener({
-    required Function(AdImpression? adImpression) this.onShown,
-    required Function(String? message) this.onShowFailed,
-    required Function() this.onClicked,
-    required Function(AdImpression? adImpression) this.onImpression,
-    required Function() this.onClosed,
-  });
+    required Function(AdImpression? adImpression) onShown,
+    required Function(String? message) onShowFailed,
+    required Function() onClicked,
+    required Function(AdImpression? adImpression) onImpression,
+    required Function() onClosed,
+  }) : super(
+          onAdLoaded: (ad) {},
+          onAdFailedToLoad: (format, error) {},
+          onAdShowed: (ad) async => onShown(await _tryParseAdContentInfo(ad)),
+          onAdFailedToShow: (format, error) => onShowFailed(error.message),
+          onAdClicked: (ad) => onClicked(),
+          onAdDismissed: (ad) => onClosed(),
+        );
+
+  static Future<AdImpression> _tryParseAdContentInfo(AdContentInfo info) async {
+    return AdImpression(
+      (await info.getFormat()).index,
+      await info.getRevenue(),
+      await info.getSourceName(),
+      (await info.getRevenuePrecision()).index,
+      '',
+      await info.getCreativeId(),
+      (await info.getSourceId()).name,
+      await info.getImpressionDepth(),
+      await info.getRevenueTotal(),
+    );
+  }
 }

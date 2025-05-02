@@ -1,5 +1,5 @@
 //
-//  AppOpenMethodHandler.swift
+//  BannerCallback.swift
 //  clever_ads_solutions
 //
 //  Copyright © 2024 CleverAdsSolutions LTD, CAS.AI. All rights reserved.
@@ -10,7 +10,7 @@ import CleverAdsSolutions
 class BannerCallback: MappedCallback, CASBannerDelegate {
     private let sizeListener: BannerSizeListener
 
-    init(_ sizeListener: BannerSizeListener, _ handler: AnyMappedMethodHandler, _ id: String) {
+    init(_ sizeListener: BannerSizeListener, _ handler: MappedMethodHandlerProtocol, _ id: String) {
         self.sizeListener = sizeListener
         super.init(handler, id)
     }
@@ -23,7 +23,7 @@ class BannerCallback: MappedCallback, CASBannerDelegate {
     }
 
     func bannerAdView(_ adView: CASBannerView, didFailWith error: CASError) {
-        invokeMethod("onAdViewFailed", ["error": error.message])
+        invokeMethod("onAdViewFailed", ["error": error.description])
 
         sizeListener.updateSize(0, 0)
     }

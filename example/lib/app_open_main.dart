@@ -32,7 +32,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    implements OnDismissListener {
   bool _isLoadingAppResources = false;
   bool _isVisibleAppOpenAd = false;
   bool _isCompletedSplash = false;
@@ -46,6 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _simulationLongAppResourcesLoading();
+      _initialize();
       _createAppOpenAd();
     });
   }
@@ -101,44 +103,68 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
+  void _initialize() {
+    // Set Ads Settings
+    CAS.settings.setDebugMode(true);
+    CAS.settings.setTaggedAudience(Audience.notChildren);
+
+    // Set Manual loading mode to disable auto requests
+    // CAS.settings.setLoadingMode(LoadingManagerMode.manual);
+
+    // Initialize SDK
+    CAS
+        .buildManager()
+        .withCasId(_casId)
+        .withTestMode(true)
+        .withConsentFlow(ConsentFlow.create()
+            .withDismissListener(this)
+            .withPrivacyPolicy('https://example.com/'))
+        .build();
+  }
+
   void _createAppOpenAd() {
     // Create an Ad
     final appOpenAd = CASAppOpen.create(_casId);
 
     // Handle fullscreen callback events
-    appOpenAd.contentCallback = AppOpenAdListener(
-      onShown: (adImpression) => logDebug('App open ad shown: $adImpression'),
-      onShowFailed: (message) {
-        logDebug('App open ad show failed: $message');
+    appOpenAd.contentCallback = ScreenAdContentCallback(
+      onAdLoaded: (ad) async {
+        logDebug('App open ad loaded: ${await ad.getSourceName()}');
 
-        _isVisibleAppOpenAd = false;
-        _openNextScreen();
-      },
-      onClicked: () => logDebug('App open ad clicked'),
-      onImpression: (adImpression) =>
-          logDebug('App open ad did impression: $adImpression!'),
-      onClosed: () {
-        logDebug('App open ad closed');
-
-        _isVisibleAppOpenAd = false;
-        _openNextScreen();
-      },
-    );
-
-    // Load the Ad
-    appOpenAd.load(LoadAdCallback(
-      onAdLoaded: () {
-        logDebug('App Open Ad loaded');
         if (_isLoadingAppResources) {
           _isVisibleAppOpenAd = true;
           appOpenAd.show();
         }
       },
-      onAdFailedToLoad: (adError) {
-        logDebug('App Open Ad failed to load: ${adError.message}');
+      onAdFailedToLoad: (_, error) {
+        logDebug('App open ad failed to load: $error');
+
         _openNextScreen();
       },
-    ));
+      onAdShowed: (ad) async =>
+          logDebug('App open ad showed: ${await ad.getSourceName()}'),
+      onAdFailedToShow: (_, error) {
+        logDebug('App open ad failed to show: $error');
+
+        _isVisibleAppOpenAd = false;
+        _openNextScreen();
+      },
+      onAdClicked: (ad) async =>
+          logDebug('App open ad clicked: ${await ad.getSourceName()}'),
+      onAdDismissed: (ad) async {
+        logDebug('App open ad dismissed: ${await ad.getSourceName()}');
+
+        _isVisibleAppOpenAd = false;
+        _openNextScreen();
+      },
+    );
+    appOpenAd.impressionListener = OnAdImpressionListener(
+      onAdImpression: (ad) async =>
+          logDebug('App open ad impression: ${await ad.getSourceName()}'),
+    );
+
+    // Load the Ad
+    appOpenAd.load();
   }
 
   void _openNextScreen() {
@@ -169,5 +195,10 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       },
     );
+  }
+
+  @override
+  void onConsentFlowDismissed(int status) {
+    logDebug('Consent flow dismissed: $status');
   }
 }

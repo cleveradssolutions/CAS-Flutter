@@ -27,6 +27,7 @@ abstract class ManagerBuilder {
   /// Set [AdType.None] to disable all ad types requests.
   ///
   /// Ad types can be enabled manually after initialize by [MediationManager.setEnabled]
+  @Deprecated("This method is no longer maintained and should not be used.")
   ManagerBuilder withAdTypes(final int adTypes);
 
   /// The userID is a unique identifier supplied by your application and must be static for each user across sessions.
@@ -74,3 +75,4 @@ abstract class ManagerBuilder {
   /// Can be called for different identifiers to create different managers.
   MediationManager initialize();
 }
+

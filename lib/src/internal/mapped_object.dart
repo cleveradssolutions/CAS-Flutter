@@ -3,8 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 abstract class MappedObject with MappedObjectImpl {
-  MappedObject(String channelName, [String? id, bool isWidget = false]) {
-    init(channelName, id, isWidget);
+  MappedObject(String channelName,
+      [String? id, bool isManagedByNative = false]) {
+    init(channelName, id, isManagedByNative);
   }
 }
 
@@ -17,7 +18,7 @@ mixin MappedObjectImpl {
   late final MethodChannel channel;
   late final String id;
 
-  void init(String channelName, [String? id, bool isWidget = false]) {
+  void init(String channelName, [String? id, bool isManagedByNative = false]) {
     this.id = id ??= UniqueKey().toString();
 
     final _ChannelEntry entry =
@@ -27,7 +28,7 @@ mixin MappedObjectImpl {
     final objects = entry.value;
     objects[id] = this;
 
-    if (!isWidget) {
+    if (!isManagedByNative) {
       final finalizer = _finalizers[channelName] ??= Finalizer((id) {
         channel.invokeMethod('dispose', {'id': id});
         objects.remove(id);
@@ -60,13 +61,13 @@ mixin MappedObjectImpl {
       final id = call.arguments['id'];
       if (id == null) {
         logDebug(
-            'Handle method call on channel \'${channel.name}\', error: id == null');
+            'Handle method \'${call.method}\' call on channel \'${channel.name}\', error: id == null');
         return;
       }
       final object = objects[id];
       if (object == null) {
         logDebug(
-            'Handle method call on channel \'${channel.name}\', error: object not found in map');
+            'Handle method \'${call.method}\' call on channel \'${channel.name}\', error: object not found in map');
         return;
       }
       return object.handleMethodCall(call);

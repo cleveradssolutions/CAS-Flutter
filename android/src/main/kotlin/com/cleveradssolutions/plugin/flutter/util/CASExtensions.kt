@@ -1,6 +1,14 @@
 package com.cleveradssolutions.plugin.flutter.util
 
+import com.cleversolutions.ads.AdError
 import com.cleversolutions.ads.AdImpression
+
+fun AdError.toMap(): Map<String, Any?> {
+    return mapOf(
+        "code" to code,
+        "message" to message
+    )
+}
 
 fun AdImpression.toMap(): Map<String, Any?> {
     return mapOf(

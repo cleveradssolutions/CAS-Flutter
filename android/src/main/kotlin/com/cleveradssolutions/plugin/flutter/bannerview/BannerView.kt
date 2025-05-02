@@ -2,8 +2,8 @@ package com.cleveradssolutions.plugin.flutter.bannerview
 
 import android.content.Context
 import android.util.Log
-import com.cleversolutions.ads.AdSize
-import com.cleversolutions.ads.MediationManager
+import com.cleveradssolutions.plugin.flutter.bridge.base.AdMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.OnAdImpressionListenerHandler
 import com.cleversolutions.ads.android.CASBannerView
 import io.flutter.plugin.platform.PlatformView
 
@@ -13,48 +13,31 @@ class BannerView(
     context: Context,
     viewId: Int,
     args: Map<*, *>?,
-    manager: MediationManager?,
-    methodHandler: BannerMethodHandler
+    private val methodHandler: BannerMethodHandler
 ) : PlatformView {
 
-    val id: String = args?.get("id") as? String ?: ""
+    private val id: String = args?.get("id") as? String ?: ""
 
-    private val banner = CASBannerView(context, manager)
-    private val sizeListener = BannerSizeListener(banner, methodHandler, id)
+    private val banner: CASBannerView
 
     init {
-        banner.id = viewId
-        banner.adListener = BannerCallback(sizeListener, methodHandler, id)
+        val casId = args?.get("casId") as? String
+        val contentInfoId = "banner_$id"
 
-        methodHandler[id] = this
+        banner = if (casId != null) CASBannerView(context, casId) else CASBannerView(context)
+        banner.id = viewId
+        val sizeListener = BannerSizeListener(banner, methodHandler, id)
+        banner.adListener = BannerCallback(sizeListener, methodHandler, id)
+        banner.onImpressionListener =
+            OnAdImpressionListenerHandler(methodHandler, id, contentInfoId)
+
+        methodHandler[id] = AdMethodHandler.Ad(this, id, contentInfoId)
 
         if (args == null) {
             Log.e(LOG_TAG, "BannerView args is null")
         } else {
             (args["size"] as? Map<*, *>)?.let { size ->
-                if (size["isAdaptive"] == true) {
-                    banner.size = (size["maxWidthDpi"] as? Int).let {
-                        if (it == null || it == 0) {
-                            AdSize.getAdaptiveBannerInScreen(context)
-                        } else {
-                            AdSize.getAdaptiveBanner(context, it)
-                        }
-                    }
-                } else {
-                    val width = size["width"] as Int
-                    val height = size["height"] as Int
-                    val mode = size["mode"] as Int
-
-                    banner.size = when (mode) {
-                        2 -> AdSize.getAdaptiveBanner(context, width)
-                        3 -> AdSize.getInlineBanner(width, height)
-                        else -> when (width) {
-                            300 -> AdSize.MEDIUM_RECTANGLE
-                            728 -> AdSize.LEADERBOARD
-                            else -> AdSize.BANNER
-                        }
-                    }
-                }
+                banner.size = BannerMethodHandler.getAdSize(context, size)
             }
 
             (args["isAutoloadEnabled"] as? Boolean)?.let {
@@ -72,6 +55,7 @@ class BannerView(
     }
 
     override fun dispose() {
+        methodHandler.remove(id)
         banner.destroy()
     }
 

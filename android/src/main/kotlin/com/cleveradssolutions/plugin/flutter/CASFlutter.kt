@@ -1,6 +1,5 @@
 package com.cleveradssolutions.plugin.flutter
 
-import com.cleveradssolutions.plugin.flutter.appopen.AppOpenMethodHandler
 import com.cleveradssolutions.plugin.flutter.bannerview.BannerViewFactory
 import com.cleveradssolutions.plugin.flutter.bridge.AdSizeMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.AdsSettingsMethodHandler
@@ -9,6 +8,10 @@ import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.TargetingOptionsMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.manager.ManagerBuilderMethodHandler
 import com.cleveradssolutions.plugin.flutter.bridge.manager.MediationManagerMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.AdContentInfoMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.screen.AppOpenMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.screen.InterstitialMethodHandler
+import com.cleveradssolutions.plugin.flutter.sdk.screen.RewardedMethodHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -21,22 +24,25 @@ class CASFlutter : FlutterPlugin, ActivityAware {
         val context = CASFlutterContext(binding.applicationContext)
         contextService = context
 
+        val contentInfoHandler = AdContentInfoMethodHandler(binding)
         val consentFlowMethodHandler = ConsentFlowMethodHandler(binding, context)
         val mediationManagerMethodHandler = MediationManagerMethodHandler(binding, context)
 
         AdSizeMethodHandler(binding, context)
         AdsSettingsMethodHandler(binding)
-        AppOpenMethodHandler(binding, context)
+        AppOpenMethodHandler(binding, context, contentInfoHandler)
         CASMethodHandler(binding, context)
+        InterstitialMethodHandler(binding, context, contentInfoHandler)
         ManagerBuilderMethodHandler(
             binding,
+            context,
             consentFlowMethodHandler,
-            mediationManagerMethodHandler,
-            context
+            mediationManagerMethodHandler
         )
+        RewardedMethodHandler(binding, context, contentInfoHandler)
         TargetingOptionsMethodHandler(binding)
 
-        val bannerViewFactory = BannerViewFactory(binding, mediationManagerMethodHandler)
+        val bannerViewFactory = BannerViewFactory(binding, contentInfoHandler)
         binding
             .platformViewRegistry
             .registerViewFactory("<cas-banner-view>", bannerViewFactory)

@@ -129,8 +129,8 @@ class AdsSettingsMethodHandler(
     }
 
     private fun setTestDeviceIds(call: MethodCall, result: MethodChannel.Result) {
-        call.getArgAndReturn<Set<String>>("deviceIds", result) {
-            CAS.settings.testDeviceIDs = it
+        call.getArgAndReturn<List<String>>("deviceIds", result) {
+            CAS.settings.testDeviceIDs = it.toSet()
         }
     }
 

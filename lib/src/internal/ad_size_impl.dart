@@ -5,7 +5,7 @@ import '../ad_size.dart';
 import 'log.dart';
 import 'utils.dart';
 
-extension AdSizeFactory on AdSize {
+class AdSizeFactory {
   static const MethodChannel _channel =
       MethodChannel("cleveradssolutions/ad_size");
 

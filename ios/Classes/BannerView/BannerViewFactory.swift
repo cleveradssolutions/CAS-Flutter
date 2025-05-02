@@ -10,13 +10,11 @@ import Foundation
 
 class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
     private let registrar: FlutterPluginRegistrar
-    private let managerHandler: MediationManagerMethodHandler
     private let methodHandler: BannerMethodHandler
 
-    init(with registrar: FlutterPluginRegistrar, managerHandler: MediationManagerMethodHandler) {
+    init(with registrar: FlutterPluginRegistrar, _ contentInfoHandler: AdContentInfoMethodHandler) {
         self.registrar = registrar
-        self.managerHandler = managerHandler
-        methodHandler = BannerMethodHandler(with: registrar)
+        methodHandler = BannerMethodHandler(with: registrar, contentInfoHandler)
     }
 
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
@@ -24,7 +22,6 @@ class BannerViewFactory: NSObject, FlutterPlatformViewFactory {
             frame: frame,
             viewId: viewId,
             args: args as? [String: Any?],
-            manager: managerHandler.manager,
             methodHandler: methodHandler
         )
     }

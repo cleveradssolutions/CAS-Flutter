@@ -23,7 +23,7 @@ internal class AppReturnListener(
     }
 
     override fun onShowFailed(message: String) {
-        handler.invokeMethod("OnAppReturnAdFailedToShow", mapOf("message" to message))
+        handler.invokeMethod("OnAppReturnAdFailedToShow", message)
     }
 
     override fun onClicked() {
