@@ -152,6 +152,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
 
     Map<String, dynamic> creationParams = <String, dynamic>{
       'id': id,
+      'casId': widget.casId,
       'size': _sizeToMap(size, widget.maxWidthDpi),
       'isAutoloadEnabled': widget.isAutoloadEnabled,
       'refreshInterval': widget.refreshInterval,

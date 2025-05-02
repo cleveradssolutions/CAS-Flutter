@@ -30,7 +30,8 @@ class BannerView: NSObject, FlutterPlatformView {
         let contentInfoId = "banner_\(id)"
 
         let size = if let map = args?["size"] as? [String: Any?] { BannerMethodHandler.getAdSize(map, frame) } else { CASSize.banner }
-        banner = CASBannerView(casID: id, size: size)
+
+        banner = CASBannerView(casID: args?["casId"] as? String ?? "", size: size)
         banner.tag = Int(viewId)
         let sizeListener = BannerSizeListener(banner, methodHandler, id)
         bannerCallback = BannerCallback(sizeListener, methodHandler, id)
