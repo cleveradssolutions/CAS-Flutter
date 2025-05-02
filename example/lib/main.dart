@@ -114,6 +114,8 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
             .withPrivacyPolicy('https://example.com/'))
         .withCompletionListener(_onCASInitialized)
         .build();
+
+    _loadAds();
   }
 
   void _onCASInitialized(InitConfig initConfig) async {
@@ -124,6 +126,13 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
     }
     logDebug('Ad manager initialized');
 
+    final String sdkVersion = await CAS.getSDKVersion();
+    setState(() {
+      _sdkVersion = sdkVersion;
+    });
+  }
+
+  void _loadAds() {
     final interstitial = CASInterstitial.create(_casId);
     interstitial.contentCallback = ContentCallback('Interstitial', _onAdLoaded);
     interstitial.impressionListener = ImpressionListener('Interstitial');
@@ -135,11 +144,6 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
     rewarded.impressionListener = ImpressionListener('Rewarded');
     rewarded.load();
     _rewarded = rewarded;
-
-    final String sdkVersion = await CAS.getSDKVersion();
-    setState(() {
-      _sdkVersion = sdkVersion;
-    });
   }
 
   @override
