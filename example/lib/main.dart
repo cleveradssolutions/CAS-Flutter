@@ -67,18 +67,17 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
               child: Column(
                 children: [
-                  BannerWidget(
-                    key: _bannerKey,
-                    listener: BannerListener('Standard'),
-                  ),
+                  LayoutBuilder(builder: (_, BoxConstraints constraints) {
+                    return BannerWidget(
+                      key: _bannerKey,
+                      casId: _casId,
+                      size: AdSize.getAdaptiveBanner(constraints.maxWidth),
+                      listener: BannerListener(),
+                    );
+                  }),
                   ElevatedButton(
                     child: const Text('Load next ad on upper widget'),
                     onPressed: () => _bannerKey.currentState?.load(),
-                  ),
-                  BannerWidget(
-                    size: AdSize.leaderboard,
-                    refreshInterval: 20,
-                    listener: BannerListener('Leaderboard'),
                   ),
                   ElevatedButton(
                     onPressed: _isInterstitialReady ? _showInterstitial : null,
@@ -88,18 +87,6 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
                     onPressed: _isRewardedReady ? _showRewarded : null,
                     child: const Text('Show rewarded'),
                   ),
-                  BannerWidget(
-                    size: AdSize.mediumRectangle,
-                    refreshInterval: 60,
-                    listener: BannerListener('MediumRectangle'),
-                  ),
-                  LayoutBuilder(builder: (_, BoxConstraints constraints) {
-                    return BannerWidget(
-                      casId: _casId,
-                      size: AdSize.getAdaptiveBanner(constraints.maxWidth),
-                      listener: BannerListener('Adaptive'),
-                    );
-                  }),
                 ],
               ),
             ),
@@ -211,33 +198,31 @@ class ImpressionListener extends OnAdImpressionListener {
 }
 
 class BannerListener extends AdViewListener {
-  final String _name;
-
-  BannerListener(this._name);
+  BannerListener();
 
   @override
   void onAdViewPresented() {
-    logDebug('$_name banner ad presented!');
+    logDebug('Banner ad presented!');
   }
 
   @override
   void onClicked() {
-    logDebug('$_name banner ad clicked!');
+    logDebug('Banner ad clicked!');
   }
 
   @override
   void onFailed(String? message) {
-    logDebug('$_name banner failed! $message');
+    logDebug('Banner failed! $message');
   }
 
   @override
   void onImpression(AdImpression? adImpression) {
-    logDebug('$_name banner impression: $adImpression');
+    logDebug('Banner impression: $adImpression');
   }
 
   @override
   void onLoaded() {
-    logDebug('$_name banner ad loaded!');
+    logDebug('Banner ad loaded!');
   }
 }
 
