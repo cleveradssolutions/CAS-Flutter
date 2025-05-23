@@ -12,5 +12,5 @@ class OnRewardEarnedListener {
   /// [ad] The ad content associated with the reward.
   final void Function(AdContentInfo ad) onUserEarnedReward;
 
-  OnRewardEarnedListener({required Function(AdContentInfo ad) this.onUserEarnedReward});
+  OnRewardEarnedListener(Function(AdContentInfo ad) this.onUserEarnedReward);
 }

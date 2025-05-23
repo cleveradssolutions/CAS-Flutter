@@ -1,44 +1,49 @@
-import '../ad_impression.dart';
+import 'package:clever_ads_solutions/clever_ads_solutions.dart';
 
-abstract class AdViewListener {
-  void onAdViewPresented();
+class AdViewListener {
+  /// Invokes this callback when ad loaded and ready to present.
+  final void Function()? onAdViewLoaded;
 
-  void onLoaded();
+  /// Invokes this callback when an error occurred with the ad.
+  /// - To see the error code, see [AdError.code].
+  /// - To see a description of the error, see [AdError.message].
+  final void Function(String? message)? onAdViewFailed;
 
-  void onImpression(AdImpression? adImpression);
+  /// Invokes this callback when the ad did present for a user with info about the impression.
+  /// Deprecated note: Use [BannerWidget.onImpressionListener] and [OnAdImpressionListener] to get impression info.
+  final void Function()? _onAdViewPresented;
 
-  void onFailed(String? message);
+  /// Invokes this callback when a user clicks the ad.
+  final void Function()? onAdViewClicked;
 
-  void onClicked();
-}
-/*
-class AdViewAdListener extends AdViewListener {
-  const AdViewAdListener({
-    required Function() onAdViewPresented,
-    required Function() onLoaded,
-    required Function(AdImpression? adImpression) onImpression,
-    required Function(String? message) onFailed,
-    required Function() onClicked,
-  });
+  const AdViewListener({
+    Function()? this.onAdViewLoaded,
+    Function(String? message)? this.onAdViewFailed,
+    Function()? onAdViewPresented,
+    Function()? this.onAdViewClicked,
+  }) : _onAdViewPresented = onAdViewPresented;
 
-  @override
-  void onAdViewPresented() {
-    onAdViewPresented();
-  }
-
-  @override
-  void onClicked() {
-  }
-
-  @override
-  void onFailed(String? message) {
-  }
-
-  @override
-  void onImpression(AdImpression? adImpression) {
-  }
-
-  @override
+  @Deprecated('Use constructor parameter')
   void onLoaded() {
+    onAdViewLoaded?.call();
   }
-}*/
+
+  @Deprecated('Use constructor parameter')
+  void onFailed(String? message) {
+    onAdViewFailed?.call(message);
+  }
+
+  @Deprecated('Use constructor parameter')
+  void onAdViewPresented() {
+    _onAdViewPresented?.call();
+  }
+
+  @Deprecated(
+      'Use [BannerWidget.onImpressionListener] and [OnAdImpressionListener] to get impression info')
+  void onImpression(AdImpression? adImpression) {}
+
+  @Deprecated('Use constructor parameter')
+  void onClicked() {
+    onAdViewClicked?.call();
+  }
+}

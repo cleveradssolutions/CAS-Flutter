@@ -15,7 +15,7 @@ class ScreenAdContentCallback {
   /// such as preparing the ad for display.
   ///
   /// [ad] The ad content that has been successfully loaded.
-  final void Function(AdContentInfo ad) onAdLoaded;
+  final void Function(AdContentInfo ad)? onAdLoaded;
 
   /// Called when the ad content fails to load.
   ///
@@ -24,7 +24,7 @@ class ScreenAdContentCallback {
   ///
   /// [format] The format of ad content.
   /// [error] The error that occurred while attempting to load the ad content.
-  final void Function(AdFormat format, AdError error) onAdFailedToLoad;
+  final void Function(AdFormat format, AdError error)? onAdFailedToLoad;
 
   /// Called when the ad content is successfully shown.
   ///
@@ -33,7 +33,7 @@ class ScreenAdContentCallback {
   /// such as logging or UI updates.
   ///
   /// [ad] The ad content that has been successfully shown.
-  final void Function(AdContentInfo ad) onAdShowed;
+  final void Function(AdContentInfo ad)? onAdShowed;
 
   /// Called when the ad content fails to show.
   ///
@@ -42,7 +42,7 @@ class ScreenAdContentCallback {
   ///
   /// [format] The format of ad content.
   /// [error] The error that occurred while attempting to show the ad content.
-  final void Function(AdFormat format, AdError error) onAdFailedToShow;
+  final void Function(AdFormat format, AdError error)? onAdFailedToShow;
 
   /// Called when the ad content is clicked by the user.
   ///
@@ -50,7 +50,7 @@ class ScreenAdContentCallback {
   /// such as tracking click events or updating the UI.
   ///
   /// [ad] The ad content that was clicked by the user.
-  final void Function(AdContentInfo ad) onAdClicked;
+  final void Function(AdContentInfo ad)? onAdClicked;
 
   /// Called when the ad content is dismissed.
   ///
@@ -58,13 +58,13 @@ class ScreenAdContentCallback {
   /// any necessary actions after the ad has been dismissed, such as cleaning up resources or updating the UI.
   ///
   /// [ad] The ad content that was dismissed.
-  final void Function(AdContentInfo ad) onAdDismissed;
+  final void Function(AdContentInfo ad)? onAdDismissed;
 
-  ScreenAdContentCallback(
-      {required Function(AdContentInfo ad) this.onAdLoaded,
-      required Function(AdFormat format, AdError error) this.onAdFailedToLoad,
-      required Function(AdContentInfo ad) this.onAdShowed,
-      required Function(AdFormat format, AdError error) this.onAdFailedToShow,
-      required Function(AdContentInfo ad) this.onAdClicked,
-      required Function(AdContentInfo ad) this.onAdDismissed});
+  const ScreenAdContentCallback(
+      {Function(AdContentInfo ad)? this.onAdLoaded,
+      Function(AdFormat format, AdError error)? this.onAdFailedToLoad,
+      Function(AdContentInfo ad)? this.onAdShowed,
+      Function(AdFormat format, AdError error)? this.onAdFailedToShow,
+      Function(AdContentInfo ad)? this.onAdClicked,
+      Function(AdContentInfo ad)? this.onAdDismissed});
 }

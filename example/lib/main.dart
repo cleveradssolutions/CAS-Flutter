@@ -26,13 +26,13 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
+class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<BannerWidgetState> _bannerKey = GlobalKey();
 
-  CASInterstitial? _interstitial;
+  final CASInterstitial _interstitial = CASInterstitial.create(_casId);
   bool _isInterstitialReady = false;
 
-  CASRewarded? _rewarded;
+  final CASRewarded _rewarded = CASRewarded.create(_casId);
   bool _isRewardedReady = false;
 
   String? _sdkVersion;
@@ -41,6 +41,13 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
   void initState() {
     super.initState();
     _initialize();
+  }
+
+  @override
+  void dispose() {
+    _interstitial.destroy();
+    _rewarded.destroy();
+    super.dispose();
   }
 
   @override
@@ -71,8 +78,9 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
                     return BannerWidget(
                       key: _bannerKey,
                       casId: _casId,
+                      adListener: _getBannerListener(),
+                      onImpressionListener: _getImpressionListener('Banner'),
                       size: AdSize.getAdaptiveBanner(constraints.maxWidth),
-                      listener: BannerListener(),
                     );
                   }),
                   ElevatedButton(
@@ -102,16 +110,18 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
     CAS.settings.setTaggedAudience(Audience.notChildren);
 
     // Set Manual loading mode to disable auto requests
-    // CAS.settings.setLoadingMode(LoadingManagerMode.manual);
+    CAS.settings.setLoadingMode(LoadingMode.Manual);
 
     // Initialize SDK
     CAS
         .buildManager()
         .withCasId(_casId)
         .withTestMode(true)
-        .withConsentFlow(ConsentFlow.create()
-            .withDismissListener(this)
-            .withPrivacyPolicy('https://example.com/'))
+        .withConsentFlow(ConsentFlow.create().withDismissListener(
+          OnDismissListener((ConsentStatus status) {
+            logDebug('Consent flow dismissed: $status');
+          }),
+        ).withPrivacyPolicy('https://example.com/'))
         .withCompletionListener(_onCASInitialized)
         .build();
 
@@ -133,100 +143,64 @@ class _HomeScreenState extends State<HomeScreen> implements OnDismissListener {
   }
 
   void _loadAds() {
-    final interstitial = CASInterstitial.create(_casId);
-    interstitial.contentCallback = ContentCallback('Interstitial', _onAdLoaded);
-    interstitial.impressionListener = ImpressionListener('Interstitial');
-    interstitial.load();
-    _interstitial = interstitial;
-
-    final rewarded = CASRewarded.create(_casId);
-    rewarded.contentCallback = ContentCallback('Rewarded', _onAdLoaded);
-    rewarded.impressionListener = ImpressionListener('Rewarded');
-    rewarded.load();
-    _rewarded = rewarded;
-  }
-
-  @override
-  void onConsentFlowDismissed(int status) {
-    logDebug('Consent flow dismissed: $status');
-  }
-
-  void _onAdLoaded(AdFormat adFormat) {
-    setState(() {
-      if (adFormat == AdFormat.interstitial) {
-        _isInterstitialReady = true;
-      } else if (adFormat == AdFormat.rewarded) {
-        _isRewardedReady = true;
-      }
+    _interstitial.contentCallback = _getAdContentCallback('Interstitial', () {
+      _isInterstitialReady = true;
     });
+    _interstitial.impressionListener = _getImpressionListener('Interstitial');
+    _interstitial.load();
+
+    _rewarded.contentCallback = _getAdContentCallback('Rewarded', () {
+      _isRewardedReady = true;
+    });
+    _rewarded.impressionListener = _getImpressionListener('Rewarded');
+    _rewarded.load();
   }
 
   void _showInterstitial() {
-    _interstitial?.show();
+    _interstitial.show();
+    _isInterstitialReady = false;
   }
 
   void _showRewarded() {
-    _rewarded?.show(OnRewardEarnedListener(onUserEarnedReward: (ad) async {
+    _rewarded.show(OnRewardEarnedListener((ad) async {
       logDebug('Rewarded ad earned reward: ${await ad.getSourceName()}');
     }));
-  }
-}
-
-class ContentCallback extends ScreenAdContentCallback {
-  ContentCallback(String name, void Function(AdFormat) onAdLoaded)
-      : super(
-          onAdLoaded: (ad) async {
-            onAdLoaded(await ad.getFormat());
-
-            logDebug('$name ad loaded: ${await ad.getSourceName()}');
-          },
-          onAdFailedToLoad: (_, error) =>
-              logDebug('$name ad failed to load: $error'),
-          onAdShowed: (ad) async =>
-              logDebug('$name ad showed: ${await ad.getSourceName()}'),
-          onAdFailedToShow: (_, error) =>
-              logDebug('$name ad failed to show: $error'),
-          onAdClicked: (ad) async =>
-              logDebug('$name ad clicked: ${await ad.getSourceName()}'),
-          onAdDismissed: (ad) async =>
-              logDebug('$name ad dismissed: ${await ad.getSourceName()}'),
-        );
-}
-
-class ImpressionListener extends OnAdImpressionListener {
-  ImpressionListener(String name)
-      : super(
-          onAdImpression: (ad) async =>
-              logDebug('$name ad impression: ${await ad.getSourceName()}'),
-        );
-}
-
-class BannerListener extends AdViewListener {
-  BannerListener();
-
-  @override
-  void onAdViewPresented() {
-    logDebug('Banner ad presented!');
+    _isRewardedReady = false;
   }
 
-  @override
-  void onClicked() {
-    logDebug('Banner ad clicked!');
+  AdViewListener _getBannerListener() {
+    return AdViewListener(
+      onAdViewLoaded: () => logDebug('Banner ad loaded!'),
+      onAdViewFailed: (message) => logDebug('Banner failed! $message'),
+      onAdViewPresented: () => logDebug('Banner ad presented!'),
+      onAdViewClicked: () => logDebug('Banner ad clicked!'),
+    );
   }
 
-  @override
-  void onFailed(String? message) {
-    logDebug('Banner failed! $message');
+  ScreenAdContentCallback _getAdContentCallback(
+      String name, void Function() onLoaded) {
+    return ScreenAdContentCallback(
+      onAdLoaded: (ad) async {
+        onLoaded();
+
+        logDebug('$name ad loaded: ${await ad.getSourceName()}');
+      },
+      onAdFailedToLoad: (_, error) =>
+          logDebug('$name ad failed to load: $error'),
+      onAdShowed: (ad) async =>
+          logDebug('$name ad showed: ${await ad.getSourceName()}'),
+      onAdFailedToShow: (_, error) =>
+          logDebug('$name ad failed to show: $error'),
+      onAdClicked: (ad) async =>
+          logDebug('$name ad clicked: ${await ad.getSourceName()}'),
+      onAdDismissed: (ad) async =>
+          logDebug('$name ad dismissed: ${await ad.getSourceName()}'),
+    );
   }
 
-  @override
-  void onImpression(AdImpression? adImpression) {
-    logDebug('Banner impression: $adImpression');
-  }
-
-  @override
-  void onLoaded() {
-    logDebug('Banner ad loaded!');
+  OnAdImpressionListener _getImpressionListener(String name) {
+    return OnAdImpressionListener((ad) async =>
+        logDebug('$name ad impression: ${await ad.getSourceName()}'));
   }
 }
 

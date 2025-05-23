@@ -94,28 +94,16 @@ class BannerWidgetStateImpl extends BannerWidgetState
           });
         }
 
-        _adListener?.onLoaded();
+        _adListener?.onAdViewLoaded?.call();
         break;
       case 'onAdViewFailed':
-        _adListener?.onFailed(call.arguments['error']);
+        _adListener?.onAdViewFailed?.call(call.arguments['error']);
         break;
       case 'onAdViewPresented':
         _adListener?.onAdViewPresented();
-        final data = call.arguments;
-        _adListener?.onImpression(AdImpression(
-          data['adType'] as int,
-          data['cpm'] as double,
-          data['networkName'] as String,
-          data['priceAccuracy'] as int,
-          data['versionInfo'] as String,
-          data['creativeIdentifier'] as String?,
-          data['identifier'] as String,
-          data['impressionDepth'] as int,
-          data['lifetimeRevenue'] as double,
-        ));
         break;
       case 'onAdViewClicked':
-        _adListener?.onClicked();
+        _adListener?.onAdViewClicked?.call();
         break;
 
       case 'onAdImpression':

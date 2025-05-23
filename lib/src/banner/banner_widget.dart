@@ -115,6 +115,7 @@ abstract class BannerWidgetState extends State<BannerWidget> {
 
   /// Destroy ad in the Banner View.
   /// Call when banner ad is no longer needed.
+  /// Automatically called when the widget is removed from the widget tree.
   @override
   Future<void> dispose();
 }

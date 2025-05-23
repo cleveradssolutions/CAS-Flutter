@@ -17,7 +17,11 @@ class ConsentFlowImpl extends MappedObject implements ConsentFlow {
       switch (call.method) {
         case 'onDismiss':
           {
-            listener.onConsentFlowDismissed(call.arguments['status']);
+            final int? index = call.arguments['status'];
+            // final consentFlow = index == null
+            //     ? ConsentStatus.undefined
+            //     : ConsentStatus.values[index];
+            listener.onConsentFlowDismissed(index ?? 0);
             break;
           }
       }
