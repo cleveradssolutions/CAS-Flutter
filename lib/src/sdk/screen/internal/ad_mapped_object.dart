@@ -6,7 +6,6 @@ import '../../ad_content_info.dart';
 import '../../internal/ad_content_info_impl.dart';
 
 mixin AdMappedObject on MappedObjectImpl {
-
   AdContentInfo? _contentInfo;
   String? _contentInfoId;
 
@@ -35,7 +34,7 @@ mixin AdMappedObject on MappedObjectImpl {
     return contentInfo;
   }
 
-  void destroy() {
+  Future<void> dispose() async {
     _contentInfo = null;
     _contentInfoId = null;
   }

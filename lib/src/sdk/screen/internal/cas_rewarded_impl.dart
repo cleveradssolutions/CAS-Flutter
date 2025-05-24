@@ -26,28 +26,28 @@ class CASRewardedImpl extends MappedObject
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'onAdLoaded':
-        contentCallback?.onAdLoaded(getContentInfoFromCall(call));
+        contentCallback?.onAdLoaded?.call(getContentInfoFromCall(call));
         break;
       case 'onAdFailedToLoad':
         final arguments = call.arguments;
-        contentCallback?.onAdFailedToLoad(
+        contentCallback?.onAdFailedToLoad?.call(
             AdFormatFactory.fromArguments(arguments),
             AdErrorFactory.fromArguments(arguments));
         break;
       case 'onAdShowed':
-        contentCallback?.onAdShowed(getContentInfoFromCall(call));
+        contentCallback?.onAdShowed?.call(getContentInfoFromCall(call));
         break;
       case 'onAdFailedToShow':
         final arguments = call.arguments;
-        contentCallback?.onAdFailedToShow(
+        contentCallback?.onAdFailedToShow?.call(
             AdFormatFactory.fromArguments(arguments),
             AdErrorFactory.fromArguments(arguments));
         break;
       case 'onAdClicked':
-        contentCallback?.onAdClicked(getContentInfoFromCall(call));
+        contentCallback?.onAdClicked?.call(getContentInfoFromCall(call));
         break;
       case 'onAdDismissed':
-        contentCallback?.onAdDismissed(getContentInfoFromCall(call));
+        contentCallback?.onAdDismissed?.call(getContentInfoFromCall(call));
         break;
 
       case 'onAdImpression':
@@ -100,11 +100,16 @@ class CASRewardedImpl extends MappedObject
   }
 
   @override
-  Future<void> destroy() {
-    super.destroy();
+  Future<void> dispose() {
+    super.dispose();
     contentCallback = null;
     impressionListener = null;
     onRewardEarnedListener = null;
     return invokeMethod('destroy');
+  }
+
+  @override
+  Future<void> destroy() {
+    return dispose();
   }
 }

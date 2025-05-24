@@ -30,24 +30,21 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<BannerWidgetState> _bannerKey = GlobalKey();
 
   final CASInterstitial _interstitial = CASInterstitial.create(_casId);
-  bool _isInterstitialReady = false;
-
   final CASRewarded _rewarded = CASRewarded.create(_casId);
-  bool _isRewardedReady = false;
 
   String? _sdkVersion;
 
   @override
   void initState() {
     super.initState();
-    _initialize();
+    _initializeCAS();
   }
 
   @override
   void dispose() {
-    _interstitial.destroy();
-    _rewarded.destroy();
     super.dispose();
+    _interstitial.dispose();
+    _rewarded.dispose();
   }
 
   @override
@@ -88,11 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () => _bannerKey.currentState?.load(),
                   ),
                   ElevatedButton(
-                    onPressed: _isInterstitialReady ? _showInterstitial : null,
+                    onPressed: _showInterstitial,
                     child: const Text('Show interstitial'),
                   ),
                   ElevatedButton(
-                    onPressed: _isRewardedReady ? _showRewarded : null,
+                    onPressed: _showRewarded,
                     child: const Text('Show rewarded'),
                   ),
                 ],
@@ -104,13 +101,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _initialize() {
+  void _initializeCAS() {
     // Set Ads Settings
     CAS.settings.setDebugMode(true);
     CAS.settings.setTaggedAudience(Audience.notChildren);
 
     // Set Manual loading mode to disable auto requests
-    CAS.settings.setLoadingMode(LoadingMode.Manual);
+    // CAS.settings.setLoadingMode(LoadingMode.Manual);
 
     // Initialize SDK
     CAS
@@ -143,29 +140,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadAds() {
-    _interstitial.contentCallback = _getAdContentCallback('Interstitial', () {
-      _isInterstitialReady = true;
-    });
+    _interstitial.contentCallback = _getAdContentCallback('Interstitial');
     _interstitial.impressionListener = _getImpressionListener('Interstitial');
     _interstitial.load();
 
-    _rewarded.contentCallback = _getAdContentCallback('Rewarded', () {
-      _isRewardedReady = true;
-    });
+    _rewarded.contentCallback = _getAdContentCallback('Rewarded');
     _rewarded.impressionListener = _getImpressionListener('Rewarded');
     _rewarded.load();
   }
 
-  void _showInterstitial() {
-    _interstitial.show();
-    _isInterstitialReady = false;
+  void _showInterstitial() async {
+    if (await _interstitial.isLoaded()) {
+      _interstitial.show();
+    } else {
+      logDebug('Interstitial ad not ready to show');
+    }
   }
 
-  void _showRewarded() {
-    _rewarded.show(OnRewardEarnedListener((ad) async {
-      logDebug('Rewarded ad earned reward: ${await ad.getSourceName()}');
-    }));
-    _isRewardedReady = false;
+  void _showRewarded() async {
+    if (await _rewarded.isLoaded()) {
+      _rewarded.show(OnRewardEarnedListener((ad) async {
+        logDebug('Rewarded ad earned reward: ${await ad.getSourceName()}');
+      }));
+    } else {
+      logDebug('Rewarded ad not ready to show');
+    }
   }
 
   AdViewListener _getBannerListener() {
@@ -177,14 +176,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ScreenAdContentCallback _getAdContentCallback(
-      String name, void Function() onLoaded) {
+  ScreenAdContentCallback _getAdContentCallback(String name) {
     return ScreenAdContentCallback(
-      onAdLoaded: (ad) async {
-        onLoaded();
-
-        logDebug('$name ad loaded: ${await ad.getSourceName()}');
-      },
+      onAdLoaded: (ad) async =>
+          logDebug('$name ad loaded: ${await ad.getSourceName()}'),
       onAdFailedToLoad: (_, error) =>
           logDebug('$name ad failed to load: $error'),
       onAdShowed: (ad) async =>

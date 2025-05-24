@@ -69,8 +69,11 @@ abstract class CASAppOpen extends Old.CASAppOpen {
   /// This method should be called after the ad has been loaded and is ready to be shown.
   Future<void> show();
 
-  /// Destroys the ad content and releases any associated resources.
+  /// Disposes the ad content and releases any associated resources.
   ///
   /// Call this method when the ad is no longer needed to clean up resources and prevent memory leaks.
+  Future<void> dispose();
+
+  @Deprecated('Use dispose instead')
   Future<void> destroy();
 }
