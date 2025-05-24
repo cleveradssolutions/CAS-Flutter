@@ -16,13 +16,13 @@ abstract class MediationManager {
   Future<bool> isDemoAdMode();
 
   /// Manual load Interstitial Ad.
-  /// You should only use this method if [AdsSettings.loadingMode] == [LoadingManagerMode.Manual] is active.
+  /// You should only use this method if [AdsSettings.loadingMode] == [LoadingMode.Manual] is active.
   /// Please call load before each show ad.
   /// You can get a callback for the successful loading of an ad subscribe [onAdLoadEvent].
   Future<void> loadInterstitial();
 
   /// Manual load Rewarded Video Ad.
-  /// You should only use this method if [AdsSettings.loadingMode] == [LoadingManagerMode.Manual] is active.
+  /// You should only use this method if [AdsSettings.loadingMode] == [LoadingMode.Manual] is active.
   /// Please call load before each show ad.
   /// You can get a callback for the successful loading of an ad by subscribe [onAdLoadEvent].
   Future<void> loadRewarded();

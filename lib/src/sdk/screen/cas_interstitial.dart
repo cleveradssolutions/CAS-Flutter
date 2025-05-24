@@ -70,9 +70,12 @@ abstract class CASInterstitial {
   /// @param activity The activity context from which the ad is shown.
   Future<void> show();
 
-  /// Destroys the ad content and releases any associated resources.
+  /// Disposes the ad content and releases any associated resources.
   ///
   /// Call this method when the ad is no longer needed to clean up resources and prevent memory leaks.
+  Future<void> dispose();
+
+  @Deprecated('Use dispose instead')
   Future<void> destroy();
 
   /// The minimum interval between showing interstitial ads, in seconds.

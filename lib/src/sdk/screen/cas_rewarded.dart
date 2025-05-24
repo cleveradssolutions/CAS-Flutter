@@ -72,8 +72,11 @@ abstract class CASRewarded {
   /// [listener] The listener that handles the reward event when the user earns a reward.
   Future<void> show(OnRewardEarnedListener listener);
 
-  /// Destroys the ad content and releases any associated resources.
+  /// Disposes the ad content and releases any associated resources.
   ///
   /// Call this method when the ad is no longer needed to clean up resources and prevent memory leaks.
+  Future<void> dispose();
+
+  @Deprecated('Use dispose instead')
   Future<void> destroy();
 }

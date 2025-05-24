@@ -11,5 +11,5 @@ class OnAdImpressionListener {
   /// This method is guaranteed to be called on the main thread.
   final void Function(AdContentInfo ad) onAdImpression;
 
-  OnAdImpressionListener({required Function(AdContentInfo ad) this.onAdImpression});
+  OnAdImpressionListener(Function(AdContentInfo ad) this.onAdImpression);
 }

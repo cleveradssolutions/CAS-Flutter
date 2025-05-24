@@ -4,7 +4,7 @@ import Foundation
 extension AdError {
     func toDict() -> [String: Any?] {
         return [
-            "code": code,
+            "code": code.rawValue,
             "message": description,
         ]
     }

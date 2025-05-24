@@ -1,8 +1,14 @@
+## 0.8.1
+### Features
+- Made methods in `ScreenAdContentCallback` and `AdViewListener` optional.
+### Bug Fixes
+- Fixed an issue with invalid argument types for ad errors.
+
 ## 0.8.0
 ### Features
 - Wraps [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 4.0.2 SDK.
 ### Changes
-- The documentation will be updated soon.
+- Please check the updated Wiki for details about the CAS 4 release.
 - All ad formats are now managed using a **CAS ID string** with the new `CASAppOpen`, `CASInterstitial`, and `CASRewarded` ad objects.
   Read more about the new implementation below.
   Previously, ad management required working with a `MediationManager` instance.

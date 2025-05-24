@@ -113,8 +113,9 @@ abstract class BannerWidgetState extends State<BannerWidget> {
   @Deprecated('Use BannerWidgetState.load instead')
   Future<void> loadNextAd() => load();
 
-  /// Destroy ad in the Banner View.
+  /// Disposes ad in the Banner View.
   /// Call when banner ad is no longer needed.
+  /// Automatically called when the widget is removed from the widget tree.
   @override
   Future<void> dispose();
 }
