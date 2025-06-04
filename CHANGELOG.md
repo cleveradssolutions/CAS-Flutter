@@ -1,3 +1,9 @@
+## 0.8.2
+### Features
+- Wraps [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 4.0.2.1 SDK.
+### Bug Fixes
+- [iOS] Fixed an issue with invalid argument types in the `getSourceId` and `getRevenuePrecision` methods of `AdContentInfo`.
+
 ## 0.8.1
 ### Features
 - Made methods in `ScreenAdContentCallback` and `AdViewListener` optional.

@@ -23,7 +23,7 @@ class AdContentInfoMethodHandler: MappedMethodHandler<AdContentInfo> {
         case "getSourceName":
             value = instance.sourceName
         case "getSourceId":
-            value = instance.sourceID
+            value = instance.sourceID.rawValue
         case "getSourceUnitId":
             value = instance.sourceUnitID
         case "getCreativeId":
@@ -31,7 +31,7 @@ class AdContentInfoMethodHandler: MappedMethodHandler<AdContentInfo> {
         case "getRevenue":
             value = instance.revenue
         case "getRevenuePrecision":
-            value = instance.revenuePrecision
+            value = instance.revenuePrecision.rawValue
         case "getImpressionDepth":
             value = instance.impressionDepth
         case "getRevenueTotal":
