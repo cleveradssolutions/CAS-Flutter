@@ -5,7 +5,7 @@ class OnDismissListener {
   final void Function(ConsentStatus status) _onConsentFlowDismissed;
 
   const OnDismissListener(
-     Function(ConsentStatus status) onConsentFlowDismissed,
+    Function(ConsentStatus status) onConsentFlowDismissed,
   ) : _onConsentFlowDismissed = onConsentFlowDismissed;
 
   void onConsentFlowDismissed(int status) {

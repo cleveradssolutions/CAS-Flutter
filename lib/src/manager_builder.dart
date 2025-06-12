@@ -75,4 +75,3 @@ abstract class ManagerBuilder {
   /// Can be called for different identifiers to create different managers.
   MediationManager initialize();
 }
-

@@ -2,124 +2,106 @@ import os
 import re
 import sys
 
+_FLUTTER_PLUGIN_VERSION = "0.8.3"
+_CAS_VERSION = "4.1.0"
 
-# To run, execute the command:
-# python version_updater.py CAS_VERSION=4.0.2 FLUTTER_PLUGIN_VERSION=0.8.2
+# Plugin publishing flow (from the project root):
+# python tools/version_updater.py
+# python tools/generate_export_file.py
+# [write CHANGELOG.md]
+# dart format .
+# flutter analyze
+# flutter pub publish
 
-def parse_args(args):
-    cas_version = None
-    flutter_plugin_version = None
+def update_version_in_file(file_path, prefix, suffix):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
 
-    for arg in args:
-        if arg.startswith("CAS_VERSION="):
-            cas_version = arg.split("=")[1]
-        elif arg.startswith("FLUTTER_PLUGIN_VERSION="):
-            flutter_plugin_version = arg.split("=")[1]
-
-    if not cas_version or not flutter_plugin_version:
-        raise ValueError("Both CAS_VERSION and FLUTTER_PLUGIN_VERSION must be provided.")
-
-    return cas_version, flutter_plugin_version
-
-
-def update_version_in_file(file_path, version_prefix, new_version, file_description):
-    with open(file_path, 'r') as file:
-        content = file.read()
-
-    content, count = re.subn(
-        rf"{re.escape(version_prefix)}(\d+\.\d+\.\d+(?:-[\w\d]+)?)",
-        f"{version_prefix}{new_version}",
-        content,
-        count=1
-    )
-
-    if count > 0:
-        with open(file_path, 'w') as file:
-            file.write(content)
-        print(f"{file_description} updated to {new_version}")
+    success = False
+    with open(file_path, 'w', encoding='utf-8') as file:
+        for line in lines:
+            if line.startswith(prefix):
+                file.write(prefix + suffix + '\n')
+                success = True
+            else:
+                file.write(line)
+    
+    if success:
+        print("Updated " + file_path)
     else:
-        print(f"{file_description} not found")
+        raise RuntimeError(f"Prefix {prefix} not found in file: {file_path}")
 
 
-def update_cas_sdk_version_android(cas_version):
+def update_cas_sdk_version_android():
     update_version_in_file(
         os.path.join('..', 'android', 'build.gradle'),
-        "com.cleveradssolutions:cas-sdk:",
-        cas_version,
-        "[Android] [build.gradle] CAS SDK version"
+        "    implementation 'com.cleveradssolutions:cas-sdk:",
+        _CAS_VERSION + "'"
     )
 
 
-def update_cas_sdk_version_android_example(cas_version):
+def update_cas_sdk_version_android_example():
     update_version_in_file(
         os.path.join('..', 'example', 'android', 'app', 'build.gradle'),
-        "id(\"com.cleveradssolutions.gradle-plugin\") version \"",
-        cas_version,
-        "[Android example] [build.gradle]"
+        '    id("com.cleveradssolutions.gradle-plugin") version "',
+        _CAS_VERSION + '"'
     )
 
 
-def update_cas_sdk_version_ios(cas_version):
+def update_cas_sdk_version_ios():
     update_version_in_file(
         os.path.join('..', 'ios', 'clever_ads_solutions.podspec'),
-        "'CleverAdsSolutions-Base', '~> ",
-        cas_version,
-        "[iOS] [podspec] CAS SDK version"
+        "  s.dependency 'CleverAdsSolutions-Base', '",
+        _CAS_VERSION + "'"
     )
 
 
-def update_cas_sdk_version_ios_example(cas_version):
+def update_cas_sdk_version_ios_example():
     update_version_in_file(
         os.path.join('..', 'example', 'ios', 'Podfile'),
-        "$casVersion = '~> ",
-        cas_version,
-        "[iOS example] [Podfile] CAS SDK version"
+        "$casVersion = '",
+        _CAS_VERSION + "'"
     )
 
 
-def update_flutter_plugin_version(flutter_plugin_version):
+def update_flutter_plugin_version():
     update_version_in_file(
         os.path.join('..', 'pubspec.yaml'),
         "version: ",
-        flutter_plugin_version,
-        "[Flutter] [pubspec.yaml] CAS Flutter plugin version"
+        _FLUTTER_PLUGIN_VERSION
     )
 
 
-def update_flutter_plugin_version_dart(flutter_plugin_version):
+def update_flutter_plugin_version_dart():
     update_version_in_file(
         os.path.join('..', 'lib', 'src', 'cas.dart'),
-        "static const String _pluginVersion = \"",
-        flutter_plugin_version,
-        "[Flutter] [cas.dart] CAS Flutter plugin version"
+        '  static const String _pluginVersion = "',
+        _FLUTTER_PLUGIN_VERSION + '";'
     )
 
 
-def update_flutter_plugin_version_android(flutter_plugin_version):
+def update_flutter_plugin_version_android():
     update_version_in_file(
         os.path.join('..', 'android', 'build.gradle'),
         "version = '",
-        flutter_plugin_version,
-        "[Android] [build.gradle] CAS Flutter plugin version"
+        _FLUTTER_PLUGIN_VERSION + "'"
     )
 
 
-def update_flutter_plugin_version_ios(flutter_plugin_version):
+def update_flutter_plugin_version_ios():
     update_version_in_file(
         os.path.join('..', 'ios', 'clever_ads_solutions.podspec'),
-        "version          = '",
-        flutter_plugin_version,
-        "[iOS] [podspec] CAS Flutter plugin version"
+        "  s.version          = '",
+        _FLUTTER_PLUGIN_VERSION + "'"
     )
 
 
 if __name__ == "__main__":
-    cas_version, flutter_plugin_version = parse_args(sys.argv[1:])
-    update_cas_sdk_version_android(cas_version)
-    update_cas_sdk_version_android_example(cas_version)
-    update_cas_sdk_version_ios(cas_version)
-    update_cas_sdk_version_ios_example(cas_version)
-    update_flutter_plugin_version(flutter_plugin_version)
-    update_flutter_plugin_version_dart(flutter_plugin_version)
-    update_flutter_plugin_version_android(flutter_plugin_version)
-    update_flutter_plugin_version_ios(flutter_plugin_version)
+    update_cas_sdk_version_android()
+    update_cas_sdk_version_android_example()
+    update_cas_sdk_version_ios()
+    update_cas_sdk_version_ios_example()
+    update_flutter_plugin_version()
+    update_flutter_plugin_version_dart()
+    update_flutter_plugin_version_android()
+    update_flutter_plugin_version_ios()

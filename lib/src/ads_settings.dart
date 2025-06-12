@@ -27,7 +27,7 @@ abstract class AdsSettings {
   /// to determine the consent status of the IAB vendor with the provided ID.
   ///
   /// @param vendorId Vendor ID as defined in the Global Vendor List.
-  /// @return [ConsentStatus.ACCEPTED] if the advertising entity has consent, [ConsentStatus.DENIED] if not, or [ConsentStatus.UNDEFINED] if VendorConsents is not available on disk.
+  /// @return [ConsentStatus.accepted] if the advertising entity has consent, [ConsentStatus.denied] if not, or [ConsentStatus.undefined] if VendorConsents is not available on disk.
   /// @see <a href="https://iabeurope.eu/vendor-list-tcf/">TCF Vendor List</a>
   Future<ConsentStatus> getVendorConsent(int vendorId);
 
@@ -35,14 +35,14 @@ abstract class AdsSettings {
   /// to determine the consent status of the advertising entity with the provided Ad Technology Provider (ATP) ID.
   ///
   /// @param providerId ATP ID of the advertising entity (e.g. 89 for Meta Audience Network).
-  /// @return [ConsentStatus.ACCEPTED] if the advertising entity has consent, [ConsentStatus.DENIED] if not, or [ConsentStatus.UNDEFINED] if AddtlConsent is not available on disk.
+  /// @return [ConsentStatus.accepted] if the advertising entity has consent, [ConsentStatus.denied] if not, or [ConsentStatus.undefined] if AddtlConsent is not available on disk.
   /// @see <a href="https://support.google.com/admanager/answer/9681920">Google’s Additional Consent Mode technical specification</a>
   /// @see <a href="https://storage.googleapis.com/tcfac/additional-consent-providers.csv">List of Google ATPs and their IDs</a>
   Future<ConsentStatus> getAdditionalConsent(int providerId);
 
   /// Whether or not user has opted out of the sale of their personal information.
   ///
-  /// Default: [CCPAStatus.UNDEFINED]
+  /// Default: [CCPAStatus.undefined]
   /// See [CCPAStatus]
   Future<CCPAStatus> getCPPAStatus();
 
@@ -79,7 +79,7 @@ abstract class AdsSettings {
   /// "To get test ads on this device, set ... "
   /// 3. Copy your alphanumeric test device ID to your clipboard.
   /// 4. Add the test device ID to the list before call initialize MediationManager.
-  Future<void> setTestDeviceId(String deviceIds);
+  Future<void> setTestDeviceId(String deviceId);
 
   /// See [setTestDeviceId]
   Future<void> setTestDeviceIds(Set<String> deviceIds);

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../ad_impression.dart';
 import '../../ad_size.dart';
 import '../../internal/ad_size_impl.dart';
 import '../../internal/mapped_object.dart';
@@ -19,7 +18,10 @@ class BannerWidgetStateImpl extends BannerWidgetState
   AdViewListener? _adListenerField;
 
   AdViewListener? get _adListener =>
-      _adListenerField ?? widget.adListener ?? widget.listener;
+      _adListenerField ??
+      widget.adListener ??
+      // ignore: deprecated_member_use_from_same_package
+      widget.listener;
 
   AdSize? _size;
   AdSize? _newSize;
@@ -77,6 +79,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
           setState(() {
             _size = size;
           });
+          // ignore: deprecated_member_use_from_same_package
           invokeMethod('setSize', _sizeToMap(size, widget.maxWidthDpi));
       }
     }
@@ -100,6 +103,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
         _adListener?.onAdViewFailed?.call(call.arguments['error']);
         break;
       case 'onAdViewPresented':
+        // ignore: deprecated_member_use_from_same_package
         _adListener?.onAdViewPresented();
         break;
       case 'onAdViewClicked':
@@ -134,6 +138,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
     if (size == null) {
       return const SizedBox.shrink();
     }
+    // ignore: deprecated_member_use_from_same_package
     if (size == AdSize.Smart) {
       size = AdSize.getSmartBanner(context);
     }
@@ -141,6 +146,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
     Map<String, dynamic> creationParams = <String, dynamic>{
       'id': id,
       'casId': widget.casId,
+      // ignore: deprecated_member_use_from_same_package
       'size': _sizeToMap(size, widget.maxWidthDpi),
       'isAutoloadEnabled': widget.isAutoloadEnabled,
       'refreshInterval': widget.refreshInterval,
@@ -215,6 +221,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
     if (size != _size) {
       _newSize = size;
       _sizeChanged = true;
+      // ignore: deprecated_member_use_from_same_package
       return invokeMethod('setSize', _sizeToMap(size, widget.maxWidthDpi));
     }
   }
@@ -270,6 +277,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
       'height': size.height,
       'mode': (size as AdSizeBase).mode,
       'maxWidthDpi': maxWidthDpi,
+      // ignore: deprecated_member_use_from_same_package
       'isAdaptive': size == AdSize.Adaptive
     };
   }

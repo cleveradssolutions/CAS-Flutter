@@ -1,3 +1,7 @@
+## 0.8.3
+- Wraps 4.1.0 [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) SDK.
+- Resolved all Flutter/Dart static analysis warnings.
+
 ## 0.8.2
 ### Features
 - Wraps [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 4.0.2.1 SDK.

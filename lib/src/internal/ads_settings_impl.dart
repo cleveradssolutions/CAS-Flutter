@@ -71,12 +71,15 @@ class AdsSettingsImpl extends AdsSettings {
   @override
   Future<void> setCCPAStatus(CCPAStatus status) {
     switch (status) {
+      // ignore: deprecated_member_use_from_same_package
       case CCPAStatus.UNDEFINED:
         status = CCPAStatus.undefined;
         break;
+      // ignore: deprecated_member_use_from_same_package
       case CCPAStatus.OPT_OUT_SALE:
         status = CCPAStatus.optOutSale;
         break;
+      // ignore: deprecated_member_use_from_same_package
       case CCPAStatus.OPT_IN_SALE:
         status = CCPAStatus.optInSale;
         break;

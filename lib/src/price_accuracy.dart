@@ -1,6 +1,9 @@
 enum PriceAccuracy {
+  // ignore: constant_identifier_names
   FLOOR,
+  // ignore: constant_identifier_names
   BID,
+  // ignore: constant_identifier_names
   UNDISCLOSED;
 
   static PriceAccuracy get(int index) {

@@ -232,10 +232,13 @@ class MediationManagerImpl implements MediationManager {
   }
 
   @override
+  // ignore: deprecated_member_use_from_same_package
   CASBannerView getAdView(AdSize size) {
     int sizeId;
+    // ignore: deprecated_member_use_from_same_package
     if (size == AdSize.Adaptive) {
       sizeId = 2;
+      // ignore: deprecated_member_use_from_same_package
     } else if (size == AdSize.Smart) {
       sizeId = 3;
     } else if (size == AdSize.leaderboard) {
@@ -247,6 +250,7 @@ class MediationManagerImpl implements MediationManager {
     }
 
     _channel.invokeMethod("showBanner", {"sizeId": sizeId});
+    // ignore: deprecated_member_use_from_same_package
     return InternalCASBannerView(_channel, _listenerContainer, sizeId);
   }
 

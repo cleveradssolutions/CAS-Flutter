@@ -3,7 +3,7 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
-    id("com.cleveradssolutions.gradle-plugin") version "4.0.2"
+    id("com.cleveradssolutions.gradle-plugin") version "4.1.0"
 }
 
 cas {

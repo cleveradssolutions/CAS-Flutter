@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '0.8.2'
+version = '0.8.3'
 
 buildscript {
     ext.kotlin_version = '1.8.22'
@@ -92,6 +92,5 @@ android {
 }
 
 dependencies {
-    implementation 'com.cleveradssolutions:cas-sdk:4.0.2'
-    implementation 'com.google.android.ump:user-messaging-platform:3.2.0'
+    implementation 'com.cleveradssolutions:cas-sdk:4.1.0'
 }

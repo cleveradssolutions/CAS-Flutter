@@ -1,4 +1,4 @@
-import '../../app_open/cas_app_open.dart' as Old;
+import '../../app_open/cas_app_open.dart' as obsolete_impl;
 import '../ad_content_info.dart';
 import '../on_ad_impression_listener.dart';
 import 'internal/cas_app_open_impl.dart';
@@ -10,7 +10,8 @@ import 'screen_ad_content_callback.dart';
 /// designed to capture the user's attention and are typically displayed when the app is launched or resumed.
 ///
 /// [casId] The unique identifier for the CAS content, typically an application bundle name.
-abstract class CASAppOpen extends Old.CASAppOpen {
+/// ignore: deprecated_member_use_from_same_package
+abstract class CASAppOpen extends obsolete_impl.CASAppOpen {
   static CASAppOpen create(String casId) {
     return CASAppOpenImpl(casId);
   }

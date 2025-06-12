@@ -1,6 +1,9 @@
 enum AdType {
+  // ignore: constant_identifier_names
   Banner,
+  // ignore: constant_identifier_names
   Interstitial,
+  // ignore: constant_identifier_names
   Rewarded;
 
   static AdType get(int index) {

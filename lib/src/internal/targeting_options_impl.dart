@@ -16,12 +16,15 @@ class TargetingOptionsImpl extends TargetingOptions {
   @override
   Future<void> setGender(Gender gender) {
     switch (gender) {
+      // ignore: deprecated_member_use_from_same_package
       case Gender.UNKNOWN:
         gender = Gender.unknown;
         break;
+      // ignore: deprecated_member_use_from_same_package
       case Gender.MALE:
         gender = Gender.male;
         break;
+      // ignore: deprecated_member_use_from_same_package
       case Gender.FEMALE:
         gender = Gender.female;
         break;
