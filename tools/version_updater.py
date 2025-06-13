@@ -2,7 +2,7 @@ import os
 import re
 import sys
 
-_FLUTTER_PLUGIN_VERSION = "0.8.3"
+_FLUTTER_PLUGIN_VERSION = "0.8.4"
 _CAS_VERSION = "4.1.0"
 
 # Plugin publishing flow (from the project root):
@@ -34,7 +34,7 @@ def update_version_in_file(file_path, prefix, suffix):
 
 def update_cas_sdk_version_android():
     update_version_in_file(
-        os.path.join('..', 'android', 'build.gradle'),
+        os.path.join('android', 'build.gradle'),
         "    implementation 'com.cleveradssolutions:cas-sdk:",
         _CAS_VERSION + "'"
     )
@@ -42,7 +42,7 @@ def update_cas_sdk_version_android():
 
 def update_cas_sdk_version_android_example():
     update_version_in_file(
-        os.path.join('..', 'example', 'android', 'app', 'build.gradle'),
+        os.path.join('example', 'android', 'app', 'build.gradle'),
         '    id("com.cleveradssolutions.gradle-plugin") version "',
         _CAS_VERSION + '"'
     )
@@ -50,7 +50,7 @@ def update_cas_sdk_version_android_example():
 
 def update_cas_sdk_version_ios():
     update_version_in_file(
-        os.path.join('..', 'ios', 'clever_ads_solutions.podspec'),
+        os.path.join('ios', 'clever_ads_solutions.podspec'),
         "  s.dependency 'CleverAdsSolutions-Base', '",
         _CAS_VERSION + "'"
     )
@@ -58,7 +58,7 @@ def update_cas_sdk_version_ios():
 
 def update_cas_sdk_version_ios_example():
     update_version_in_file(
-        os.path.join('..', 'example', 'ios', 'Podfile'),
+        os.path.join('example', 'ios', 'Podfile'),
         "$casVersion = '",
         _CAS_VERSION + "'"
     )
@@ -66,7 +66,7 @@ def update_cas_sdk_version_ios_example():
 
 def update_flutter_plugin_version():
     update_version_in_file(
-        os.path.join('..', 'pubspec.yaml'),
+        os.path.join('pubspec.yaml'),
         "version: ",
         _FLUTTER_PLUGIN_VERSION
     )
@@ -74,7 +74,7 @@ def update_flutter_plugin_version():
 
 def update_flutter_plugin_version_dart():
     update_version_in_file(
-        os.path.join('..', 'lib', 'src', 'cas.dart'),
+        os.path.join('lib', 'src', 'cas.dart'),
         '  static const String _pluginVersion = "',
         _FLUTTER_PLUGIN_VERSION + '";'
     )
@@ -82,7 +82,7 @@ def update_flutter_plugin_version_dart():
 
 def update_flutter_plugin_version_android():
     update_version_in_file(
-        os.path.join('..', 'android', 'build.gradle'),
+        os.path.join('android', 'build.gradle'),
         "version = '",
         _FLUTTER_PLUGIN_VERSION + "'"
     )
@@ -90,7 +90,7 @@ def update_flutter_plugin_version_android():
 
 def update_flutter_plugin_version_ios():
     update_version_in_file(
-        os.path.join('..', 'ios', 'clever_ads_solutions.podspec'),
+        os.path.join('ios', 'clever_ads_solutions.podspec'),
         "  s.version          = '",
         _FLUTTER_PLUGIN_VERSION + "'"
     )
