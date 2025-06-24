@@ -2,12 +2,12 @@ import os
 import re
 import sys
 
-_FLUTTER_PLUGIN_VERSION = "0.8.4"
-_CAS_VERSION = "4.1.0"
+_FLUTTER_PLUGIN_VERSION = "0.8.5"
+_CAS_VERSION = "4.1.2"
 
 # Plugin publishing flow (from the project root):
-# python tools/version_updater.py
-# python tools/generate_export_file.py
+# python3 tools/version_updater.py
+# python3 tools/generate_export_file.py
 # [write CHANGELOG.md]
 # dart format .
 # flutter analyze
@@ -52,7 +52,7 @@ def update_cas_sdk_version_ios():
     update_version_in_file(
         os.path.join('ios', 'clever_ads_solutions.podspec'),
         "  s.dependency 'CleverAdsSolutions-Base', '",
-        _CAS_VERSION + "'"
+        ">= " + _CAS_VERSION + "'"
     )
 
 

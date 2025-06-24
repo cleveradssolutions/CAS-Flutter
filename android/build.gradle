@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '0.8.4'
+version = '0.8.5'
 
 buildscript {
     ext.kotlin_version = '1.8.22'
@@ -32,11 +32,6 @@ rootProject.allprojects {
             name = "ChartboostAdsRepo"
             url = "https://cboost.jfrog.io/artifactory/chartboost-ads/"
             content { it.includeGroup("com.chartboost") }
-        }
-        maven {
-            name = "SuperAwesomeAdsRepo"
-            url = "https://aa-sdk.s3-eu-west-1.amazonaws.com/android_repo"
-            content { it.includeGroup("tv.superawesome.sdk.publisher") }
         }
         maven {
             name = "YSONetworkRepo"
@@ -92,5 +87,5 @@ android {
 }
 
 dependencies {
-    implementation 'com.cleveradssolutions:cas-sdk:4.1.0'
+    implementation 'com.cleveradssolutions:cas-sdk:4.1.2'
 }

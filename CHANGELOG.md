@@ -1,3 +1,6 @@
+## 0.8.5
+- Wraps 4.1.2 [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) SDK.
+
 ## 0.8.4
 - Hotfix the native [4.1.0.1 iOS](https://github.com/cleveradssolutions/CAS-iOS/releases).
 
