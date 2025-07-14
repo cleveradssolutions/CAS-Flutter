@@ -2,8 +2,8 @@ import os
 import re
 import sys
 
-_FLUTTER_PLUGIN_VERSION = "0.8.5"
-_CAS_VERSION = "4.1.2"
+_FLUTTER_PLUGIN_VERSION = "0.8.6"
+_CAS_VERSION = "4.2.0"
 
 # Plugin publishing flow (from the project root):
 # python3 tools/version_updater.py

@@ -1,3 +1,6 @@
+## 0.8.6
+- Updates CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependency to 4.2.0
+
 ## 0.8.5
 - Wraps 4.1.2 [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) SDK.
 
