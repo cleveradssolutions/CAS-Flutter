@@ -1,3 +1,6 @@
+## 0.8.8
+- [Android] Fixed build failure related to missing style attribute `windowOptOutEdgeToEdgeEnforcement` by increasing `compileSdkVersion` to 35 in the plugin.
+
 ## 0.8.7
 - Updates CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) 4.2.0 and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) 4.2.1 dependency
 

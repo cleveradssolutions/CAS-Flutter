@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '0.8.7'
+version = '0.8.8'
 
 buildscript {
     ext.kotlin_version = '1.8.22'
@@ -67,7 +67,7 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace 'com.cleveradssolutions.plugin.flutter'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 23
