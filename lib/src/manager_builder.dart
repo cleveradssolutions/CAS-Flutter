@@ -27,7 +27,8 @@ abstract class ManagerBuilder {
   /// Set [AdType.None] to disable all ad types requests.
   ///
   /// Ad types can be enabled manually after initialize by [MediationManager.setEnabled]
-  @Deprecated("Use `ManagerBuilder.withAdTypes()` only if you continue to use `MediationManager` for ad requests. For the new `CASInterstitial` and `CASRewarded` implementations, you should skip this function call.")
+  @Deprecated(
+      "Use `ManagerBuilder.withAdTypes()` only if you continue to use `MediationManager` for ad requests. For the new `CASInterstitial` and `CASRewarded` implementations, you should skip this function call.")
   ManagerBuilder withAdTypes(final int adTypes);
 
   /// The userID is a unique identifier supplied by your application and must be static for each user across sessions.

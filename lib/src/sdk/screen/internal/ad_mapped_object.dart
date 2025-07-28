@@ -34,7 +34,7 @@ mixin AdMappedObject on MappedObjectImpl {
     return contentInfo;
   }
 
-  Future<void> dispose() async {
+  void disposeContent() {
     _contentInfo = null;
     _contentInfoId = null;
   }

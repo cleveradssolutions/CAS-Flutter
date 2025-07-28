@@ -91,7 +91,7 @@ class CASInterstitialImpl extends MappedObject
 
   @override
   Future<void> dispose() {
-    super.dispose();
+    disposeContent();
     contentCallback = null;
     impressionListener = null;
     return invokeMethod('destroy');

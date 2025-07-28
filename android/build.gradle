@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '0.8.8'
+version = '0.8.9'
 
 buildscript {
     ext.kotlin_version = '1.8.22'

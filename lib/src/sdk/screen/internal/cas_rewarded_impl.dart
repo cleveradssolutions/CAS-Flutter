@@ -101,7 +101,7 @@ class CASRewardedImpl extends MappedObject
 
   @override
   Future<void> dispose() {
-    super.dispose();
+    disposeContent();
     contentCallback = null;
     impressionListener = null;
     onRewardEarnedListener = null;

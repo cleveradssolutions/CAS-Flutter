@@ -1,3 +1,6 @@
+## 0.8.9
+- Fixed `BannerWidgetStateImpl.dispose` failed to call `super.dispose` issue #45.
+
 ## 0.8.8
 - [Android] Fixed build failure related to missing style attribute `windowOptOutEdgeToEdgeEnforcement` by increasing `compileSdkVersion` to 35 in the plugin.
 

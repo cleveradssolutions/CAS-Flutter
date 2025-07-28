@@ -266,8 +266,9 @@ class BannerWidgetStateImpl extends BannerWidgetState
 
   @override
   Future<void> dispose() {
-    super.dispose();
+    disposeContent();
     _adListenerField = null;
+    super.dispose();
     return invokeMethod('dispose');
   }
 
