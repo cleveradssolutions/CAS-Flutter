@@ -1,52 +1,50 @@
 package com.cleveradssolutions.plugin.flutter.bridge.manager.listener
 
-import com.cleveradssolutions.plugin.flutter.CASViewWrapperListener
-import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
-import com.cleveradssolutions.plugin.flutter.util.toMap
+import com.cleveradssolutions.plugin.flutter.CASChannel
+import com.cleveradssolutions.plugin.flutter.toMap
 import com.cleversolutions.ads.AdError
 import com.cleversolutions.ads.AdStatusHandler
 
 @Deprecated("Old implementation")
 internal class BannerListener(
-    private val handler: MethodHandler,
+    private val handler: CASChannel,
     sizeId: Int
-) : CASViewWrapperListener {
+) {
 
     private val name = getBannerName(sizeId)
 
-    override fun onLoaded() {
-        handler.invokeMethod("OnBannerAdLoaded", mapOf("banner" to name))
+    fun onLoaded() {
+        handler.invokeMethod("OnBannerAdLoaded", hashMapOf("banner" to name))
     }
 
-    override fun onFailed(error: Int) {
+    fun onFailed(error: Int) {
         handler.invokeMethod(
             "OnBannerAdFailedToLoad",
-            mapOf(
+            hashMapOf(
                 "banner" to name,
                 "message" to AdError(error).message
             )
         )
     }
 
-    override fun onShown() {
-        handler.invokeMethod("OnBannerAdShown", mapOf("banner" to name))
+    fun onShown() {
+        handler.invokeMethod("OnBannerAdShown", hashMapOf("banner" to name))
     }
 
-    override fun onImpression(impression: AdStatusHandler?) {
-        handler.invokeMethod(
-            "OnBannerAdImpression",
-            mapOf("banner" to name) + (impression?.toMap() ?: emptyMap())
-        )
+    fun onImpression(impression: AdStatusHandler?) {
+        val args = impression?.toMap() ?: HashMap()
+        args["banner"] = name
+        handler.invokeMethod("OnBannerAdImpression", args)
     }
 
-    override fun onClicked() {
-        handler.invokeMethod("OnBannerAdClicked", mapOf("banner" to name))
+    fun onClicked() {
+        handler.invokeMethod("OnBannerAdClicked", hashMapOf("banner" to name))
     }
 
-    override fun onRect(x: Int, y: Int, width: Int, height: Int) {
+    fun onRect(x: Int, y: Int, width: Int, height: Int) {
         handler.invokeMethod(
             "OnBannerAdRect",
-            mapOf(
+            hashMapOf(
                 "banner" to name,
                 "x" to x,
                 "y" to y,

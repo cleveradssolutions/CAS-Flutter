@@ -1,10 +1,8 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
-import android.app.Activity
+import com.cleveradssolutions.plugin.flutter.CASChannel
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
-import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
-import com.cleveradssolutions.plugin.flutter.util.errorArgNull
-import com.cleveradssolutions.plugin.flutter.util.success
+import com.cleveradssolutions.plugin.flutter.success
 import com.cleversolutions.ads.android.CAS
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
@@ -15,7 +13,7 @@ private const val CHANNEL_NAME = "cleveradssolutions/cas"
 class CASMethodHandler(
     binding: FlutterPluginBinding,
     private val contextService: CASFlutterContext
-) : MethodHandler(binding, CHANNEL_NAME) {
+) : CASChannel(binding, CHANNEL_NAME) {
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {

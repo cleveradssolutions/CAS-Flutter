@@ -45,6 +45,8 @@ abstract class MediationManager {
 
   /// Set [enabled] ad [type] to processing.
   /// The state will not be saved between sessions.
+  @Deprecated(
+      "If you want more precise control over ad memory, you should switch to using the new CAS classes for each format.")
   Future<void> setEnabled(int adType, bool isEnable);
 
   /// Ad [type] is processing.
@@ -55,6 +57,8 @@ abstract class MediationManager {
   ///
   /// Return ads are disabled by default.
   /// If you want to enable this feature, simply pass AdCallback as the parameter of the method.
+  @Deprecated(
+      "Please migrate to new `CASAppOpen` or `CASInterstitial` to enable this feature with the `isAutoshowEnabled` property.")
   Future<void> enableAppReturn(AdCallback? callback);
 
   /// Disable the Return Ad which is displayed once the user returns to your application after a certain period of time.
@@ -66,6 +70,7 @@ abstract class MediationManager {
   /// and do not want them to see ads when they return to your application.
   Future<void> skipNextAppReturnAds();
 
+  @Deprecated('Use BannerWidget.refreshInterval instead')
   Future<void> setBannerRefreshDelay(int delay);
 
   Future<int> getBannerRefreshDelay();
@@ -73,5 +78,7 @@ abstract class MediationManager {
   @Deprecated("This method is no longer maintained and should not be used")
   CASBannerView getAdView(AdSize size);
 
+  @Deprecated(
+      "If you want to receive convenient ad loading callbacks, you should switch to using the new CAS classes for each format.")
   void setAdLoadCallback(AdLoadCallback? callback);
 }

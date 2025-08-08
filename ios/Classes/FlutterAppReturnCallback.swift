@@ -2,11 +2,7 @@ import CleverAdsSolutions
 import Foundation
 
 class FlutterAppReturnCallback: CASAppReturnDelegate {
-    private var handler: MethodHandler?
-
-    func setMethodHandler(handler: MethodHandler) {
-        self.handler = handler
-    }
+    weak var handler: CASChannel?
 
     func willShown(ad adStatus: CASImpression) {
         handler?.invokeMethod("OnAppReturnAdShown")

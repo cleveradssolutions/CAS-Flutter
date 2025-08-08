@@ -135,11 +135,10 @@ abstract class AdsSettings {
   Future<void> allowInterstitialAdsWhenVideoCostAreLower(bool isAllow);
 
   /// Mediation waterfall loading mode.
-  ///
-  /// Default: [LoadingMode.Optimal]
-  /// See [LoadingMode]
+  // ignore: deprecated_member_use_from_same_package
   Future<LoadingMode> getLoadingMode();
 
   /// See [getLoadingMode]
+  // ignore: deprecated_member_use_from_same_package
   Future<void> setLoadingMode(LoadingMode loadingMode);
 }

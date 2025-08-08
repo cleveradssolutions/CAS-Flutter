@@ -1,14 +1,15 @@
 package com.cleveradssolutions.plugin.flutter.bridge.manager.listener
 
-import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
-import com.cleveradssolutions.plugin.flutter.util.toMap
+import com.cleveradssolutions.plugin.flutter.CASChannel
+import com.cleveradssolutions.plugin.flutter.toMap
 import com.cleversolutions.ads.AdError
 import com.cleversolutions.ads.AdPaidCallback
 import com.cleversolutions.ads.AdStatusHandler
 import com.cleversolutions.ads.LoadAdCallback
 
+@Deprecated("Old implementation")
 internal class RewardedListener(
-    private val handler: MethodHandler
+    private val handler: CASChannel
 ) : AdPaidCallback, LoadAdCallback {
 
     override fun onAdLoaded() {
@@ -18,7 +19,7 @@ internal class RewardedListener(
     override fun onAdFailedToLoad(error: AdError) {
         handler.invokeMethod(
             "OnRewardedAdFailedToLoad",
-            mapOf("message" to error.message)
+            hashMapOf("message" to error.message)
         )
     }
 

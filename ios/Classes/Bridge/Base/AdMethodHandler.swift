@@ -8,17 +8,18 @@
 import CleverAdsSolutions
 import Flutter
 
-protocol AdMethodHandlerProtocol: MappedMethodHandlerProtocol {
-    func onAdContentLoaded(_ contentInfoId: String, _ contentInfo: AdContentInfo?)
+class AdInstance: NSObject {
+    let id: String
+    let contentInfoId: String
+
+    init(id: String, contentInfoId: String) {
+        self.id = id
+        self.contentInfoId = contentInfoId
+        super.init()
+    }
 }
 
-class AdMethodHandler<T>: MappedMethodHandler<AdMethodHandler.Ad>, AdMethodHandlerProtocol {
-    struct Ad {
-        let ad: T
-        let id: String
-        let contentInfoId: String
-    }
-
+class AdMethodHandler<T: AdInstance>: CASMappedChannel<T> {
     private let contentInfoHandler: AdContentInfoMethodHandler
 
     init(with registrar: FlutterPluginRegistrar, on channelName: String, _ contentInfoHandler: AdContentInfoMethodHandler) {
@@ -34,8 +35,8 @@ class AdMethodHandler<T>: MappedMethodHandler<AdMethodHandler.Ad>, AdMethodHandl
         }
     }
 
-    func destroy(ad: Ad) {
-        _ = remove(ad.id)
-        _ = contentInfoHandler.remove(ad.contentInfoId)
+    func destroy(instance: AdInstance) {
+        _ = remove(instance.id)
+        _ = contentInfoHandler.remove(instance.contentInfoId)
     }
 }

@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '0.8.9'
+version = '0.9.0'
 
 buildscript {
     ext.kotlin_version = '1.8.22'
@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:8.7.0"
+        classpath "com.android.tools.build:gradle:8.3.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -66,17 +66,21 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    namespace 'com.cleveradssolutions.plugin.flutter'
     compileSdk 35
+
+    if (project.android.hasProperty('namespace')) {
+        namespace 'com.cleveradssolutions.plugin.flutter'
+    }
 
     defaultConfig {
         minSdk 23
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -84,8 +88,8 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-}
 
-dependencies {
-    implementation 'com.cleveradssolutions:cas-sdk:4.2.0'
+    dependencies {
+        api 'com.cleveradssolutions:cas-sdk:4.3.0'
+    }
 }

@@ -19,6 +19,7 @@ class MediationManagerImpl implements MediationManager {
   AdCallback? _interstitialListener;
   AdCallback? _rewardedListener;
   AdCallback? _appReturnListener;
+  // ignore: deprecated_member_use_from_same_package
   AdLoadCallback? _adLoadCallback;
 
   static final InternalListenerContainer _listenerContainer =
@@ -255,6 +256,7 @@ class MediationManagerImpl implements MediationManager {
   }
 
   @override
+  // ignore: deprecated_member_use_from_same_package
   void setAdLoadCallback(AdLoadCallback? callback) {
     _adLoadCallback = callback;
   }

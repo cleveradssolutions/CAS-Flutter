@@ -198,12 +198,15 @@ class AdsSettingsImpl extends AdsSettings {
   }
 
   @override
+  // ignore: deprecated_member_use_from_same_package
   Future<LoadingMode> getLoadingMode() async {
     final int? index = await _channel.invokeMethod<int>("getLoadingMode");
+    // ignore: deprecated_member_use_from_same_package
     return index == null ? LoadingMode.Optimal : LoadingMode.values[index];
   }
 
   @override
+  // ignore: deprecated_member_use_from_same_package
   Future<void> setLoadingMode(LoadingMode loadingMode) {
     return _channel.invokeMethod(
       "setLoadingMode",

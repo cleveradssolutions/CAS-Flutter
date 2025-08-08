@@ -1,3 +1,20 @@
+## 0.9.0
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.3.0
+- Updated `AdError` codes for compatibility with CAS 4.
+### Bug Fixes
+- Fixed a type mismatch issue in `AdErrorFactory`. [#46](https://github.com/cleveradssolutions/CAS-Flutter/issues/46)
+- Fixed an `IndexOutOfRangeException` in `onConsentFlowDismissed()`.
+- Fixed a `MissingPluginException` in `CASInterstitial.setMinInterval()`.
+- [iOS] Fixed `OnImpressionListener` not being triggered for `BannerWidget`.
+### Deprecations
+> The following functions are deprecated. They are still supported for now but are not recommended for use in new implementations.
+
+- Deprecated `ConsentFlow.withDismissListener(OnDismissListener)` as it always returns `ConsentStatus.undefined`. Use `ConsentFlow.setOnDismissCallback(OnConsentFlowDismissedCallback)` instead, which provides a valid `int` status. Refer to constants in `ConsentFlow` for status values.
+- Deprecated `MediationManager.enableAppReturn()`. Migrate to the new `CASAppOpen` or `CASInterstitial` APIs and enable this feature via the `isAutoshowEnabled` property.
+- Deprecated `MediationManager.setAdLoadCallback()` as it's no longer the recommended way to listen for ad loading events. Use the new implementation in individual ad classes instead.
+- Deprecated `AdContentInfo.getSourceId()` as it's no longer recommended and will be removed in future versions. Use `getSourceName()` instead.
+- Deprecated `AdsSettings.setLoadingMode()` in favor of the new ad class implementation, which provides full control over the ad lifecycle.
+
 ## 0.8.9
 - Fixed `BannerWidgetStateImpl.dispose` failed to call `super.dispose` issue #45.
 

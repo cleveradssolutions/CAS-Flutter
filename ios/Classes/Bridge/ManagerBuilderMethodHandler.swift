@@ -8,9 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "cleveradssolutions/manager_builder"
-
-class ManagerBuilderMethodHandler: MethodHandler {
+class ManagerBuilderMethodHandler: CASChannel {
     private let consentFlowMethodHandler: ConsentFlowMethodHandler
     private let mediationManagerMethodHandler: MediationManagerMethodHandler
 
@@ -29,7 +27,7 @@ class ManagerBuilderMethodHandler: MethodHandler {
     ) {
         self.consentFlowMethodHandler = consentFlowMethodHandler
         self.mediationManagerMethodHandler = mediationManagerMethodHandler
-        super.init(with: registrar, on: channelName)
+        super.init(with: registrar, on: "manager_builder")
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

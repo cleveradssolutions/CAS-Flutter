@@ -4,24 +4,29 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../ad_size.dart';
 import '../../internal/ad_size_impl.dart';
 import '../../internal/mapped_object.dart';
 import '../../sdk/screen/internal/ad_mapped_object.dart';
 import '../ad_view_listener.dart';
 import '../banner_widget.dart';
+import '../../ad_size.dart';
+import '../../sdk/on_ad_impression_listener.dart';
 
 const String _viewType = '<cas-banner-view>';
 
 class BannerWidgetStateImpl extends BannerWidgetState
     with MappedObjectImpl, AdMappedObject {
   AdViewListener? _adListenerField;
+  OnAdImpressionListener? _adImpressionListenerField;
 
   AdViewListener? get _adListener =>
-      _adListenerField ??
       widget.adListener ??
       // ignore: deprecated_member_use_from_same_package
-      widget.listener;
+      widget.listener ??
+      _adListenerField;
+
+  OnAdImpressionListener? get _adImpressionListener =>
+      widget.onImpressionListener ?? _adImpressionListenerField;
 
   AdSize? _size;
   AdSize? _newSize;
@@ -102,17 +107,14 @@ class BannerWidgetStateImpl extends BannerWidgetState
       case 'onAdViewFailed':
         _adListener?.onAdViewFailed?.call(call.arguments['error']);
         break;
-      case 'onAdViewPresented':
-        // ignore: deprecated_member_use_from_same_package
-        _adListener?.onAdViewPresented();
-        break;
       case 'onAdViewClicked':
         _adListener?.onAdViewClicked?.call();
         break;
 
       case 'onAdImpression':
-        widget.onImpressionListener
-            ?.onAdImpression(getContentInfoFromCall(call));
+        _adImpressionListener?.onAdImpression(getContentInfoFromCall(call));
+        // ignore: deprecated_member_use_from_same_package
+        _adListener?.onAdViewPresented();
         break;
 
       case 'updateWidgetSize':
@@ -170,11 +172,7 @@ class BannerWidgetStateImpl extends BannerWidgetState
         );
         break;
       default:
-        return SizedBox(
-          width: size.width.toDouble(),
-          height: size.height.toDouble(),
-          child: const Center(child: Text('Platform is not supported')),
-        );
+        return const SizedBox.shrink();
     }
 
     final isSizeCalculated = _width != 0;
@@ -211,6 +209,11 @@ class BannerWidgetStateImpl extends BannerWidgetState
   @override
   void setAdListener(AdViewListener listener) {
     _adListenerField = listener;
+  }
+
+  @override
+  void setOnImpressionListener(OnAdImpressionListener listener) {
+    _adImpressionListenerField = listener;
   }
 
   @override

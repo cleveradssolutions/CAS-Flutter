@@ -2,17 +2,17 @@ package com.cleveradssolutions.plugin.flutter.bridge.manager
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.CASViewWrapper
-import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
+import com.cleveradssolutions.plugin.flutter.CASChannel
 import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.AppReturnListener
 import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.BannerListener
 import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.BannerListener.Companion.getBannerName
 import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.InterstitialListener
 import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.RewardedListener
-import com.cleveradssolutions.plugin.flutter.util.error
-import com.cleveradssolutions.plugin.flutter.util.errorFieldNull
-import com.cleveradssolutions.plugin.flutter.util.errorInvalidArg
-import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
-import com.cleveradssolutions.plugin.flutter.util.success
+import com.cleveradssolutions.plugin.flutter.error
+import com.cleveradssolutions.plugin.flutter.errorFieldNull
+import com.cleveradssolutions.plugin.flutter.errorInvalidArg
+import com.cleveradssolutions.plugin.flutter.getArgAndCheckNull
+import com.cleveradssolutions.plugin.flutter.success
 import com.cleveradssolutions.sdk.base.CASHandler
 import com.cleversolutions.ads.AdError
 import com.cleversolutions.ads.AdLoadCallback
@@ -24,10 +24,11 @@ import io.flutter.plugin.common.MethodChannel
 
 private const val CHANNEL_NAME = "cleveradssolutions/mediation_manager"
 
+@Deprecated("Old implementation")
 class MediationManagerMethodHandler(
     binding: FlutterPluginBinding,
     private val contextService: CASFlutterContext,
-) : MethodHandler(binding, CHANNEL_NAME), AdLoadCallback {
+) : CASChannel(binding, CHANNEL_NAME), AdLoadCallback {
 
     var manager: MediationManager? = null
         private set

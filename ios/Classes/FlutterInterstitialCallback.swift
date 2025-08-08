@@ -2,11 +2,7 @@ import CleverAdsSolutions
 import Foundation
 
 class FlutterInterstitialCallback: CASPaidCallback {
-    private var handler: MethodHandler?
-
-    func setMethodHandler(handler: MethodHandler) {
-        self.handler = handler
-    }
+    weak var handler: CASChannel?
 
     func onAdLoaded() {
         handler?.invokeMethod("OnInterstitialAdLoaded")

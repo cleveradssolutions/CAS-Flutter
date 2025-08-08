@@ -9,9 +9,9 @@ import Foundation
 import CleverAdsSolutions
 
 class CASView: CASBannerDelegate {
-    private var bannerView: CASBannerView
-    private var view: UIViewController
-    private var callback: FlutterBannerCallback
+    private let bannerView: CASBannerView
+    private let view: UIViewController
+    private let callback: FlutterBannerCallback
     
     private var activePos = 3
     
@@ -30,7 +30,7 @@ class CASView: CASBannerDelegate {
         self.view = view
         self.callback = callback
             
-        bannerView.adDelegate = self
+        bannerView.delegate = self
     }
     
     func bannerAdViewDidLoad(_ view: CASBannerView) {
@@ -51,11 +51,11 @@ class CASView: CASBannerDelegate {
     }
     
     func loadNextBanner() {
-        bannerView.loadNextAd()
+        bannerView.loadAd()
     }
     
     func isBannerViewAdReady() -> Bool {
-        bannerView.isAdReady
+        bannerView.isAdLoaded
     }
     
     func showBanner() {

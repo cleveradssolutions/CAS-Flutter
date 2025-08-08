@@ -8,11 +8,9 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "cleveradssolutions/ad_size"
-
-class AdSizeMethodHandler: MethodHandler {
+class AdSizeMethodHandler: CASChannel {
     init(with registrar: FlutterPluginRegistrar) {
-        super.init(with: registrar, on: channelName)
+        super.init(with: registrar, on: "ad_size")
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

@@ -8,16 +8,13 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "cleveradssolutions/consent_flow"
-
-class ConsentFlowMethodHandler: MappedMethodHandler<CASConsentFlow> {
+class ConsentFlowMethodHandler: CASMappedChannel<CASConsentFlow> {
     init(with registrar: FlutterPluginRegistrar) {
-        super.init(with: registrar, on: channelName)
+        super.init(with: registrar, on: "consent_flow")
     }
 
     override func initInstance(_ id: String) -> CASConsentFlow {
        return CASConsentFlow()
-            .withViewControllerToPresent(Util.findRootViewController())
             .withCompletionHandler(createDismissListener(id))
     }
 

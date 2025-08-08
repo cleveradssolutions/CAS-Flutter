@@ -12,21 +12,24 @@ class ConsentFlowImpl extends MappedObject implements ConsentFlow {
   }
 
   @override
-  ConsentFlow withDismissListener(OnDismissListener listener) {
+  ConsentFlow setOnDismissCallback(OnConsentFlowDismissedCallback callback) {
     channel.setMethodCallHandler((call) async {
       switch (call.method) {
         case 'onDismiss':
           {
             final int? index = call.arguments['status'];
-            // final consentFlow = index == null
-            //     ? ConsentStatus.undefined
-            //     : ConsentStatus.values[index];
-            listener.onConsentFlowDismissed(index ?? 0);
+            callback.call(index ?? 0);
             break;
           }
       }
     });
     return this;
+  }
+
+  @override
+  // ignore: deprecated_member_use_from_same_package
+  ConsentFlow withDismissListener(OnDismissListener listener) {
+    return setOnDismissCallback(listener.onConsentFlowDismissed);
   }
 
   @override

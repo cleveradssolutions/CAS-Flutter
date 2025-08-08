@@ -1,19 +1,17 @@
 package com.cleveradssolutions.plugin.flutter.bridge
 
-import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
-import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
-import com.cleveradssolutions.plugin.flutter.util.getArgAndReturnResult
-import com.cleveradssolutions.plugin.flutter.util.success
+import com.cleveradssolutions.plugin.flutter.CASChannel
+import com.cleveradssolutions.plugin.flutter.getArgAndReturn
+import com.cleveradssolutions.plugin.flutter.getArgAndReturnResult
+import com.cleveradssolutions.plugin.flutter.success
 import com.cleversolutions.ads.android.CAS
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-private const val CHANNEL_NAME = "cleveradssolutions/ads_settings"
-
 class AdsSettingsMethodHandler(
     binding: FlutterPluginBinding
-) : MethodHandler(binding, CHANNEL_NAME) {
+) : CASChannel(binding, "cleveradssolutions/ads_settings") {
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {

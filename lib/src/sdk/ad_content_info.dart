@@ -10,11 +10,6 @@ abstract class AdContentInfo {
   /// Gets the display name of the mediated network that purchased the impression.
   Future<String> getSourceName();
 
-  /// Gets the ID of the mediated network that purchased the impression.
-  ///
-  /// See [AdSourceId].
-  Future<AdSourceId> getSourceId();
-
   /// Gets the Ad Unit ID from the mediated network that purchased the impression.
   Future<String> getSourceUnitId();
 
@@ -38,4 +33,8 @@ abstract class AdContentInfo {
 
   /// Gets the accumulated value of user ad revenue in USD from all ad format impressions.
   Future<double> getRevenueTotal();
+
+  @Deprecated(
+      "Not recommended and will be removed in the future. Use getSourceName() instead.")
+  Future<AdSourceId> getSourceId();
 }

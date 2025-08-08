@@ -2,15 +2,11 @@ import CleverAdsSolutions
 import Foundation
 
 class FlutterBannerCallback: CASBannerDelegate {
-    private var handler: MethodHandler?
+    weak var handler: CASChannel?
     private var sizeId = 0
 
     init(sizeId: Int) {
         self.sizeId = sizeId
-    }
-
-    func setMethodHandler(handler: MethodHandler) {
-        self.handler = handler
     }
 
     func bannerAdViewDidLoad(_ view: CleverAdsSolutions.CASBannerView) {
@@ -20,7 +16,7 @@ class FlutterBannerCallback: CASBannerDelegate {
     func bannerAdView(_ adView: CleverAdsSolutions.CASBannerView, didFailWith error: CleverAdsSolutions.CASError) {
         handler?.invokeMethod("OnBannerAdFailedToLoad", [
             "name": "banner",
-            "message": error.message
+            "message": error.description
         ])
     }
 

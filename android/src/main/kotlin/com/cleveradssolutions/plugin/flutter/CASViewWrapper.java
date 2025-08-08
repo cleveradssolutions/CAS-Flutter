@@ -1,5 +1,7 @@
 package com.cleveradssolutions.plugin.flutter;
 
+import static com.cleveradssolutions.plugin.flutter.CASFlutterKt.CAS_LOG_TAG;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
@@ -19,7 +21,7 @@ import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
-import com.cleveradssolutions.mediation.ContextService;
+import com.cleveradssolutions.plugin.flutter.bridge.manager.listener.BannerListener;
 import com.cleversolutions.ads.AdError;
 import com.cleversolutions.ads.AdSize;
 import com.cleversolutions.ads.AdStatusHandler;
@@ -46,10 +48,10 @@ public final class CASViewWrapper implements AdViewListener {
     private static final int AD_SIZE_LINE = 7;
 
     @NonNull
-    private final ContextService contextService;
+    private final CASFlutterContext contextService;
 
     private CASBannerView view;
-    private CASViewWrapperListener listener;
+    private BannerListener listener;
     private int activeSizeId = 0;
     public boolean isNeedSafeInsets = true;
 
@@ -71,7 +73,7 @@ public final class CASViewWrapper implements AdViewListener {
             refreshViewPosition(view);
             view.setVisibility(View.VISIBLE);
         } else {
-            Log.w("CAS.dart", "Unity bridge call Show banner but Native View is Null");
+            Log.w(CAS_LOG_TAG, "Bridge call Show banner but Native View is Null");
         }
     };
 
@@ -85,7 +87,7 @@ public final class CASViewWrapper implements AdViewListener {
         if (view != null) {
             view.loadNextAd();
         } else {
-            Log.w("CAS.dart", "Unity bridge call load banner but Native View is Null");
+            Log.w(CAS_LOG_TAG, "Bridge call load banner but Native View is Null");
         }
     };
 
@@ -99,7 +101,7 @@ public final class CASViewWrapper implements AdViewListener {
         if (view == null)
             return;
         AdSize newSize = getSizeByCode(activeSizeId);
-        Log.d("CAS.dart", "Unity bridge change Ad size to " + newSize + " after orientation changed");
+        Log.d(CAS_LOG_TAG, "Bridge change Ad size to " + newSize + " after orientation changed");
         view.setSize(newSize);
         refreshPositionRunnable.run();
     };
@@ -110,7 +112,7 @@ public final class CASViewWrapper implements AdViewListener {
      */
     private final View.OnLayoutChangeListener layoutChangeListener;
 
-    public CASViewWrapper(@NonNull ContextService contextService) {
+    public CASViewWrapper(@NonNull CASFlutterContext contextService) {
         this.contextService = contextService;
 
         layoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -129,11 +131,11 @@ public final class CASViewWrapper implements AdViewListener {
     }
 
     @MainThread
-    public void createView(MediationManager manager, CASViewWrapperListener listener, int sizeCode) {
+    public void createView(MediationManager manager, BannerListener listener, int sizeCode) {
         if (sizeCode == 0)
             return;
 
-        Activity activity = contextService.getActivityOrNull();
+        Activity activity = contextService.getActivity();
         if (activity == null)
             return;
 
@@ -145,7 +147,7 @@ public final class CASViewWrapper implements AdViewListener {
         // Setting the background color works around an issue where the first ad isn't visible.
         view.setBackgroundColor(Color.TRANSPARENT);
         view.setSize(getSizeByCode(sizeCode));
-        Log.d("CAS.dart", "Unity bridge create Ad View with size " + view.getSize());
+        Log.d(CAS_LOG_TAG, "Bridge create Ad View with size " + view.getSize());
 
         activity.getWindow()
                 .getDecorView()
@@ -197,7 +199,7 @@ public final class CASViewWrapper implements AdViewListener {
     public void destroy() {
         if (view != null) {
             CASHandler.INSTANCE.main(() -> {
-                Activity activity = contextService.getActivityOrNull();
+                Activity activity = contextService.getActivity();
                 if (activity != null) {
                     activity.getWindow()
                             .getDecorView()
@@ -250,7 +252,7 @@ public final class CASViewWrapper implements AdViewListener {
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT);
         final int targetPos = activePos;
-        Activity activity = contextService.getActivityOrNull();
+        Activity activity = contextService.getActivity();
         if (activity == null)
             return;
 
@@ -355,17 +357,17 @@ public final class CASViewWrapper implements AdViewListener {
                 return AdSize.BANNER;
             case AD_SIZE_ADAPTIVE:
                 int width = Math.min(getScreenWidth(), AdSize.LEADERBOARD.getWidth());
-                return AdSize.getAdaptiveBanner(contextService.getContext(), width);
+                return AdSize.getAdaptiveBanner(contextService.getApplication(), width);
             case AD_SIZE_SMART:
-                return AdSize.getSmartBanner(contextService.getContext());
+                return AdSize.getSmartBanner(contextService.getApplication());
             case AD_SIZE_LEADER:
                 return AdSize.LEADERBOARD;
             case AD_SIZE_MREC:
                 return AdSize.MEDIUM_RECTANGLE;
             case AD_SIZE_FULL_WIDTH:
-                return AdSize.getAdaptiveBanner(contextService.getContext(), getScreenWidth());
+                return AdSize.getAdaptiveBanner(contextService.getApplication(), getScreenWidth());
             case AD_SIZE_LINE:
-                Activity activity = contextService.getActivityOrNull();
+                Activity activity = contextService.getActivity();
                 if (activity == null)
                     return AdSize.BANNER;
 
@@ -397,7 +399,7 @@ public final class CASViewWrapper implements AdViewListener {
                 }
                 return AdSize.getInlineBanner(screenWidth, bannerHeight);
             default:
-                Log.w("CAS.dart", "Unity bridge call change banner size with unknown id: " + sizeId);
+                Log.w(CAS_LOG_TAG, "Bridge call change banner size with unknown id: " + sizeId);
                 return AdSize.BANNER;
         }
     }
@@ -423,7 +425,7 @@ public final class CASViewWrapper implements AdViewListener {
 
     private DisplayMetrics getScreenMetrics() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        Activity activity = contextService.getActivityOrNull();
+        Activity activity = contextService.getActivity();
         if (activity == null)
             return displayMetrics;
         WindowManager windowManager = activity.getWindowManager();

@@ -22,8 +22,10 @@ class AdContentInfoImpl extends MappedObject implements AdContentInfo {
   }
 
   @override
+  // ignore: deprecated_member_use_from_same_package
   Future<AdSourceId> getSourceId() async {
     final int? value = await invokeMethod<int>('getSourceId');
+    // ignore: deprecated_member_use_from_same_package
     return AdSourceId.fromValue(value);
   }
 

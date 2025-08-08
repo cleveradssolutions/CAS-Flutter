@@ -8,9 +8,12 @@
 import CleverAdsSolutions
 import Flutter
 
-public class CASFlutter: NSObject, FlutterPlugin {
-    private var methodHandlers: [MethodHandler] = []
+let casLogTag = "[CAS.AI.Flutter]"
 
+public class CASFlutter: NSObject, FlutterPlugin {
+    private var methodHandlers: [Any] = []
+
+    
     init(with registrar: FlutterPluginRegistrar) {
         let contentInfoHandler = AdContentInfoMethodHandler(with: registrar)
         let consentFlowMethodHandler = ConsentFlowMethodHandler(with: registrar)
@@ -19,16 +22,16 @@ public class CASFlutter: NSObject, FlutterPlugin {
         methodHandlers = [
             AdSizeMethodHandler(with: registrar),
             AdsSettingsMethodHandler(with: registrar),
-            AppOpenMethodHandler(with: registrar, contentInfoHandler),
+            ScreenAdMethodHandler(with: registrar, on: "app_open", contentInfoHandler),
+            ScreenAdMethodHandler(with: registrar, on: "interstitial", contentInfoHandler),
+            ScreenAdMethodHandler(with: registrar, on: "rewarded", contentInfoHandler),
             CASMethodHandler(with: registrar),
-            InterstitialMethodHandler(with: registrar, contentInfoHandler),
             consentFlowMethodHandler,
             ManagerBuilderMethodHandler(
                 with: registrar,
                 consentFlowMethodHandler,
                 mediationManagerMethodHandler
             ),
-            RewardedMethodHandler(with: registrar, contentInfoHandler),
             mediationManagerMethodHandler,
             TargetingOptionsMethodHandler(with: registrar),
         ]

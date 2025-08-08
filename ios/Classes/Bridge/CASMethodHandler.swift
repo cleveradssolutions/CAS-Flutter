@@ -8,11 +8,9 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "cleveradssolutions/cas"
-
-class CASMethodHandler: MethodHandler {
+class CASMethodHandler: CASChannel {
     init(with registrar: FlutterPluginRegistrar) {
-        super.init(with: registrar, on: channelName)
+        super.init(with: registrar, on: "cas")
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

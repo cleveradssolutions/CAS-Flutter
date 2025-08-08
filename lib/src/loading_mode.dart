@@ -1,3 +1,5 @@
+@Deprecated(
+    "Please migrate to the new implementation of ad classes, which will allow you to fully manage the ad lifecycle.")
 enum LoadingMode {
   // ignore: constant_identifier_names
   FastestRequests,

@@ -1,3 +1,5 @@
+@Deprecated(
+    "Not recommended and will be removed in the future. Use getSourceName() instead.")
 enum AdSourceId {
   googleAds(0),
   liftoffMonetize(1),
@@ -25,6 +27,7 @@ enum AdSourceId {
   pangle(24),
   ysoNetwork(25),
   prado(26),
+  maticoo(26),
 
   dspExchange(30),
   lastPageAd(31),

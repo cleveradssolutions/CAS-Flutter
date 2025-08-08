@@ -6,31 +6,11 @@ abstract class AdSize {
   /// Standard banner size 320dp width and 50dp height
   static const AdSize banner = AdSizeImpl(320, 50);
 
-  @Deprecated("Use AdSize.banner instead")
-  // ignore: constant_identifier_names
-  static const AdSize Banner = banner;
-
   /// Leaderboard banner size 728dp width and 90dp height
   static const AdSize leaderboard = AdSizeImpl(728, 90);
 
-  @Deprecated("Use AdSize.leaderboard instead")
-  // ignore: constant_identifier_names
-  static const AdSize Leaderboard = leaderboard;
-
   /// Medium Rectangle size 300dp width and 250dp height
   static const AdSize mediumRectangle = AdSizeImpl(300, 250);
-
-  @Deprecated("Use AdSize.mediumRectangle instead")
-  // ignore: constant_identifier_names
-  static const AdSize MediumRectangle = mediumRectangle;
-
-  @Deprecated("Use AdSize.getAdaptiveBanner() instead")
-  // ignore: constant_identifier_names
-  static const AdSize Adaptive = AdSizeImpl(-1, -1, 2);
-
-  @Deprecated("Use AdSize.getSmartBanner() instead")
-  // ignore: constant_identifier_names
-  static const AdSize Smart = AdSizeImpl(-2, -2);
 
   int get width;
 
@@ -70,4 +50,23 @@ abstract class AdSize {
   /// - The adaptive banners use fixed aspect ratios instead of fixed heights.
   factory AdSize.getAdaptiveBannerInScreen() =>
       AdSizeFactory.getAdaptiveBannerInScreen();
+
+  @Deprecated("Use AdSize.banner instead")
+  // ignore: constant_identifier_names
+  static const AdSize Banner = banner;
+
+  @Deprecated("Use AdSize.leaderboard instead")
+  // ignore: constant_identifier_names
+  static const AdSize Leaderboard = leaderboard;
+
+  @Deprecated("Use AdSize.mediumRectangle instead")
+  // ignore: constant_identifier_names
+  static const AdSize MediumRectangle = mediumRectangle;
+  @Deprecated("Use AdSize.getAdaptiveBanner() instead")
+  // ignore: constant_identifier_names
+  static const AdSize Adaptive = AdSizeImpl(-1, -1, 2);
+
+  @Deprecated("Use AdSize.getSmartBanner() instead")
+  // ignore: constant_identifier_names
+  static const AdSize Smart = AdSizeImpl(-2, -2);
 }

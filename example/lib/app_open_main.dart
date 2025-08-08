@@ -115,19 +115,15 @@ class _SplashScreenState extends State<SplashScreen> {
     CAS.settings.setDebugMode(true);
     CAS.settings.setTaggedAudience(Audience.notChildren);
 
-    // Set Manual loading mode to disable auto requests
-    // CAS.settings.setLoadingMode(LoadingMode.Manual);
-
     // Initialize SDK
     CAS
         .buildManager()
         .withCasId(_casId)
         .withTestMode(true)
-        .withConsentFlow(ConsentFlow.create().withDismissListener(
-          OnDismissListener((ConsentStatus status) {
-            logDebug('Consent flow dismissed: $status');
-          }),
-        ).withPrivacyPolicy('https://example.com/'))
+        .withConsentFlow(
+            ConsentFlow.create().setOnDismissCallback((int status) {
+          logDebug('Consent flow dismissed: $status');
+        }).withPrivacyPolicy('https://example.com/'))
         .build();
   }
 

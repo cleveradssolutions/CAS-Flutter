@@ -9,11 +9,9 @@ import CleverAdsSolutions
 import Flutter
 import Foundation
 
-private let channelName = "cleveradssolutions/targeting_options"
-
-class TargetingOptionsMethodHandler: MethodHandler {
+class TargetingOptionsMethodHandler: CASChannel {
     init(with registrar: FlutterPluginRegistrar) {
-        super.init(with: registrar, on: channelName)
+        super.init(with: registrar, on: "targeting_options")
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {

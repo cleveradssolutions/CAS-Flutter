@@ -1,66 +1,60 @@
-import 'internal/cas_utils.dart';
-
-/// To see the error code, see AdError.getCode().
-/// To see a description of the error, see AdError.getMessage().
+/// To see the error code, see AdError.code.
+/// To see a description of the error, see AdError.message.
 /// See CODE constants for a list of error codes.
 class AdError implements Comparable<int> {
+  /// Indicates an internal error occurred.
   static const int codeInternalError = 0;
 
-  /// Loading ads cannot be successful without an internet connection.
-  static const int codeNoConnection = 2;
+  /// Indicates that the device is rejected for services.
+  /// Services may not be available for some devices that do not meet the requirements.
+  /// For example, the country or version of the OS.
+  static const int rejected = 2;
 
-  /// This means we are not able to serve ads to this person.
-  ///
-  /// Note that if you can see ads while you are testing with enabled MediationManager.isDemoAdMode(),
-  /// your implementation works correctly and people will be able to see ads in your app once it's live.
+  /// Indicates that no ads are available to be served.
+  /// If ads are visible in demo mode, your implementation is correct, and ads will be served once live.
   static const int codeNoFill = 3;
 
-  /// A configuration error has been detected in one of the mediation ad networks.
-  /// Please report error message to your manager support.
-  static const int codeConfigurationError = 6;
+  /// Indicates that ads are not ready to be shown.
+  /// Ensure to call the appropriate ad loading method or use automatic cache mode.
+  /// If using automatic load mode, wait a little longer for ads to be ready.
+  static const int codeNotReady = 1;
 
-  /// Ad are not ready to show.
-  /// You need to call Load ads or use one of the automatic cache mode.
-  ///
-  /// If you are already using automatic cache mode then just wait a little longer.
-  ///
-  /// You can always check if ad is ready to show
-  /// using MediationManager.isInterstitialReady() or MediationManager.isRewardedAdReady() or CASBannerView.isAdReady() methods.
-  static const int codeNotReady = 1001;
+  /// Indicates that the ad creative has reached its daily cap for the user.
+  /// This is typically relevant for cross-promotion ads only.
+  static const int codeReachedCap = 6;
 
-  /// The manager you want to use is not active at the moment.
-  /// To change the state of the manager, use MediationManager.setEnabled(AdType, boolean) method.
-  static const int codeManagerIsDisabled = 1002;
+  /// Indicates that the CAS SDK is not initialized.
+  /// Ensure to add CAS initialization code.
+  static const int codeNotInitialized = 7;
 
-  /// Ad creative has reached its daily cap for user.
-  /// The reason is for cross promo only.
-  static const int codeReachedCap = 1004;
+  /// Indicates a timeout error occurred because the advertising source did not respond in time.
+  /// The system will continue waiting for a response, which may delay ad loading or cause a loading error.
+  static const int codeTimeout = 8;
 
-  /// There is not enough space in the current view for the selected AdSize.
-  /// Please make sure that the size of the banner container has enough free space.
-  /// You can choose a smaller size if necessary using CASBannerView.setSize(AdSize) method.
-  static const int codeNotEnoughSpace = 1005;
+  /// Indicates that there is no internet connection available, which prevents ads from loading.
+  static const int codeNoConnection = 9;
 
-  /// The interval between impressions of Interstitial Ad has not yet passed.
-  /// To change the interval, use AdsSettings.setInterstitialInterval(int) method.
-  static const int codeIntervalNotYetPassed = 2001;
+  /// Indicates that there is a configuration error in one of the mediation ad sources.
+  /// Report this error to your support manager for further assistance.
+  static const int codeConfigurationError = 10;
 
-  /// You can not show ads because another fullscreen ad is being displayed at the moment.
-  /// Please check your ad call logic to eliminate duplicate impressions.
-  static const int codeAlreadyDisplayed = 2002;
+  /// Indicates that the interval between impressions of interstitial ads has not yet passed.
+  /// To change the interval, use the AdsSettings.interstitialInterval method.
+  /// This error may also occur if a trial ad-free interval has been defined and has not yet passed since app start.
+  static const int codeNotPassedInterval = 11;
 
-  /// Ads cannot be shown as the application is currently not visible to the user.
-  static const int codeAppIsPaused = 2003;
+  /// Indicates that another fullscreen ad is currently being displayed, preventing new ads from showing.
+  /// Review your ad display logic to avoid duplicate impressions.
+  static const int codeAlreadyDisplayed = 12;
+
+  /// Indicates that ads cannot be shown because the application is not currently in the foreground.
+  static const int codeNotForeground = 13;
 
   final int code;
 
-  String? _message;
+  final String message;
 
-  String get message => _message ?? CASUtils.getAdErrorMessage(code);
-
-  AdError(this.code, [this._message]);
-
-  AdError.fromMessage(String message) : code = CASUtils.getAdErrorCode(message);
+  AdError(this.code, this.message);
 
   @override
   String toString() => message;
@@ -80,4 +74,16 @@ class AdError implements Comparable<int> {
 
   @override
   int compareTo(int other) => code.compareTo(other);
+
+  @Deprecated("Renamed to codeNotInitialized")
+  static const int codeManagerIsDisabled = codeNotInitialized;
+
+  @Deprecated("Renamed to codeNotPassedInterval")
+  static const int codeIntervalNotYetPassed = codeNotPassedInterval;
+
+  @Deprecated("Renamed to codeNotForeground")
+  static const int codeAppIsPaused = codeNotForeground;
+
+  @Deprecated("No longer used")
+  static const int codeNotEnoughSpace = 1005;
 }

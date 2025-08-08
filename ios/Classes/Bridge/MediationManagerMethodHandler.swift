@@ -8,9 +8,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let channelName = "cleveradssolutions/mediation_manager"
-
-class MediationManagerMethodHandler: MethodHandler, CASLoadDelegate {
+class MediationManagerMethodHandler: CASChannel, CASLoadDelegate {
     private(set) var manager: CASMediationManager?
 
     private let interstitialListener = FlutterInterstitialCallback()
@@ -18,10 +16,10 @@ class MediationManagerMethodHandler: MethodHandler, CASLoadDelegate {
     private let appReturnListener = FlutterAppReturnCallback()
 
     init(with registrar: FlutterPluginRegistrar) {
-        super.init(with: registrar, on: channelName)
-        interstitialListener.setMethodHandler(handler: self)
-        rewardedListener.setMethodHandler(handler: self)
-        appReturnListener.setMethodHandler(handler: self)
+        super.init(with: registrar, on: "mediation_manager")
+        interstitialListener.handler = self
+        rewardedListener.handler = self
+        appReturnListener.handler = self
     }
 
     override func onMethodCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
@@ -197,7 +195,7 @@ class MediationManagerMethodHandler: MethodHandler, CASLoadDelegate {
                 bannerView.rootViewController = viewController
 
                 let flutterCallback = FlutterBannerCallback(sizeId: sizeId)
-                flutterCallback.setMethodHandler(handler: self)
+                flutterCallback.handler = self
 
                 let view = CASView(bannerView: bannerView, view: viewController, callback: flutterCallback)
                 banners[sizeId] = view

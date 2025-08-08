@@ -2,11 +2,11 @@ package com.cleveradssolutions.plugin.flutter.bridge.manager
 
 import com.cleveradssolutions.plugin.flutter.CASFlutterContext
 import com.cleveradssolutions.plugin.flutter.bridge.ConsentFlowMethodHandler
-import com.cleveradssolutions.plugin.flutter.bridge.base.MethodHandler
-import com.cleveradssolutions.plugin.flutter.util.errorFieldNull
-import com.cleveradssolutions.plugin.flutter.util.getArgAndCheckNull
-import com.cleveradssolutions.plugin.flutter.util.getArgAndReturn
-import com.cleveradssolutions.plugin.flutter.util.success
+import com.cleveradssolutions.plugin.flutter.CASChannel
+import com.cleveradssolutions.plugin.flutter.errorFieldNull
+import com.cleveradssolutions.plugin.flutter.getArgAndCheckNull
+import com.cleveradssolutions.plugin.flutter.getArgAndReturn
+import com.cleveradssolutions.plugin.flutter.success
 import com.cleversolutions.ads.android.CAS
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
@@ -19,7 +19,7 @@ class ManagerBuilderMethodHandler(
     private val contextService: CASFlutterContext,
     private val consentFlowMethodHandler: ConsentFlowMethodHandler,
     private val mediationManagerMethodHandler: MediationManagerMethodHandler
-) : MethodHandler(binding, CHANNEL_NAME) {
+) : CASChannel(binding, CHANNEL_NAME) {
 
     @Volatile
     private var builderField: CAS.ManagerBuilder? = null
@@ -91,7 +91,7 @@ class ManagerBuilderMethodHandler(
                 .withCompletionListener { config ->
                     invokeMethod(
                         "onCASInitialized",
-                        mapOf(
+                        hashMapOf(
                             "error" to config.error,
                             "countryCode" to config.countryCode,
                             "isConsentRequired" to config.isConsentRequired,
@@ -99,7 +99,7 @@ class ManagerBuilderMethodHandler(
                         )
                     )
                 }
-                .initialize(contextService)
+                .build(contextService.activity ?: contextService.application)
 
             mediationManagerMethodHandler.setManager(manager)
 

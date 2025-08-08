@@ -1,8 +1,14 @@
 import 'internal/consent_flow_impl.dart';
 import 'on_dismiss_listener.dart';
 
+/// The callback type for when a user earns a reward.
+/// Check [status] with [ConsentFlow] status constants.
+typedef OnConsentFlowDismissedCallback = void Function(int status);
+
 /// Use this object for configure Consent flow forms for GDPR.
 abstract class ConsentFlow {
+  static const statusUnknown = 0;
+
   /// User consent obtained. Personalized vs non-personalized undefined.
   static const statusObtained = 3;
 
@@ -19,9 +25,6 @@ abstract class ConsentFlow {
   static const statusNetworkError = 11;
 
   /// There was an error with the UI context is passed in.
-  /// - Activity is null.
-  /// - Activity with null windows.
-  /// - Activity is destroyed.
   static const statusContextInvalid = 12;
 
   /// There was an error with another form is still being displayed.
@@ -32,10 +35,10 @@ abstract class ConsentFlow {
   /// Disable auto display consent flow if required on Ads initialization.
   ConsentFlow disableFlow();
 
-  /// The listener is called after the form is dismissed.
-  /// If consent is not required, the listener is called immediately.
-  /// The [Status] with which the form is dismissed will be passed to the listener function.
-  ConsentFlow withDismissListener(OnDismissListener listener);
+  /// The callback is called after the form is dismissed.
+  /// If consent is not required, the callback is called immediately.
+  /// The Integer Status with which the form is dismissed will be passed to the callback.
+  ConsentFlow setOnDismissCallback(OnConsentFlowDismissedCallback listener);
 
   /// Override a link to the App's Privacy Policy in the consent form.
   ConsentFlow withPrivacyPolicy(String? privacyPolicy);
@@ -49,4 +52,8 @@ abstract class ConsentFlow {
   /// When a user interacts with your UI element, call function to show the form
   /// so the user can update their privacy options at any time.
   Future<void> show();
+
+  @Deprecated(
+      'Use setOnDismissCallback(OnConsentFlowDismissedCallback) instead. This listener always returns ConsentStatus.undefined.')
+  ConsentFlow withDismissListener(OnDismissListener listener);
 }
