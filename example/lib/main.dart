@@ -1,277 +1,353 @@
-import 'package:clever_ads_solutions/clever_ads_solutions.dart';
+// ignore_for_file: public_member_api_docs
+
+// ignore_for_file: avoid_print
+
+import 'dart:io' show Platform;
+
+import 'package:cas_example/native_factory_example.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:clever_ads_solutions/clever_ads_solutions.dart';
 
-const String _casId = 'demo';
-const bool _useAutoLoad = true;
+import 'adaptive_banner_example.dart';
+import 'inline_banner_example.dart';
+import 'native_template_example.dart';
+import 'multi_banners_example.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // If you encounter any problems, simply share the `CAS.AI` debug logs with your account manager.
+  if (kDebugMode) {
+    CASMobileAds.setDebugLoggingEnabled(true);
+  }
+
+  // The 'demo' ID is valid for test advertising
+  // but don't forget to set your registered IDs for each platform.
+  CASMobileAds.initialize(
+    casId: Platform.isAndroid ? 'demo' : 'demo',
+    showConsentFormIfRequired: true,
+    forceTestAds: kDebugMode || kProfileMode,
+    testDeviceIds: [
+      // You can also test in release build by registering your device as a test device.
+      // Check the logs for your device's ID value.
+    ],
+    debugPrivacyGeography: PrivacyGeography.europeanEconomicArea,
+  ).then((InitializationStatus status) {
+    if (status.error != null) {
+      // If an error occurs, the SDK will attempt automatic reinitialization internally.
+      print('CAS Mobile Ads SDK initialization failed: ${status.error}');
+    } else {
+      print('CAS Mobile Ads SDK initialized in ${status.countryCode} country');
+    }
+  });
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeScreen(),
-    );
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class _MyAppState extends State<MyApp> {
+  late CASAppOpen _appOpenAd;
+  late CASInterstitial _interstitialAd;
+  late CASRewarded _rewardedAd;
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final GlobalKey<BannerWidgetState> _bannerKey = GlobalKey();
-
-  final CASAppOpen _appOpen = CASAppOpen.create(_casId);
-  final CASInterstitial _interstitial = CASInterstitial.create(_casId);
-  final CASRewarded _rewarded = CASRewarded.create(_casId);
-
-  String? _sdkVersion;
-
-  final OnAdImpressionListener _impressionListener = OnAdImpressionListener(
-      (ad) async => {
-            logDebug(
-                '${await ad.getFormat()} ad impression: ${await ad.getSourceName()}')
-          });
-
-  final _bannerListener = AdViewListener(
-    onAdViewLoaded: () => {logDebug('Banner ad loaded!')},
-    onAdViewFailed: (message) => {logDebug('Banner failed! $message')},
-    onAdViewClicked: () => {logDebug('Banner ad clicked!')},
-  );
-
-  final ScreenAdContentCallback _contentCallback = ScreenAdContentCallback(
-    onAdLoaded: (ad) async => {
-      logDebug('${await ad.getFormat()} ad loaded: ${await ad.getSourceName()}')
-    },
-    onAdFailedToLoad: (format, error) =>
-        {logDebug('$format ad failed to load: $error')},
-    onAdShowed: (ad) async => {
-      logDebug('${await ad.getFormat()} ad showed: ${await ad.getSourceName()}')
-    },
-    onAdFailedToShow: (format, error) =>
-        {logDebug('$format ad failed to show: $error')},
-    onAdClicked: (ad) async => {
-      logDebug(
-          '${await ad.getFormat()} ad clicked: ${await ad.getSourceName()}')
-    },
-    onAdDismissed: (ad) async => {
-      logDebug(
-          '${await ad.getFormat()} ad dismissed: ${await ad.getSourceName()}')
-    },
-  );
+  bool _isAppOpenAdLoaded = false;
+  bool _isInterstitialAdLoaded = false;
+  bool _isRewardedAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _initAdsSDK();
 
-    _initAppOpenAd();
-    _initInterstitialAd();
-    _initRewardedAd();
+    bool useAutoReloadAds = true;
+    _createAppOpenAd(useAutoReloadAds);
+    _createInterstitialAd(useAutoReloadAds);
+    _createRewardedAd(useAutoReloadAds);
+  }
 
-    _getAdsSDKVersion();
+  void _createAppOpenAd(bool autoReload) {
+    _appOpenAd = CASAppOpen.createAndLoad(
+      autoReload: autoReload,
+      autoShow: true,
+      onAdLoaded: (AdScreenInstance ad) {
+        print('$ad loaded');
+        setState(() {
+          _isAppOpenAdLoaded = true;
+        });
+      },
+      onAdFailedToLoad: (AdInstance ad, AdError error) {
+        print('$ad failed to load: ${error.message}.');
+        if (autoReload) {
+          // just wait for the automatic reload
+        } else {
+          Future.delayed(const Duration(seconds: 10), () {
+            _appOpenAd.load();
+          });
+        }
+      },
+      onAdFailedToShow: (AdInstance ad, AdError error) {
+        print('$ad failed to show: ${error.message}.');
+        if (autoReload) {
+          // just wait for the automatic reload
+        } else {
+          _appOpenAd.load();
+        }
+      },
+      onAdShowed: (AdScreenInstance ad) {
+        print('$ad showed');
+      },
+      onAdImpression: (AdInstance ad, AdContentInfo contentInfo) {
+        print('$ad impression creative id: ${contentInfo.creativeId}');
+      },
+      onAdClicked: (AdInstance ad) {
+        print('$ad clicked');
+      },
+      onAdDismissed: (AdScreenInstance ad) {
+        print('$ad dismissed');
+        if (autoReload) {
+          // just wait for the automatic reload
+        } else {
+          _appOpenAd.load();
+        }
+      },
+    );
+  }
+
+  /// The [CASAppOpen.onAdFailedToShow] callback will be fired if the ad
+  /// is not ready to show. Or check [CASAppOpen.isLoaded].
+  void _showAppOpenAd() {
+    setState(() {
+      _isAppOpenAdLoaded = false;
+    });
+    _appOpenAd.show();
+  }
+
+  void _createInterstitialAd(bool autoReload) {
+    _interstitialAd = CASInterstitial.createAndLoad(
+      autoReload: autoReload,
+      autoShow: true,
+      minInterval: 0,
+      onAdLoaded: (AdScreenInstance ad) {
+        print('$ad loaded');
+        setState(() {
+          _isInterstitialAdLoaded = true;
+        });
+      },
+      onAdFailedToLoad: (AdInstance ad, AdError error) {
+        print('$ad failed to load: ${error.message}.');
+        if (autoReload) {
+          // just wait for the automatic reload
+        } else {
+          Future.delayed(const Duration(seconds: 10), () {
+            _interstitialAd.load();
+          });
+        }
+      },
+      onAdFailedToShow: (AdInstance ad, AdError error) {
+        print('$ad failed to show: ${error.message}.');
+        if (autoReload) {
+          // just wait for the automatic reload
+        } else {
+          _interstitialAd.load();
+        }
+      },
+      onAdShowed: (AdScreenInstance ad) {
+        print('$ad showed');
+      },
+      onAdImpression: (AdInstance ad, AdContentInfo contentInfo) {
+        print('$ad impression creative id: ${contentInfo.creativeId}');
+      },
+      onAdClicked: (AdInstance ad) {
+        print('$ad clicked');
+      },
+      onAdDismissed: (AdScreenInstance ad) {
+        print('$ad dismissed');
+        if (autoReload) {
+          // just wait for the automatic reload
+        } else {
+          _interstitialAd.load();
+        }
+      },
+    );
+  }
+
+  /// The [CASInterstitial.onAdFailedToShow] callback will be fired if the ad
+  /// is not ready to show. Or check [CASInterstitial.isLoaded].
+  void _showInterstitialAd() {
+    setState(() {
+      _isInterstitialAdLoaded = false;
+    });
+    _interstitialAd.show();
+  }
+
+  void _createRewardedAd(bool autoReload) {
+    _rewardedAd = CASRewarded.createAndLoad(
+      autoReload: autoReload,
+      onAdLoaded: (AdScreenInstance ad) {
+        print('$ad loaded');
+        setState(() {
+          _isRewardedAdLoaded = true;
+        });
+      },
+      onAdFailedToLoad: (AdInstance ad, AdError error) {
+        print('$ad failed to load: ${error.message}.');
+        if (autoReload) {
+          // just wait for the automatic reload
+        } else {
+          ad.dispose();
+          Future.delayed(const Duration(seconds: 10), () {
+            _rewardedAd.load();
+          });
+        }
+      },
+      onAdFailedToShow: (AdInstance ad, AdError error) {
+        print('$ad failed to show: ${error.message}.');
+        if (autoReload) {
+          // just wait for the automatic reload
+        } else {
+          _rewardedAd.load();
+        }
+      },
+      onAdShowed: (AdScreenInstance ad) {
+        print('$ad showed');
+      },
+      onAdImpression: (AdInstance ad, AdContentInfo contentInfo) {
+        print('$ad impression creative id: ${contentInfo.creativeId}');
+      },
+      onAdClicked: (AdInstance ad) {
+        print('$ad clicked');
+      },
+      onAdDismissed: (AdScreenInstance ad) {
+        print('$ad dismissed');
+        if (autoReload) {
+          // just wait for the automatic reload
+        } else {
+          _rewardedAd.load();
+        }
+      },
+    );
+  }
+
+  /// Be sure to implement [CASRewarded.onUserEarnedReward] callback
+  /// and reward the user for watching an ad.
+  ///
+  /// The [CASRewarded.onAdFailedToShow] callback will be fired if the ad
+  /// is not ready to show. Or check [CASRewarded.isLoaded].
+  void _showRewardedAd() {
+    setState(() {
+      _isRewardedAdLoaded = false;
+    });
+    _rewardedAd.onUserEarnedReward = (AdScreenInstance ad) {
+      print('Reward the user for watching the $ad');
+    };
+    _rewardedAd.show();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _appOpen.dispose();
-    _interstitial.dispose();
-    _rewarded.dispose();
+    _appOpenAd.dispose();
+    _interstitialAd.dispose();
+    _rewardedAd.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('CAS.AI Sample'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (_sdkVersion != null) Text('CAS.AI $_sdkVersion'),
-                const Spacer(),
-                Text('Plugin version ${CAS.getPluginVersion()}'),
-              ],
-            ),
-          ),
-          Expanded(
+    return MaterialApp(
+      home: Builder(builder: (BuildContext context) {
+        return Scaffold(
+          appBar: AppBar(title: const Text('CAS.AI Plugin example app')),
+          body: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
-              child: Column(
+              child: Center(
+                  child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  LayoutBuilder(
-                      builder: (_, constraints) =>
-                          _buildBannerAdWidget(constraints.maxWidth)),
                   ElevatedButton(
-                    child: const Text('Load next ad on upper widget'),
-                    onPressed: () => _bannerKey.currentState?.load(),
+                    onPressed: _isAppOpenAdLoaded ? _showAppOpenAd : null,
+                    child: const Text('AppOpen Ad'),
                   ),
                   ElevatedButton(
-                    onPressed: _showAppOpen,
-                    child: const Text('Show App Open'),
+                    onPressed:
+                        _isInterstitialAdLoaded ? _showInterstitialAd : null,
+                    child: const Text('Interstitial Ad'),
                   ),
                   ElevatedButton(
-                    onPressed: _showInterstitial,
-                    child: const Text('Show Interstitial'),
+                    onPressed: _isRewardedAdLoaded ? _showRewardedAd : null,
+                    child: const Text('Rewarded Ad'),
+                  ),
+                  /**
+                       *   static const adaptiveBannerButtonText = 'Adaptive Banner Ad';
+                          static const inlineBannerButtonText = 'Inline Banner Ad';
+                          static const nativeTemplateButtonText = 'Native Ad template';
+                          static const multiBannersButtonText = 'Multi Banner Ads';
+                       */
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AdaptiveBannerExample()),
+                      );
+                    },
+                    child: const Text('Adaptive Banner Ad'),
                   ),
                   ElevatedButton(
-                    onPressed: _showRewarded,
-                    child: const Text('Show Rewarded'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const InlineBannerExample()),
+                      );
+                    },
+                    child: const Text('Inline Banner Ads'),
                   ),
                   ElevatedButton(
-                    onPressed: _showConsentFlowIfRequired,
-                    child: const Text('Show Consent Flow if required'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const MultiBannersWithRecycleExample()),
+                      );
+                    },
+                    child: const Text('Multi Banner Ads'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const NativeTemplateExample()),
+                      );
+                    },
+                    child: const Text('Native Ad template'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NativeFactoryExample()),
+                      );
+                    },
+                    child: const Text('Native Ad factory'),
                   ),
                 ],
-              ),
+              )),
             ),
           ),
-        ],
-      ),
+        );
+      }),
     );
-  }
-
-  void _initAdsSDK() {
-    // Set Ads Settings
-    CAS.settings.setDebugMode(true);
-    CAS.settings.setTaggedAudience(Audience.notChildren);
-
-    // Configure Consent flow
-    final ConsentFlow consentFlow = ConsentFlow.create()
-        .setOnDismissCallback(_onConsentFlowDismissed)
-        .withPrivacyPolicy('https://example.com/');
-
-    // Initialize SDK
-    CAS
-        .buildManager()
-        .withCasId(_casId)
-        .withTestMode(kDebugMode)
-        .withConsentFlow(consentFlow)
-        .withCompletionListener(_onInitializationCompleted)
-        .build();
-  }
-
-  void _getAdsSDKVersion() async {
-    final String sdkVersion = await CAS.getSDKVersion();
-    setState(() {
-      _sdkVersion = sdkVersion;
-    });
-  }
-
-  void _onConsentFlowDismissed(int status) {
-    switch (status) {
-      case ConsentFlow.statusObtained:
-        // Consent obtained
-        break;
-    }
-    logDebug('Consent flow dismissed: $status');
-  }
-
-  void _onInitializationCompleted(InitConfig initConfig) async {
-    final String? error = initConfig.error;
-    if (error != null) {
-      logDebug('Ad manager initialization failed: $error');
-      return;
-    }
-    logDebug('Ad manager initialized');
-  }
-
-  Widget _buildBannerAdWidget(double maxWidth) {
-    return BannerWidget(
-      key: _bannerKey,
-      casId: _casId,
-      adListener: _bannerListener,
-      onImpressionListener: _impressionListener,
-      // AdSize.banner by default
-      size: AdSize.getAdaptiveBanner(maxWidth),
-      // true by default
-      isAutoloadEnabled: true,
-      // 30 sec by default
-      refreshInterval: 30,
-    );
-  }
-
-  void _initAppOpenAd() {
-    _appOpen.contentCallback = _contentCallback;
-    _appOpen.impressionListener = _impressionListener;
-    _appOpen.setAutoloadEnabled(_useAutoLoad); // false by default
-    _appOpen.setAutoshowEnabled(true); // false by default
-    if (!_useAutoLoad) {
-      _appOpen.load();
-    }
-  }
-
-  void _showAppOpen() async {
-    _appOpen.show();
-  }
-
-  void _initInterstitialAd() {
-    _interstitial.contentCallback = _contentCallback;
-    _interstitial.impressionListener = _impressionListener;
-    _interstitial.setAutoloadEnabled(_useAutoLoad); // false by default
-    _interstitial.setAutoshowEnabled(true); // false by default
-    _interstitial.setMinInterval(0); // by default
-    if (!_useAutoLoad) {
-      _interstitial.load();
-    }
-  }
-
-  void _showInterstitial() async {
-    // You can show ads without checking for isLoaded,
-    // expecting an error in onAdFailedToShow.
-    if (await _interstitial.isLoaded()) {
-      _interstitial.show();
-    } else {
-      logDebug('Interstitial ad not ready to show');
-    }
-  }
-
-  void _initRewardedAd() {
-    _rewarded.contentCallback = _contentCallback;
-    _rewarded.impressionListener = _impressionListener;
-    _rewarded.setExtraFillInterstitialAdEnabled(true); // true by default
-    _rewarded.setAutoloadEnabled(_useAutoLoad); // false by default
-    if (!_useAutoLoad) {
-      _rewarded.load();
-    }
-  }
-
-  void _showRewarded() async {
-    // You can show ads without checking for isLoaded,
-    // expecting an error in onAdFailedToShow.
-    if (await _rewarded.isLoaded()) {
-      _rewarded.show(OnRewardEarnedListener((ad) async {
-        logDebug('Rewarded ad earned reward: ${await ad.getSourceName()}');
-      }));
-    } else {
-      logDebug('Rewarded ad not ready to show');
-    }
-  }
-
-  void _showConsentFlowIfRequired() {
-    ConsentFlow.create()
-        .setOnDismissCallback(_onConsentFlowDismissed)
-        .withPrivacyPolicy('https://example.com/')
-        .showIfRequired();
-  }
-}
-
-void logDebug(String message) {
-  if (kDebugMode) {
-    debugPrint('CAS.AI.Flutter.Example: $message');
   }
 }

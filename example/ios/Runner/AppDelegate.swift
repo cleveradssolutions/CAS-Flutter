@@ -1,3 +1,4 @@
+import clever_ads_solutions
 import Flutter
 import UIKit
 
@@ -8,6 +9,12 @@ import UIKit
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
+
+        // Register map of NativeAdFactory to CAS Flutter Plugin
+        CASMobileAdsPlugin.nativeAdFactories = [
+            "nativeFactoryIdExample": NativeAdFactoryExample(),
+        ]
+
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 

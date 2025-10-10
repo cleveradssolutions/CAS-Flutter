@@ -2,12 +2,11 @@ import os
 import re
 import sys
 
-_FLUTTER_PLUGIN_VERSION = "0.9.0"
+_FLUTTER_PLUGIN_VERSION = "4.3.0"
 _CAS_VERSION = "4.3.0"
 
 # Plugin publishing flow (from the project root):
 # python3 tools/version_updater.py
-# python3 tools/generate_export_file.py
 # [write CHANGELOG.md]
 # dart format .
 # flutter analyze
@@ -35,7 +34,7 @@ def update_version_in_file(file_path, prefix, suffix):
 def update_cas_sdk_version_android():
     update_version_in_file(
         os.path.join('android', 'build.gradle'),
-        "    implementation 'com.cleveradssolutions:cas-sdk:",
+        "        implementation 'com.cleveradssolutions:cas-sdk:",
         _CAS_VERSION + "'"
     )
 
@@ -52,7 +51,7 @@ def update_cas_sdk_version_ios():
     update_version_in_file(
         os.path.join('ios', 'clever_ads_solutions.podspec'),
         "  s.dependency 'CleverAdsSolutions-Base', '",
-        ">= " + _CAS_VERSION + "'"
+        "~> " + _CAS_VERSION + "'"
     )
 
 
@@ -74,9 +73,14 @@ def update_flutter_plugin_version():
 
 def update_flutter_plugin_version_dart():
     update_version_in_file(
-        os.path.join('lib', 'src', 'cas.dart'),
-        '  static const String _pluginVersion = "',
-        _FLUTTER_PLUGIN_VERSION + '";'
+        os.path.join('android', 'src', 'main', 'kotlin', 'com', 'cleveradssolutions', 'plugin', 'flutter', 'CASMobileAdsPlugin.kt'),
+        'private const val PLUGIN_VERSION = "',
+        _FLUTTER_PLUGIN_VERSION + '"'
+    )
+    update_version_in_file(
+        os.path.join('ios', 'Classes', 'CASMobileAdsPlugin.swift'),
+        'private let pluginVersion = "',
+        _FLUTTER_PLUGIN_VERSION + '"'
     )
 
 

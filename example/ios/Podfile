@@ -35,7 +35,6 @@ target 'Runner' do
   use_frameworks! :linkage => :static
   use_modular_headers!
 
-  pod 'CleverAdsSolutions-Base', $casVersion
   # There should be `pod` on ready-made solutions and/or separate adapters.
   # pod 'CleverAdsSolutions-SDK/GoogleAds', $casVersion
   # Instead of defining each adapter separately,

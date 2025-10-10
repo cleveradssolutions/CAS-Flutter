@@ -1,19 +1,30 @@
-# CAS.AI Flutter Plugin
-The CAS.AI SDK is mobile advertising featuring refined ad formats and streamlined APIs for access to mobile ad networks and advertising solutions. The SDK enables mobile app developers to maximize their monetization in native mobile apps.
-
-This repository contains the source code for the CAS.AI (CleverAdsSolutions) plugin for Flutter. This plugin enables Flutter developers to easily serve ads on Android and iOS apps without having to write Java or Objective-C code. The plugin provides a Dart interface for ad management that is used in your Flutter project.
-
+# CAS.AI Mobile Ads for Flutter
 [![Pub Version](https://img.shields.io/pub/v/clever_ads_solutions)](https://pub.dev/packages/clever_ads_solutions/versions)
 [![App-ads.txt](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/cleveradssolutions/App-ads.txt/master/Shield.json)](https://github.com/cleveradssolutions/App-ads.txt)
+![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-blue.svg)
+
+The CAS.AI Mobile Ads SDK (by CleverAdsSolutions) offers advanced mobile advertising capabilities with refined ad formats and streamlined APIs to access multiple ad networks and maximize monetization in mobile apps.
+
+This repository contains the official Flutter plugin for CAS.AI, allowing Flutter developers to easily integrate and monetize their apps using the CAS.AI SDK.
 
 ## Documentation
-For instructions on using the plugin, please refer to [this developer guide](https://github.com/cleveradssolutions/CAS-Flutter/wiki).
+For setup instructions, usage examples, and API details, refer to the [Developer Guide on our Wiki](https://github.com/cleveradssolutions/CAS-Flutter/wiki).
 
 ## Downloads
-See [pub.dev](https://pub.dev/packages/clever_ads_solutions/versions) for the latest releases of the plugin.
+Visit [pub.dev](https://pub.dev/packages/clever_ads_solutions/versions) to get the latest version of the plugin.
 
 ## Sample application
-For a sample application demonstrating how to use CAS.AI Flutter plugin see `example` directory.
+A full sample application demonstrating CAS.AI Flutter integration is available in the [example/](https://github.com/cleveradssolutions/CAS-Flutter/tree/main/example) directory.
 
-## Suggesting improvements
-To file bugs, make feature requests, or to suggest other improvements, please use [GitHub's issue tracker](https://github.com/cleveradssolutions/CAS-Flutter/issues).
+## Feedback & Contributions
+Found a bug? Have a feature request or suggestion?  
+Please open an issue using [GitHub’s Issue Tracker](https://github.com/cleveradssolutions/CAS-Flutter/issues).
+
+## Native SDK Repositories
+This Flutter plugin is built on top of the official native CAS.AI SDKs:
+- [CAS.AI Android SDK (GitHub)](https://github.com/cleveradssolutions/CAS-Android)
+  Native Android SDK for Java and Kotlin applications.
+- [CAS.AI iOS SDK (GitHub)](https://github.com/cleveradssolutions/CAS-iOS)
+  Native iOS SDK for Swift and Objective-C applications.
+
+Refer to these repositories for follow the latest releases, changelogs, or to report platform-specific issues.

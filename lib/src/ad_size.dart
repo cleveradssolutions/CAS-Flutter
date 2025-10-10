@@ -1,72 +1,90 @@
 import 'package:flutter/material.dart';
 
-import 'internal/ad_size_impl.dart';
+/// [AdSize] represents the size of a banner ad.
+class AdSize {
+  /// Constructs an [AdSize] with the given [width] and [height].
+  const AdSize._({required this.width, required this.height}) : _mode = 0;
 
-abstract class AdSize {
-  /// Standard banner size 320dp width and 50dp height
-  static const AdSize banner = AdSizeImpl(320, 50);
+  /// The vertical span of an ad.
+  final int width;
 
-  /// Leaderboard banner size 728dp width and 90dp height
-  static const AdSize leaderboard = AdSizeImpl(728, 90);
+  /// The horizontal span of an ad.
+  final int height;
 
-  /// Medium Rectangle size 300dp width and 250dp height
-  static const AdSize mediumRectangle = AdSizeImpl(300, 250);
+  /// The ad size mode.
+  final int _mode;
 
-  int get width;
+  /// Is true for AdSize created by [AdSize.getAdaptiveBanner].
+  bool get isAdaptive => _mode == 2;
 
-  int get height;
+  /// Is true for AdSize created by [AdSize.getInlineBanner].
+  bool get isInline => _mode == 3;
 
-  bool get isAdaptive;
+  /// Standard banner has a fixed size of 320x50 and is the minimum ad size.
+  static const AdSize banner = AdSize._(width: 320, height: 50);
 
-  bool get isInline;
+  /// Leaderboard has a fixed size of 728x90 and is allowed on tablets only.
+  static const AdSize leaderboard = AdSize._(width: 728, height: 90);
 
-  /// Typically, Smart Banners on phones have a [BANNER] size.
-  /// Or on tablets a [LEADERBOARD] size.
-  factory AdSize.getSmartBanner(BuildContext context) =>
-      AdSizeFactory.getSmartBanner(context);
+  /// Medium rectangle has a fixed size of 300x250.
+  static const AdSize mediumRectangle = AdSize._(width: 300, height: 250);
 
-  /// Inline adaptive banners are larger, taller banners compared to anchored adaptive banners.
-  /// They are of variable height, and can be as tall as the device screen.
+  /// Adaptive banner ads have a fixed aspect ratio for the maximum width.
+  /// The adaptive size calculates the optimal height for that width with an
+  /// aspect ratio similar to 320x50.
   ///
-  /// - The height of adaptive banners cannot be less than 32 dp.
-  /// - You must know the width of the view that the ad will be placed in,
-  /// and this should take into account the device width and any safe areas that are applicable.
-  /// - The inline adaptive banner sizes are designed to work best when using the full available width.
-  /// In most cases, this will be the full width of the screen of the device in use.
+  /// Width of the current device can be found using:
+  ///  `MediaQuery.of(context).size.width`.
+  ///
   /// Be sure to take into account applicable safe areas.
-  factory AdSize.getInlineBanner(int width, int maxHeight) =>
-      AdSizeFactory.getInlineBanner(width, maxHeight);
+  AdSize.getAdaptiveBanner(double maxWidth)
+      : width = maxWidth.truncate(),
+        height = 0,
+        _mode = 2;
 
-  /// Create Adaptive AdSize with Max Width dp for current screen orientation.
-  /// - The height of adaptive banners cannot be less than 50 dp and more than 250 dp.
-  /// - The width of adaptive banners cannot be less than 300 dp.
-  /// - The adaptive banners use fixed aspect ratios instead of fixed heights.
-  factory AdSize.getAdaptiveBanner(double maxWidthDp) =>
-      AdSizeFactory.getAdaptiveBanner(maxWidthDp);
+  /// Inline banner ads have a desired width and a maximum height, useful when
+  /// you want to limit the banner's height. Inline banners are larger and
+  /// taller compared to adaptive banners. They have variable height, including
+  /// Medium Rectangle size, and can be as tall as the device screen.
+  ///
+  /// Width of the current device can be found using:
+  ///  `MediaQuery.of(context).size.width.truncate()`.
+  /// Be sure to take into account applicable safe areas.
+  AdSize.getInlineBanner(this.width, int maxHeight)
+      : height = maxHeight,
+        _mode = 3 {
+    if (width < 300 || maxHeight < 32) {
+      throw FlutterError.fromParts(<DiagnosticsNode>[
+        ErrorSummary('Invalid Inline Ad Size ($width x $maxHeight)'),
+        ErrorHint(
+            'The minimum supported values for Inline Ad Size is (300 x 32).'),
+      ]);
+    }
+  }
+
+  /// Smart ad size selects the optimal dimensions depending on the device type.
+  /// For mobile devices, it returns 320x50, while for tablets, it returns 728x90.
+  /// In the UI, these banners occupy the same amount of space regardless of device type.
+  factory AdSize.getSmartBanner(BuildContext context) {
+    final isTablet = (MediaQuery.of(context).size.shortestSide > 720.0);
+    return isTablet ? AdSize.leaderboard : AdSize.banner;
+  }
 
   /// Create Adaptive AdSize with screen width for current screen orientation.
-  /// - The height of adaptive banners cannot be less than 50 dp and more than 250 dp.
-  /// - The width of adaptive banners cannot be less than 300 dp.
-  /// - The adaptive banners use fixed aspect ratios instead of fixed heights.
-  factory AdSize.getAdaptiveBannerInScreen() =>
-      AdSizeFactory.getAdaptiveBannerInScreen();
+  @Deprecated(
+      "Use getAdaptiveBanner(maxWidthDp) with screen width by `MediaQuery.of(context).size.width` instead.")
+  AdSize.getAdaptiveBannerInScreen()
+      : width = 0,
+        height = 0,
+        _mode = 2;
 
-  @Deprecated("Use AdSize.banner instead")
-  // ignore: constant_identifier_names
-  static const AdSize Banner = banner;
+  @override
+  bool operator ==(Object other) =>
+      other is AdSize && other.width == width && other.height == height;
 
-  @Deprecated("Use AdSize.leaderboard instead")
-  // ignore: constant_identifier_names
-  static const AdSize Leaderboard = leaderboard;
+  @override
+  String toString() => '($width, $height)';
 
-  @Deprecated("Use AdSize.mediumRectangle instead")
-  // ignore: constant_identifier_names
-  static const AdSize MediumRectangle = mediumRectangle;
-  @Deprecated("Use AdSize.getAdaptiveBanner() instead")
-  // ignore: constant_identifier_names
-  static const AdSize Adaptive = AdSizeImpl(-1, -1, 2);
-
-  @Deprecated("Use AdSize.getSmartBanner() instead")
-  // ignore: constant_identifier_names
-  static const AdSize Smart = AdSizeImpl(-2, -2);
+  @override
+  int get hashCode => Object.hash(width, height);
 }

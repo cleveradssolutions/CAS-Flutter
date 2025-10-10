@@ -1,3 +1,45 @@
+## 4.3.0
+### Major changes
+- Version bumped to 4.3 to align with native SDK versions.
+- Completely rewritten Android and iOS platform code for improved performance, stability, and better integration with native SDKs.
+- Introduced new `CASMobileAds` class. Deprecated `CAS` and `MediationManager` classes are still available for use but they may be removed in a future release.
+- The CAS SDK initialization is now done via a single function `CASMobileAds.initialize(...)` that uses a `Future` to return the new `InitializationStatus` structure.
+- The Ad format management has been modernized and streamlined. All ad classes now extend the base AdInstance class and share similar callbacks.
+- Introduced `createAndLoad(...)` method for each ad format, accepting all possible configuration options and automatically initiating ad loading. This improvement simplifies and optimizes the creation of ad instances.
+- Introduced support for Native Ads using built-in templates or native platform view factories.
+- The Banner ad management is now handled via the `CASBanner` class, which can be `createAndLoad()` independently of the widget state and displayed using the new `CASWidget`. Platform view rendering has been optimized by simplifying the widget class.
+- The CAS ID only needs to be passed once during initialization if you are using a single ID.
+- The `AdContentInfo` structure now provides ad information synchronously, without requiring `await` of `Future`.
+- Added the `debugGeography` to override `PrivacyGeography` for `ConsentFlow` to test different consent dialogs.
+- The `ConsentFlow.show()` functions now complete `Future<int>` only after the consent form is dismissed and return the resulting consent flow status.
+- For detailed information on all new functions, please refer to the updated wiki.
+- Removed several functions that were previously deprecated.
+### Migration table
+Deprecated functions are still supported but no longer recommended.
+| Deprecated  | Replacement | 
+| ----------- | ----------- | 
+| `CAS.buildManager()...` | `CASMobileAds.initialize(...)` | 
+| `CAS.targetingOptions...` | `CASMobileAds.targetingOptions...` | 
+| `CAS.settings.setMutedAdSounds()` | `CASMobileAds.setAdSoundsMuted()` |
+| `CAS.settings.setDebugMode()` | `CASMobileAds.setDebugLoggingEnabled()` |
+| `CAS.settings.setTrialAdFreeInterval()` | `CASMobileAds.setTrialAdFreeInterval()` |
+| `CAS.settings.setTaggedAudience()` | `CASMobileAds.initialize(targetAudience:)` |
+| `CAS.settings.setTestDeviceId()` | `CASMobileAds.initialize(testDeviceIds:)` |
+| `CASInterstitial.create()` | `CASInterstitial.createAndLoad(...)` |
+| `CASInterstitial.impressionListener` | `CASInterstitial.onAdImpression` |
+| `CASInterstitial.contentCallback` | `CASInterstitial.onAdLoaded` and others |
+| `CASAppOpen.create()` | `CASAppOpen.createAndLoad(...)` |
+| `CASAppOpen.impressionListener` | `CASAppOpen.onAdImpression` |
+| `CASAppOpen.contentCallback` | `CASAppOpen.onAdLoaded` and others |
+| `CASRewarded.create()` | `CASRewarded.createAndLoad(...)` |
+| `CASRewarded.impressionListener` | `CASRewarded.onAdImpression` |
+| `CASRewarded.contentCallback` | `CASRewarded.onAdLoaded` and others |
+| `OnRewardEarnedListener` | `CASRewarded.onUserEarnedReward` |
+| `BannerWidgetState()...` | `CASBanner.createAndLoad(...)` |
+| `BannerWidget(...)` | `CASWidget(ad:)` |
+| `AdSize.getAdaptiveBannerInScreen()` | `maxWidth = MediaQuery.of(context).size.width`<br>and `AdSize.getAdaptiveBanner(maxWidth)` | 
+
+
 ## 0.9.0
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.3.0
 - Updated `AdError` codes for compatibility with CAS 4.

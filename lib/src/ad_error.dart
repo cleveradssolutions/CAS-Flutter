@@ -50,10 +50,13 @@ class AdError implements Comparable<int> {
   /// Indicates that ads cannot be shown because the application is not currently in the foreground.
   static const int codeNotForeground = 13;
 
+  /// Ad error code. Check code constants from [AdError].
   final int code;
 
+  /// Ad error message to log.
   final String message;
 
+  /// Create Ad error
   AdError(this.code, this.message);
 
   @override
@@ -74,16 +77,4 @@ class AdError implements Comparable<int> {
 
   @override
   int compareTo(int other) => code.compareTo(other);
-
-  @Deprecated("Renamed to codeNotInitialized")
-  static const int codeManagerIsDisabled = codeNotInitialized;
-
-  @Deprecated("Renamed to codeNotPassedInterval")
-  static const int codeIntervalNotYetPassed = codeNotPassedInterval;
-
-  @Deprecated("Renamed to codeNotForeground")
-  static const int codeAppIsPaused = codeNotForeground;
-
-  @Deprecated("No longer used")
-  static const int codeNotEnoughSpace = 1005;
 }
