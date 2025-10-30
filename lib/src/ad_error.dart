@@ -1,23 +1,23 @@
-/// To see the error code, see AdError.code.
-/// To see a description of the error, see AdError.message.
-/// See CODE constants for a list of error codes.
+/// Use [code] to retrieve the error code.
+/// Use [message] to get a human-readable error description.
+/// See `code` constants for all available error codes.
 class AdError implements Comparable<int> {
   /// Indicates an internal error occurred.
   static const int codeInternalError = 0;
-
-  /// Indicates that the device is rejected for services.
-  /// Services may not be available for some devices that do not meet the requirements.
-  /// For example, the country or version of the OS.
-  static const int rejected = 2;
-
-  /// Indicates that no ads are available to be served.
-  /// If ads are visible in demo mode, your implementation is correct, and ads will be served once live.
-  static const int codeNoFill = 3;
 
   /// Indicates that ads are not ready to be shown.
   /// Ensure to call the appropriate ad loading method or use automatic cache mode.
   /// If using automatic load mode, wait a little longer for ads to be ready.
   static const int codeNotReady = 1;
+
+  /// Indicates that the device is rejected for services.
+  /// Services may not be available for some devices that do not meet the requirements.
+  /// For example, the country or version of the OS.
+  static const int codeRejected = 2;
+
+  /// Indicates that no ads are available to be served.
+  /// If ads are visible in demo mode, your implementation is correct, and ads will be served once live.
+  static const int codeNoFill = 3;
 
   /// Indicates that the ad creative has reached its daily cap for the user.
   /// This is typically relevant for cross-promotion ads only.
@@ -77,4 +77,8 @@ class AdError implements Comparable<int> {
 
   @override
   int compareTo(int other) => code.compareTo(other);
+
+  /// Renamed to [codeRejected]
+  @Deprecated("Renamed to codeRejected")
+  static const int rejected = codeRejected;
 }

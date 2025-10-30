@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'clever_ads_solutions'
-  s.version          = '4.3.0'
+  s.version          = '4.4.1'
   s.summary          = 'CAS.AI plugin for Flutter.'
   s.description      = <<-DESC
 CAS.AI Mobile Ads plugin for Flutter.
@@ -20,7 +20,7 @@ CAS.AI Mobile Ads plugin for Flutter.
   s.static_framework = true
 
   s.dependency 'Flutter'
-  s.dependency 'CleverAdsSolutions-Base', '~> 4.3.0'
+  s.dependency 'CleverAdsSolutions-Base', '~> 4.4.1'
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'armv7 arm64 x86_64' }
 end

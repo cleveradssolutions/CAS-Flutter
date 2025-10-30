@@ -39,7 +39,9 @@ class CASNativeContent extends AdViewInstance {
   /// CASNativeContent.load(
   ///   onAdLoaded: (ad) {
   ///     // Ad successfully loaded - display an CASWidget with the native ad.
-  ///     _nativeAd = ad;
+  ///     setState(() {
+  //        _nativeAd = ad;
+  //      });
   ///   },
   ///   onAdFailedToLoad: (ad, error) {
   ///     // Ad failed to load - log the error.
@@ -48,7 +50,7 @@ class CASNativeContent extends AdViewInstance {
   /// ```
   ///
   /// - [casId] - The unique identifier of the CAS content for each platform.
-  /// Leave blank to use the initialization identifier.
+  /// Leave null to use the initialization identifier.
   /// - [factoryId] - An identifier for the platform factory that creates the Platform view.
   /// If you do not provide a [factoryId] for the native factory, CAS will build
   /// a default template view based on the size you specify for the [CASWidget].

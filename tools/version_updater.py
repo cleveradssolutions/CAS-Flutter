@@ -2,8 +2,8 @@ import os
 import re
 import sys
 
-_FLUTTER_PLUGIN_VERSION = "4.3.0"
-_CAS_VERSION = "4.3.0"
+_PLUGIN_VERSION = "4.4.1"
+_CAS_VERSION = "4.4.1"
 
 # Plugin publishing flow (from the project root):
 # python3 tools/version_updater.py
@@ -67,7 +67,7 @@ def update_flutter_plugin_version():
     update_version_in_file(
         os.path.join('pubspec.yaml'),
         "version: ",
-        _FLUTTER_PLUGIN_VERSION
+        _PLUGIN_VERSION
     )
 
 
@@ -75,12 +75,12 @@ def update_flutter_plugin_version_dart():
     update_version_in_file(
         os.path.join('android', 'src', 'main', 'kotlin', 'com', 'cleveradssolutions', 'plugin', 'flutter', 'CASMobileAdsPlugin.kt'),
         'private const val PLUGIN_VERSION = "',
-        _FLUTTER_PLUGIN_VERSION + '"'
+        _PLUGIN_VERSION + '"'
     )
     update_version_in_file(
         os.path.join('ios', 'Classes', 'CASMobileAdsPlugin.swift'),
         'private let pluginVersion = "',
-        _FLUTTER_PLUGIN_VERSION + '"'
+        _PLUGIN_VERSION + '"'
     )
 
 
@@ -88,7 +88,7 @@ def update_flutter_plugin_version_android():
     update_version_in_file(
         os.path.join('android', 'build.gradle'),
         "version = '",
-        _FLUTTER_PLUGIN_VERSION + "'"
+        _PLUGIN_VERSION + "'"
     )
 
 
@@ -96,7 +96,7 @@ def update_flutter_plugin_version_ios():
     update_version_in_file(
         os.path.join('ios', 'clever_ads_solutions.podspec'),
         "  s.version          = '",
-        _FLUTTER_PLUGIN_VERSION + "'"
+        _PLUGIN_VERSION + "'"
     )
 
 

@@ -182,7 +182,7 @@ class CASAppOpen extends AdScreenInstance {
   /// Create [CASAppOpen] and load ad content.
   ///
   /// - [casId] - The unique identifier of the CAS content for each platform.
-  /// Leave blank to use the initialization identifier.
+  /// Leave null to use the initialization identifier.
   /// - [autoReload] - If enabled, the ad will automatically load new content when the current ad is dismissed or completed.
   /// Additionally, it will automatically retry loading the ad if an error occurs during the loading process.
   /// - [autoShow] - If enabled, the ad will automatically displayed when the user returns to the app.
@@ -243,7 +243,7 @@ class CASInterstitial extends AdScreenInstance {
   /// Create [CASInterstitial] and load ad content.
   ///
   /// - [casId] - The unique identifier of the CAS content for each platform.
-  /// Leave blank to use the initialization identifier.
+  /// Leave null to use the initialization identifier.
   /// - [autoReload] - If enabled, the ad will automatically load new content
   /// when the current ad is dismissed or completed.
   /// Additionally, it will automatically retry loading the ad if an error occurs
@@ -346,7 +346,7 @@ class CASRewarded extends AdScreenInstance {
   /// Create [CASRewarded] and load ad content.
   ///
   /// - [casId] - The unique identifier of the CAS content for each platform.
-  /// Leave blank to use the initialization identifier.
+  /// Leave null to use the initialization identifier.
   /// - [autoReload] - If enabled, the ad will automatically load new content
   /// when the current ad is dismissed or completed.
   /// Additionally, it will automatically retry loading the ad if an error occurs

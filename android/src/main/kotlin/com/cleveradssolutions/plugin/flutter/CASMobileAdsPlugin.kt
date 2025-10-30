@@ -21,7 +21,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.StandardMethodCodec
 
-private const val PLUGIN_VERSION = "4.3.0"
+private const val PLUGIN_VERSION = "4.4.1"
 private const val DEFAULT_KEY = "value"
 
 class CASMobileAdsPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCallHandler {

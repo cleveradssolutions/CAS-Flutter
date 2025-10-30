@@ -11,7 +11,7 @@ class CASBanner extends AdViewInstance {
   ///
   /// - [size] - Represents the size of a banner ad.
   /// - [casId] - The unique identifier of the CAS content for each platform.
-  /// Leave blank to use the initialization identifier.
+  /// Leave null to use the initialization identifier.
   /// - [autoReload] - If enabled, the ad will automatically retry loading the ad
   /// if an error occurs during the loading process.
   /// - [refreshInterval] - Sets the refresh interval in seconds for displaying
