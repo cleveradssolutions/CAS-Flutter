@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '4.4.1'
+version = '4.4.2'
 
 buildscript {
     ext.kotlin_version = '2.0.21'
@@ -90,6 +90,6 @@ android {
     }
 
     dependencies {
-        implementation 'com.cleveradssolutions:cas-sdk:4.4.1'
+        implementation 'com.cleveradssolutions:cas-sdk:4.4.2'
     }
 }

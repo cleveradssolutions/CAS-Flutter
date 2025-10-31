@@ -1,3 +1,6 @@
+## 4.4.2
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.4.2
+
 ## 4.4.1
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.4.1
 - Renamed `AdError.rejected` to `AdError.codeRejected` for consistency with other error codes.
