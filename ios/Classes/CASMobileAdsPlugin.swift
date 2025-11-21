@@ -1,7 +1,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let pluginVersion = "4.4.2"
+private let pluginVersion = "4.5.0"
 private let defaultKey = "value"
 
 @objc(CASMobileAdsPlugin)

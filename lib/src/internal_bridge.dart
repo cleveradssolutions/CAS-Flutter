@@ -6,6 +6,11 @@
 
 import 'dart:async';
 
+// 'dart:ui' is included via 'services.dart' in newer Flutter versions,
+// but required for older versions.
+// ignore: unnecessary_import
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -354,10 +359,16 @@ class _AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.secondaryFontStyle?.index);
     } else if (value is Color) {
       buffer.putUint8(_valueColor);
+      /* New Color API with Flutter 3.27
       writeValue(buffer, (value.a * 255).toInt());
       writeValue(buffer, (value.r * 255).toInt());
       writeValue(buffer, (value.g * 255).toInt());
       writeValue(buffer, (value.b * 255).toInt());
+       */
+      writeValue(buffer, value.alpha);
+      writeValue(buffer, value.red);
+      writeValue(buffer, value.green);
+      writeValue(buffer, value.blue);
     } else {
       super.writeValue(buffer, value);
     }

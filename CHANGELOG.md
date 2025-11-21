@@ -1,3 +1,8 @@
+## 4.5.0
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.5.0
+- Fixed issue #49: support for Flutter 3.0–3.27.  
+  > Previously only 3.27+. The plugin has not been tested on every version; using the latest stable Flutter is recommended.
+
 ## 4.4.2
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.4.2
 
