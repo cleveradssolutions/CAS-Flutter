@@ -1,3 +1,6 @@
+## 4.5.2
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.5.2
+
 ## 4.5.0
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.5.0
 - Fixed issue #49: support for Flutter 3.0–3.27.  
