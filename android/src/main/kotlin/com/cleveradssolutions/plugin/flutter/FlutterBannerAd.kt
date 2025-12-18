@@ -5,7 +5,6 @@ import android.util.Size
 import com.cleveradssolutions.sdk.AdContentInfo
 import com.cleveradssolutions.sdk.OnAdImpressionListener
 import com.cleversolutions.ads.AdError
-import com.cleversolutions.ads.AdImpression
 import com.cleversolutions.ads.AdViewListener
 import com.cleversolutions.ads.android.CASBannerView
 import io.flutter.plugin.platform.PlatformView
@@ -84,9 +83,5 @@ internal class FlutterBannerAd(
 
     override fun onAdImpression(ad: AdContentInfo) {
         manager.onAdImpression(adId, ad)
-    }
-
-    override fun onAdViewPresented(view: CASBannerView, info: AdImpression) {
-        // deprecated
     }
 }
