@@ -2,14 +2,16 @@ import os
 import re
 import sys
 
-_PLUGIN_VERSION = "4.5.3"
-_CAS_VERSION = "4.5.2"
+_PLUGIN_VERSION = "4.5.4"
+_CAS_VERSION = "4.5.4"
 
 # Plugin publishing flow (from the project root):
 # python3 updater.py
 # [write CHANGELOG.md]
 # dart format .
 # flutter analyze
+# cd example && flutter build apk --debug
+# cd example && flutter build ios --no-codesign
 # flutter pub publish
 
 def update_version_in_file(file_path, prefix, suffix):
