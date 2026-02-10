@@ -77,7 +77,7 @@ class FlutterNativeAd: NSObject, FlutterAd, FlutterPlatformView, CASNativeLoader
                 templateSize = newSize
                 adView.setAdTemplateSize(newSize)
                 templateStyle?.applyToView(adView)
-                adView.setNativeAd(adContent)
+                adView.bindAdContent(adContent)
             }
         }
     }
@@ -103,10 +103,10 @@ class FlutterNativeAd: NSObject, FlutterAd, FlutterPlatformView, CASNativeLoader
                 )
                 return
             }
-            view.setNativeAd(ad)
+            view.bindAdContent(ad)
 
             if adContent == nil {
-                // onNativeAdFailedToShow called from setNativeAd()
+                // onNativeAdFailedToShow called from bindAdContent()
                 // so adContent already destroyed
                 return
             }

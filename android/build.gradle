@@ -1,15 +1,19 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '4.5.4'
+version = '4.6.0'
 
 buildscript {
-    ext.kotlin_version = '2.1.21'
+    ext {
+        kotlin_version = '2.1.21'
+        agp_version = '8.6.1'
+    }
+
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:8.3.2"
+        classpath "com.android.tools.build:gradle:$agp_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -121,6 +125,6 @@ android {
     }
 
     dependencies {
-        implementation 'com.cleveradssolutions:cas-sdk:4.5.4'
+        api 'com.cleveradssolutions:cas-sdk:4.6.0'
     }
 }

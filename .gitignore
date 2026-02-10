@@ -40,6 +40,12 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
+gradlew
+gradlew.bat
+gradle-wrapper.jar
+local.properties
+*.iml
+
 /android/app/debug
 /android/app/profile
 /android/app/release

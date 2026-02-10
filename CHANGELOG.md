@@ -1,3 +1,7 @@
+## 4.6.0
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.6.0
+- [iOS] **This release requires a minimum Xcode version of 26.0.**
+
 ## 4.5.4
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.5.4
 

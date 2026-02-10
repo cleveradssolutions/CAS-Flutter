@@ -73,7 +73,7 @@ internal class FlutterNativeAd(
                     templateSize = newSize
                     it.setAdTemplateSize(newSize)
                     templateStyle?.applyToView(it)
-                    it.setNativeAd(adContent)
+                    it.bindAdContent(adContent)
                 }
             }
             FlutterPlatformView(it)
@@ -102,10 +102,10 @@ internal class FlutterNativeAd(
                 )
                 return
             }
-            view.setNativeAd(nativeAd)
+            view.bindAdContent(nativeAd)
 
             if (adContent == null) {
-                // onNativeAdFailedToShow called from setNativeAd()
+                // onNativeAdFailedToShow called from bindAdContent()
                 // so adContent already destroyed
                 return
             }
