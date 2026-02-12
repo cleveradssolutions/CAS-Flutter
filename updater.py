@@ -1,7 +1,7 @@
 import os
 
-_PLUGIN_VERSION = "4.6.0"
-_CAS_VERSION = "4.6.0"
+_PLUGIN_VERSION = "4.6.2"
+_CAS_VERSION = "4.6.2"
 
 # Plugin publishing flow (from the project root):
 # python3 updater.py
@@ -34,7 +34,7 @@ def update_version_in_file(file_path, prefix, suffix):
 def update_cas_sdk_version_android():
     update_version_in_file(
         os.path.join('android', 'build.gradle'),
-        "        implementation 'com.cleveradssolutions:cas-sdk:",
+        "        api 'com.cleveradssolutions:cas-sdk:",
         _CAS_VERSION + "'"
     )
 

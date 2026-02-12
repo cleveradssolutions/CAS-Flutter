@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '4.6.0'
+version = '4.6.2'
 
 buildscript {
     ext {
@@ -125,6 +125,6 @@ android {
     }
 
     dependencies {
-        api 'com.cleveradssolutions:cas-sdk:4.6.0'
+        api 'com.cleveradssolutions:cas-sdk:4.6.2'
     }
 }

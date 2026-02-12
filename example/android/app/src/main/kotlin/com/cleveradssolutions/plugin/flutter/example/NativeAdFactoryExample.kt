@@ -35,7 +35,7 @@ class NativeAdFactoryExample : CASNativeAdViewFactory {
         adView.starRatingView = adView.findViewById(R.id.ad_star_rating)
 
         // The CAS Flutter plugin will automatically call
-        // `adView.setNativeAd(nativeAd)` later in any case.
+        // `adView.bindAdContent(nativeAd)` later in any case.
         return adView
     }
 }

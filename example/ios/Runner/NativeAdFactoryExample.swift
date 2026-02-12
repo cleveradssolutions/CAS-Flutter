@@ -26,7 +26,7 @@ class NativeAdFactoryExample: NSObject, CASNativeAdViewFactory {
         adView.registerReviewCountView(tag: 110)
 
         // The CAS Flutter plugin will automatically call
-        // `adView.setNativeAd(nativeAd)` later in any case.
+        // `adView.bindAdContent(nativeAd)` later in any case.
         return adView
     }
 }
