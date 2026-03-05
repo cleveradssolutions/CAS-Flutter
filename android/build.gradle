@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '4.6.3'
+version = '4.6.4'
 
 buildscript {
     ext {

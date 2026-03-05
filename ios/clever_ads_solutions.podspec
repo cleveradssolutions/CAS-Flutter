@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'clever_ads_solutions'
-  s.version          = '4.6.3'
+  s.version          = '4.6.4'
   s.summary          = 'CAS.AI plugin for Flutter.'
   s.description      = <<-DESC
 CAS.AI Mobile Ads plugin for Flutter.
