@@ -85,10 +85,19 @@ class _NativeTemplateExampleState extends State<NativeTemplateExample> {
                     // CAS will build a default template view based on the size
                     // you specify for the CASWidget.
                     double availableWidth = constraints.maxWidth;
-                    return CASWidget(
-                      ad: _nativeAd!,
-                      width: availableWidth,
-                      height: _rowHeight,
+                    return Column(
+                      children: [
+                        CASWidget(
+                          ad: _nativeAd!,
+                          width: availableWidth,
+                          height: _rowHeight,
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: _loadAd,
+                          child: const Text('Reload Ad'),
+                        ),
+                      ],
                     );
                   },
                 );

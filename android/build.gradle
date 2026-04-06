@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '4.6.4'
+version = '4.6.5'
 
 buildscript {
     ext {
@@ -61,7 +61,10 @@ rootProject.allprojects {
         maven {
             name = "SmaatoAdsRepo"
             url = uri("https://s3.amazonaws.com/smaato-sdk-releases/")
-            content { includeGroup("com.smaato.android.sdk") }
+            content { 
+                includeGroup("com.smaato.android.sdk")
+                includeGroup("com.verve")
+            }
         }
         maven {
             name = "VerveAdsRepo"
@@ -125,6 +128,6 @@ android {
     }
 
     dependencies {
-        api 'com.cleveradssolutions:cas-sdk:4.6.3'
+        api 'com.cleveradssolutions:cas-sdk:4.6.5'
     }
 }

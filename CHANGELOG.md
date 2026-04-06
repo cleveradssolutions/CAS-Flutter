@@ -1,3 +1,7 @@
+## 4.6.5
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.6.5
+- Fixed `CASWidget` not refreshing ad content when `AdInstance` is changed.
+
 ## 4.6.4
 - [Android] Removed forced `EnableImpeller=false` from plugin manifest. (issues/52)
 

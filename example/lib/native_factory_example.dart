@@ -78,10 +78,19 @@ class _NativeFactoryExampleState extends State<NativeFactoryExample> {
                 return LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                     double availableWidth = constraints.maxWidth;
-                    return CASWidget(
-                      ad: _nativeAd!,
-                      width: availableWidth,
-                      height: _rowHeight,
+                    return Column(
+                      children: [
+                        CASWidget(
+                          ad: _nativeAd!,
+                          width: availableWidth,
+                          height: _rowHeight,
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: _loadAd,
+                          child: const Text('Reload Ad'),
+                        ),
+                      ],
                     );
                   },
                 );

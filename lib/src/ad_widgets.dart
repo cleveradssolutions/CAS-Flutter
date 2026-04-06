@@ -117,7 +117,7 @@ class _CASWidgetState extends State<CASWidget> {
       }
     } else {
       width = widget.width ?? 350;
-      height = widget.height ?? 350;
+      height = widget.height ?? 300;
     }
 
     if (width < 2 || height < 2) {
@@ -126,16 +126,18 @@ class _CASWidgetState extends State<CASWidget> {
     }
 
     final String viewType = '${casInternalBridge.channel.name}/ad_widget';
+    final int adId = casInternalBridge.adIdFor(widget.ad);
     final Map<String, dynamic> creationParams = {
-      'adId': casInternalBridge.adIdFor(widget.ad),
+      'adId': adId,
       'width': width.isFinite ? width.truncate() : 350,
-      'height': height.isFinite ? height.truncate() : 350
+      'height': height.isFinite ? height.truncate() : 300
     };
 
     Widget platformView;
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         platformView = PlatformViewLink(
+            key: ValueKey(adId),
             viewType: viewType,
             surfaceFactory:
                 (BuildContext context, PlatformViewController controller) {
@@ -160,6 +162,7 @@ class _CASWidgetState extends State<CASWidget> {
         break;
       case TargetPlatform.iOS:
         platformView = UiKitView(
+          key: ValueKey(adId),
           viewType: viewType,
           creationParams: creationParams,
           creationParamsCodec: StandardMessageCodec(),
