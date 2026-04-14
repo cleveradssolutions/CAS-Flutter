@@ -14,12 +14,31 @@ enum Gender {
 
 /// The App/user targeting options.
 class TargetingOptions {
+  String? _lastSetUserId;
+
+  /// The last value passed to [setUserId], or `null` if it has never been set.
+  ///
+  /// Exposed so publishers can correlate an impression fired while this
+  /// session was active with the userId they attributed to it. Useful for
+  /// rewarded-ad use cases where revenue must be reconciled per user
+  /// server-side.
+  ///
+  /// Example:
+  /// ```dart
+  /// CASMobileAds.targetingOptions.setUserId('user-123');
+  /// // ... later, in an impression callback ...
+  /// final userId = CASMobileAds.targetingOptions.lastSetUserId;
+  /// await backend.reportImpression(userId: userId, revenue: info.revenue);
+  /// ```
+  String? get lastSetUserId => _lastSetUserId;
+
   /// The userID is a unique identifier supplied by your application
   /// and must be static for each user across sessions.
   ///
   /// Your userID should not contain any personally identifiable information such as
   /// an email address, screen name, Android ID (AID), or Google Advertising ID (GAID).
   Future<void> setUserId(String? userId) {
+    _lastSetUserId = userId;
     return casInternalBridge.channel.invokeMethod("setUserId", userId);
   }
 

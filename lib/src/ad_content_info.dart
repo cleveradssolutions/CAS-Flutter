@@ -82,6 +82,12 @@ class AdContentInfo {
   ///
   /// The revenue value may be either estimated or exact,
   /// depending on the precision specified by [revenuePrecision].
+  ///
+  /// To attribute this revenue to a specific user for server-side
+  /// reconciliation (e.g. rewarded-ad payouts), read
+  /// `CASMobileAds.targetingOptions.lastSetUserId` inside your impression
+  /// callback. That value reflects the last userId passed to
+  /// [TargetingOptions.setUserId] or [ManagerBuilder.withUserId].
   final double revenue;
 
   /// The precision type of the revenue field.
