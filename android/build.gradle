@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '4.6.5'
+version = '4.6.6'
 
 buildscript {
     ext {
@@ -46,11 +46,6 @@ rootProject.allprojects {
             content { includeGroup("com.ysocorp") }
         }
         maven {
-            name = "SuperAwesomeRepo"
-            url = uri("https://aa-sdk.s3-eu-west-1.amazonaws.com/android_repo")
-            content { includeGroup("tv.superawesome.sdk.publisher") }
-        }
-        maven {
             name = "OguryAdsRepo"
             url = uri("https://maven.ogury.co")
             content {
@@ -72,12 +67,18 @@ rootProject.allprojects {
             content {
                 includeGroup("net.pubnative")
                 includeGroup("com.verve")
+                includeGroup("com.smaato.android.sdk")
             }
         }
         maven {
             name = "PubmaticAdsRepo"
             url = uri("https://repo.pubmatic.com/artifactory/public-repos")
             content { includeGroup("com.pubmatic.sdk") }
+        }
+        maven {
+            name = "SuperAwesomeRepo"
+            url = uri("https://aa-sdk.s3-eu-west-1.amazonaws.com/android_repo")
+            content { includeGroup("tv.superawesome.sdk.publisher") }
         }
         maven {
             name = "MadexAdsProxyRepo"
@@ -128,6 +129,6 @@ android {
     }
 
     dependencies {
-        api 'com.cleveradssolutions:cas-sdk:4.6.5'
+        api 'com.cleveradssolutions:cas-sdk:4.6.6'
     }
 }

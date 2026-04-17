@@ -1,7 +1,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let pluginVersion = "4.6.5"
+private let pluginVersion = "4.6.6"
 private let defaultKey = "value"
 
 @objc(CASMobileAdsPlugin)
@@ -188,7 +188,10 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
             result(nil)
 
         case "setGender":
-            CAS.targetingOptions.gender = call.requireArg()
+            let gender: Int = call.requireArg()
+            if let genderEnum = Gender(rawValue: gender) {
+                CAS.targetingOptions.gender = genderEnum
+            }
             result(nil)
 
         case "setAge":

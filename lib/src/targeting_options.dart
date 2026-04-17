@@ -14,6 +14,12 @@ enum Gender {
 
 /// The App/user targeting options.
 class TargetingOptions {
+  String? _userId;
+
+  /// The userID is a unique identifier supplied by your application
+  /// and must be static for each user across sessions.
+  String? get userId => _userId;
+
   /// The userID is a unique identifier supplied by your application
   /// and must be static for each user across sessions.
   ///

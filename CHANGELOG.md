@@ -1,3 +1,10 @@
+## 4.6.6
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.6.6
+- Added `CASMobileAds.targetingOptions.userId` getter.
+- [iOS] Fixed `NSInvalidArgumentException`: Missing required argument of type Gender for setGender().
+- [Android] Fixed maven repository filter for Verve dependencies.
+
+
 ## 4.6.5
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.6.5
 - Fixed `CASWidget` not refreshing ad content when `AdInstance` is changed.
@@ -77,7 +84,7 @@ Deprecated functions are still supported but no longer recommended.
 | `OnRewardEarnedListener` | `CASRewarded.onUserEarnedReward` |
 | `BannerWidgetState()...` | `CASBanner.createAndLoad(...)` |
 | `BannerWidget(...)` | `CASWidget(ad:)` |
-| `AdSize.getAdaptiveBannerInScreen()` | `maxWidth = MediaQuery.of(context).size.width`<br>and `AdSize.getAdaptiveBanner(maxWidth)` | 
+| `AdSize.getAdaptiveBannerInScreen()` | `maxWidth = MediaQuery.of(context).size.width` and `AdSize.getAdaptiveBanner(maxWidth)` | 
 
 
 ## 0.9.0
