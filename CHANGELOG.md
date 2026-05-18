@@ -1,9 +1,11 @@
+## 4.7.0
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.7.0
+
 ## 4.6.6
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.6.6
 - Added `CASMobileAds.targetingOptions.userId` getter.
 - [iOS] Fixed `NSInvalidArgumentException`: Missing required argument of type Gender for setGender().
 - [Android] Fixed maven repository filter for Verve dependencies.
-
 
 ## 4.6.5
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.6.5

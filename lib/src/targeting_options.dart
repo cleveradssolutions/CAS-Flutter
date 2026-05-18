@@ -26,6 +26,7 @@ class TargetingOptions {
   /// Your userID should not contain any personally identifiable information such as
   /// an email address, screen name, Android ID (AID), or Google Advertising ID (GAID).
   Future<void> setUserId(String? userId) {
+    _userId = userId;
     return casInternalBridge.channel.invokeMethod("setUserId", userId);
   }
 
