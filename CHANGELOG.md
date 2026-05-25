@@ -1,3 +1,11 @@
+## 4.7.1
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.7.1
+### Update Adapters
+- **Added Maticoo, Monetrix and YSO Network adapters to Optimal Ads Solutions.**
+- **Removed Chartboost adapter from Optimal Ads Solutions and VPN Compliant Ads Solutions.**
+- Added new adapter for DisplayIO (closed beta).
+- The Monetrix adapter are now out of closed beta and available to all developers.
+
 ## 4.7.0
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.7.0
 
