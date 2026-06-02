@@ -25,6 +25,7 @@ abstract class AdInstance {
   /// Default constructor, used by subclasses.
   AdInstance({
     required this.format,
+    this.placement,
     this.onAdFailedToLoad,
     this.onAdClicked,
     this.onAdImpression,
@@ -32,6 +33,10 @@ abstract class AdInstance {
 
   /// The ad format of this instance.
   final AdFormat format;
+
+  /// An optional placement name for the ad instance that helps categorize
+  /// and track statistics across different ad placements.
+  final String? placement;
 
   /// Called when the ad content fails to load.
   ///
@@ -74,6 +79,7 @@ abstract class AdScreenInstance extends AdInstance {
   /// Default constructor, used by subclasses.
   AdScreenInstance({
     required super.format,
+    super.placement,
     this.onAdLoaded,
     super.onAdFailedToLoad,
     this.onAdFailedToShow,
@@ -186,6 +192,8 @@ class CASAppOpen extends AdScreenInstance {
   /// - [autoReload] - If enabled, the ad will automatically load new content when the current ad is dismissed or completed.
   /// Additionally, it will automatically retry loading the ad if an error occurs during the loading process.
   /// - [autoShow] - If enabled, the ad will automatically displayed when the user returns to the app.
+  /// - [placement] - An optional placement name for the ad instance that helps categorize
+  /// and track statistics across different ad placements.
   /// - [onAdLoaded] - Callback to be invoked when the ad content has been successfully loaded.
   /// - [onAdFailedToLoad] - Callback to be invoked when the ad content fails to load.
   /// - [onAdFailedToShow] - Callback to be invoked when the ad content fails to show.
@@ -196,6 +204,7 @@ class CASAppOpen extends AdScreenInstance {
     String? casId,
     bool autoReload = false,
     bool autoShow = false,
+    super.placement,
     super.onAdLoaded,
     super.onAdFailedToLoad,
     super.onAdFailedToShow,
@@ -250,6 +259,8 @@ class CASInterstitial extends AdScreenInstance {
   /// during the loading process.
   /// - [autoShow] - If enabled, the ad will automatically displayed when the user returns to the app.
   /// - [minInterval] - The minimum interval between showing interstitial ads, in seconds.
+  /// - [placement] - An optional placement name for the ad instance that helps categorize
+  /// and track statistics across different ad placements.
   /// - [onAdLoaded] - Callback to be invoked when the ad content has been successfully loaded.
   /// - [onAdFailedToLoad] - Callback to be invoked when the ad content fails to load.
   /// - [onAdFailedToShow] - Callback to be invoked when the ad content fails to show.
@@ -261,6 +272,7 @@ class CASInterstitial extends AdScreenInstance {
     bool autoReload = false,
     bool autoShow = false,
     int? minInterval,
+    super.placement,
     super.onAdLoaded,
     super.onAdFailedToLoad,
     super.onAdFailedToShow,
@@ -355,6 +367,8 @@ class CASRewarded extends AdScreenInstance {
   /// as a fallback when a rewarded video ad has no available fill.
   /// Interstitial ads do not require the user to watch the entire ad to completion.
   /// However, the [onUserEarnedReward] will still be triggered as if the user completed the rewarded video.
+  /// - [placement] - An optional placement name for the ad instance that helps categorize
+  /// and track statistics across different ad placements.
   /// - [onAdLoaded] - Callback to be invoked when the ad content has been successfully loaded.
   /// - [onAdFailedToLoad] - Callback to be invoked when the ad content fails to load.
   /// - [onAdFailedToShow] - Callback to be invoked when the ad content fails to show.
@@ -366,6 +380,7 @@ class CASRewarded extends AdScreenInstance {
     String? casId,
     bool autoReload = false,
     bool extraFillByInterstitialAd = true,
+    super.placement,
     super.onAdLoaded,
     super.onAdFailedToLoad,
     super.onAdFailedToShow,
@@ -391,6 +406,23 @@ class CASRewarded extends AdScreenInstance {
   CASRewarded.create(String casId) : super(format: AdFormat.rewarded) {
     casInternalBridge.createAdInstance(
         ad: this, casId: casId, shouldLoad: false);
+  }
+
+  /// Get custom data for server side verification.
+  /// See also [setServerSideVerificationData]
+  Future<String?> getServerSideVerificationData() {
+    return casInternalBridge.getServerSideVerificationData(this);
+  }
+
+  /// Sets custom data to be included in server-side verification callbacks.
+  /// Maximum 8192 characters allowed for the custom data.
+  ///
+  /// The callbacks contain query parameters that describe the rewarded ad interaction,
+  /// including the [placement] and `userID` from [CASMobileAds.targetingOptions] alongside any custom data provided here.
+  ///
+  /// This feature is currently in closed beta.
+  Future<void> setServerSideVerificationData(String? data) {
+    return casInternalBridge.setServerSideVerificationData(this, data);
   }
 
   /// Called when the user earns a reward.

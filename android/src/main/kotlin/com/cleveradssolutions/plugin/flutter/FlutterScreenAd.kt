@@ -56,13 +56,27 @@ internal class FlutterScreenAd(
             }
         }
 
+    override var placement: String?
+        get() = ad.placement
+        set(value) {
+            ad.placement = value
+        }
+
+    var serverSideVerificationData: String?
+        get() = if (ad is CASRewarded) ad.serverSideVerificationData else null
+        set(value) {
+            if (ad is CASRewarded) {
+                ad.serverSideVerificationData = value
+            }
+        }
+
     override fun isLoaded(): Boolean = ad.isLoaded
 
     override fun load() {
         ad.load(null)
     }
 
-    override fun showScreen(activity: Activity?) {
+    fun showScreen(activity: Activity?) {
         when (ad) {
             is CASInterstitial -> ad.show(activity)
             is CASAppOpen -> ad.show(activity)

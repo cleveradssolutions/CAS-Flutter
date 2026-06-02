@@ -95,43 +95,43 @@ class AdContentInfo {
   final int impressionDepth;
 
   /// Gets the display name of the mediated network that purchased the impression.
-  @Deprecated("Use the not future property with the same name instead.")
+  @Deprecated("Use the non-future property with the same name instead.")
   Future<String> getSourceName() {
     return Future.value(sourceName);
   }
 
   /// Gets the Ad Unit ID from the mediated network that purchased the impression.
-  @Deprecated("Use the not future property with the same name instead.")
+  @Deprecated("Use the non-future property with the same name instead.")
   Future<String> getSourceUnitId() {
     return Future.value(sourceUnitId);
   }
 
   /// Gets the Creative ID associated with the ad, if available. May be `null`.
-  @Deprecated("Use the not future property with the same name instead.")
+  @Deprecated("Use the non-future property with the same name instead.")
   Future<String?> getCreativeId() {
     return Future.value(creativeId);
   }
 
   /// Gets the revenue generated from the impression, in USD.
-  @Deprecated("Use the not future property with the same name instead.")
+  @Deprecated("Use the non-future property with the same name instead.")
   Future<double> getRevenue() {
     return Future.value(revenue);
   }
 
   /// Gets the precision type of the revenue field.
-  @Deprecated("Use the not future property with the same name instead.")
+  @Deprecated("Use the non-future property with the same name instead.")
   Future<AdRevenuePrecision> getRevenuePrecision() {
     return Future.value(revenuePrecision);
   }
 
   /// Gets the total number of impressions across all ad formats for the current user, across all sessions.
-  @Deprecated("Use the not future property with the same name instead.")
+  @Deprecated("Use the non-future property with the same name instead.")
   Future<int> getImpressionDepth() {
     return Future.value(impressionDepth);
   }
 
   /// Gets the accumulated value of user ad revenue in USD from all ad format impressions.
-  @Deprecated("Use the not future property with the same name instead.")
+  @Deprecated("Use the non-future property with the same name instead.")
   Future<double> getRevenueTotal() {
     return Future.value(revenueTotal);
   }

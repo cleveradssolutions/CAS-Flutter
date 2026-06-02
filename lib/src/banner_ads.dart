@@ -17,6 +17,8 @@ class CASBanner extends AdViewInstance {
   /// - [refreshInterval] - Sets the refresh interval in seconds for displaying
   /// ads. Set `0` to disable automatic refreshing. This automatic refresh works
   /// regardless of the [autoReload] setting. By default 30 seconds.
+  /// - [placement] - An optional placement name for the ad instance that helps categorize
+  /// and track statistics across different ad placements.
   /// - [onAdLoaded] - Callback to be invoked when the ad content has been successfully loaded.
   /// - [onAdFailedToLoad] - Callback to be invoked when the ad content fails to load.
   /// - [onAdImpression] - Callback to be invoked when an ad is estimated to have earned money.
@@ -26,15 +28,16 @@ class CASBanner extends AdViewInstance {
     String? casId,
     bool autoReload = true,
     int? refreshInterval,
+    super.placement,
     super.onAdLoaded,
     super.onAdFailedToLoad,
     super.onAdImpression,
     super.onAdClicked,
   }) : super(
-            format: size.isInline
-                ? AdFormat.inlineBanner
-                : size.height >= 250
-                    ? AdFormat.mediumRectangle
+            format: size.height >= 250
+                ? AdFormat.mediumRectangle
+                : size.isInline
+                    ? AdFormat.inlineBanner
                     : AdFormat.banner) {
     casInternalBridge.createAdInstance(
       ad: this,

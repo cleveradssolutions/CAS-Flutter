@@ -1,3 +1,8 @@
+## 4.7.3
+- Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.7.3
+- Added `placement` parameter for labeling the display location of all ad formats. Read more in the updated documentation.
+- Added `CASRewarded.setServerSideVerificationData(String?)` to be included in server-side verification callbacks. (Closed beta)
+
 ## 4.7.1
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.7.1
 ### Update Adapters

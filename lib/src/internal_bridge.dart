@@ -165,6 +165,7 @@ class InternalBridge {
     arguments['casId'] = casId;
     arguments['format'] = ad.format.index;
     arguments['shouldLoad'] = shouldLoad;
+    arguments['placement'] = ad.placement;
 
     unawaited(channel.invokeMethod<void>('createAdInstance', arguments));
   }
@@ -196,6 +197,17 @@ class InternalBridge {
     return channel.invokeMethod<void>(
       'setAutoshowEnabled',
       <dynamic, dynamic>{_keyAdId: adIdFor(ad), _keyDefault: enabled},
+    );
+  }
+
+  Future<String?> getServerSideVerificationData(AdInstance ad) {
+    return channel.invokeMethod<String?>('getSSVerificationData', adIdFor(ad));
+  }
+
+  Future<void> setServerSideVerificationData(AdInstance ad, String? data) {
+    return channel.invokeMethod<void>(
+      'setSSVerificationData',
+      <dynamic, dynamic>{_keyAdId: adIdFor(ad), _keyDefault: data},
     );
   }
 

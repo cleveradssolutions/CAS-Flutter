@@ -1,6 +1,5 @@
 package com.cleveradssolutions.plugin.flutter
 
-import android.app.Activity
 import com.cleveradssolutions.sdk.AdContentInfo
 import io.flutter.plugin.platform.PlatformView
 
@@ -10,12 +9,11 @@ internal interface FlutterAd {
     var isAutoloadEnabled: Boolean
     var isAutoshowEnabled: Boolean
     var interval: Int
+    var placement: String?
 
     fun isLoaded(): Boolean
 
     fun load()
-
-    fun showScreen(activity: Activity?)
 
     /**
      * Gets the PlatformView for the ad. Default behavior is to return null. Should be overridden by

@@ -5,6 +5,7 @@ abstract class AdViewInstance extends AdInstance {
   /// Default constructor, used by subclasses.
   AdViewInstance({
     required super.format,
+    super.placement,
     this.onAdLoaded,
     super.onAdFailedToLoad,
     super.onAdClicked,
@@ -50,7 +51,7 @@ class CASWidget extends StatefulWidget {
   /// The value [double.infinity] is not supported for [CASNativeContent].
   final double? width;
 
-  /// The width to set for the ad widget.
+  /// The height to set for the ad widget.
   /// The value [double.infinity] is not supported for [CASNativeContent].
   final double? height;
 

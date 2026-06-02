@@ -21,7 +21,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.StandardMethodCodec
 
-private const val PLUGIN_VERSION = "4.7.1"
+private const val PLUGIN_VERSION = "4.7.3"
 private const val DEFAULT_KEY = "value"
 
 class CASMobileAdsPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCallHandler {
@@ -181,7 +181,7 @@ class CASMobileAdsPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCal
 
             "showScreenAd" -> {
                 val adId: Int = call.requireArg()
-                val ad = instanceManager.findAd(adId)
+                val ad = instanceManager.findAd(adId) as? FlutterScreenAd
                 if (ad != null) {
                     ad.showScreen(instanceManager.activity)
                 } else {
@@ -199,6 +199,17 @@ class CASMobileAdsPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCal
 
             "restartInterstitialAdInterval" -> {
                 CAS.settings.restartInterstitialInterval()
+                null
+            }
+
+            "getSSVerificationData" -> {
+                val ad = instanceManager.findAd(call.requireArg()) as? FlutterScreenAd
+                ad?.serverSideVerificationData
+            }
+
+            "setSSVerificationData" -> {
+                val ad = instanceManager.findAd(call.requireAdId()) as? FlutterScreenAd
+                ad?.serverSideVerificationData = call.argument(DEFAULT_KEY)
                 null
             }
 
@@ -398,6 +409,9 @@ class CASMobileAdsPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCal
 
         manager.trackAd(flutterAd)
 
+        call.argument<String?>("placement")?.let {
+            flutterAd.placement = it
+        }
         if (autoload) {
             flutterAd.isAutoloadEnabled = true
         } else if (call.argument<Boolean>("shouldLoad") == true) {

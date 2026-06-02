@@ -5,10 +5,10 @@ class AdSize {
   /// Constructs an [AdSize] with the given [width] and [height].
   const AdSize._({required this.width, required this.height}) : _mode = 0;
 
-  /// The vertical span of an ad.
+  /// The horizontal span of an ad.
   final int width;
 
-  /// The horizontal span of an ad.
+  /// The vertical span of an ad.
   final int height;
 
   /// The ad size mode.

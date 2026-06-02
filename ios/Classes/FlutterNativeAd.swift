@@ -1,7 +1,9 @@
 import CleverAdsSolutions
 import Flutter
 
-class FlutterNativeAd: NSObject, FlutterAd, FlutterPlatformView, CASNativeLoaderDelegate, CASNativeContentDelegate, CASImpressionDelegate {
+class FlutterNativeAd: NSObject, FlutterAd, FlutterPlatformView, CASNativeLoaderDelegate,
+    CASNativeContentDelegate, CASImpressionDelegate
+{
     let adId: Int
     private let manager: AdInstanceManager
     private let viewFactory: CASNativeAdViewFactory?
@@ -12,11 +14,13 @@ class FlutterNativeAd: NSObject, FlutterAd, FlutterPlatformView, CASNativeLoader
     private let templateStyle: NativeTemplateStyle?
     private var templateSize: AdSize?
 
-    init(adId: Int,
-         manager: AdInstanceManager,
-         call: FlutterMethodCall,
-         casID: String,
-         viewFactory: CASNativeAdViewFactory?) {
+    init(
+        adId: Int,
+        manager: AdInstanceManager,
+        call: FlutterMethodCall,
+        casID: String,
+        viewFactory: CASNativeAdViewFactory?
+    ) {
         self.adId = adId
         self.manager = manager
         self.viewFactory = viewFactory
@@ -30,20 +34,29 @@ class FlutterNativeAd: NSObject, FlutterAd, FlutterPlatformView, CASNativeLoader
 
         loader.delegate = self
 
-        if let placementId: Int = call.argument("adChoicesPlacement"), placementId >= 0, let placement = AdChoicesPlacement(rawValue: placementId) {
+        if let placementId: Int = call.argument("adChoicesPlacement"), placementId >= 0,
+            let placement = AdChoicesPlacement(rawValue: placementId)
+        {
             loader.adChoicesPlacement = placement
         }
         if let muted: Bool = call.argument("startVideoMuted") {
             loader.isStartVideoMuted = muted
         }
     }
-    
+
     func view() -> UIView {
         adView
     }
 
     var contentInfo: AdContentInfo? {
         adContent?.contentInfo
+    }
+    
+    var placement: String? {
+        get { loader.placement }
+        set {
+            loader.placement = newValue
+        }
     }
 
     var isAutoloadEnabled: Bool {
@@ -91,9 +104,12 @@ class FlutterNativeAd: NSObject, FlutterAd, FlutterPlatformView, CASNativeLoader
         adContent = ad
 
         if let viewFactory {
-            guard let view = viewFactory.createNativeAdView(
-                for: ad,
-                customOptions: customOptions) else {
+            guard
+                let view = viewFactory.createNativeAdView(
+                    for: ad,
+                    customOptions: customOptions
+                )
+            else {
                 manager.onAdFailedToLoad(
                     adId: adId,
                     error: AdError(

@@ -8,6 +8,7 @@ protocol FlutterAd: AnyObject {
     var isAutoloadEnabled: Bool { get set }
     var isAutoshowEnabled: Bool { get set }
     var interval: Int { get set }
+    var placement: String? { get set }
 
     func isAdLoaded() -> Bool
 

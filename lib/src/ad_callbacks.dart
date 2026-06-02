@@ -8,7 +8,7 @@ typedef OnAdCallback = void Function(AdInstance ad);
 /// The callback type to handle an error loading/showing an [AdInstance].
 typedef OnAdFailedCallback = void Function(AdInstance ad, AdError error);
 
-/// The callback type for when an ad impression.
+/// The callback type for when an ad impression occurs.
 typedef OnAdContentCallback = void Function(
     AdInstance ad, AdContentInfo contentInfo);
 

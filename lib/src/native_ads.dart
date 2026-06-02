@@ -25,6 +25,7 @@ enum AdChoicesPlacement {
 class CASNativeContent extends AdViewInstance {
   CASNativeContent._({
     this.factoryId,
+    super.placement,
     super.onAdLoaded,
     super.onAdFailedToLoad,
     super.onAdImpression,
@@ -54,6 +55,8 @@ class CASNativeContent extends AdViewInstance {
   /// - [factoryId] - An identifier for the platform factory that creates the Platform view.
   /// If you do not provide a [factoryId] for the native factory, CAS will build
   /// a default template view based on the size you specify for the [CASWidget].
+  /// - [placement] - An optional placement name for the ad instance that helps categorize
+  /// and track statistics across different ad placements.
   /// - [adChoicesPlacement] - Where to place the AdChoices icon.
   /// - [startVideoMuted] - If enabled, the videos will start muted.
   /// - [templateStyle] - Style options for native templates.
@@ -66,6 +69,7 @@ class CASNativeContent extends AdViewInstance {
   static void load({
     String? casId,
     String? factoryId,
+    String? placement,
     AdChoicesPlacement adChoicesPlacement = AdChoicesPlacement.topRightCorner,
     bool startVideoMuted = true,
     NativeTemplateStyle? templateStyle,
@@ -77,6 +81,7 @@ class CASNativeContent extends AdViewInstance {
   }) {
     final CASNativeContent ad = CASNativeContent._(
       factoryId: factoryId,
+      placement: placement,
       onAdLoaded: onAdLoaded,
       onAdFailedToLoad: onAdFailedToLoad,
       onAdImpression: onAdImpression,

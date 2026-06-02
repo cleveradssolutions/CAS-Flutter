@@ -1,7 +1,7 @@
 import CleverAdsSolutions
 import Flutter
 
-private let pluginVersion = "4.7.1"
+private let pluginVersion = "4.7.3"
 private let defaultKey = "value"
 
 @objc(CASMobileAdsPlugin)
@@ -12,7 +12,7 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
     /// The dictionary keys are string unique identifier for the ad factory. The Native Ad created in Dart includes a parameter that refers to `factoryId`.
     /// Set this dictionary to register native ad view factories before loading native ads.
     @objc
-    public static var nativeAdFactories: Dictionary<String, CASNativeAdViewFactory>?
+    public static var nativeAdFactories: [String: CASNativeAdViewFactory]?
 
     private let instanceManager: AdInstanceManager
     private var appDelegate: UIApplicationDelegate?
@@ -29,9 +29,11 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
         let codec = FlutterStandardMethodCodec(readerWriter: readerWriter)
 
         let channelName = "clever_ads_solutions"
-        let channel = FlutterMethodChannel(name: channelName,
-                                           binaryMessenger: registrar.messenger(),
-                                           codec: codec)
+        let channel = FlutterMethodChannel(
+            name: channelName,
+            binaryMessenger: registrar.messenger(),
+            codec: codec
+        )
 
         let adInstanceManager = AdInstanceManager(channel: channel)
         let instance = CASMobileAdsPlugin(instanceManager: adInstanceManager)
@@ -44,7 +46,10 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
         registrar.register(viewFactory, withId: channelName + "/ad_widget")
     }
 
-    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable: Any] = [:]) -> Bool {
+    public func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [AnyHashable: Any] = [:]
+    ) -> Bool {
         appDelegate = application.delegate
         return true
     }
@@ -54,7 +59,6 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
         case "_init":
             // Internal init. This is necessary to cleanup state on hot restart.
             instanceManager.disposeAllAds()
-            result(nil)
 
         case "initialize":
             initializeSDK(call: call, result: result)
@@ -62,31 +66,32 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
 
         case "getSDKVersion":
             result(CAS.getSDKVersion())
+            return
         case "setAdSoundsMuted":
             CAS.settings.mutedAdSounds = call.requireArg()
-            result(nil)
 
         case "setDebugLoggingEnabled":
             CAS.settings.debugMode = call.requireArg()
-            result(nil)
 
         case "setTrialAdFreeInterval":
             CAS.settings.trialAdFreeInterval = call.requireArg()
-            result(nil)
 
         case "getVendorConsent":
             result(CAS.settings.getVendorConsent(vendorId: call.requireArg()))
+            return
 
         case "getAdditionalConsent":
             result(CAS.settings.getAdditionalConsent(providerId: call.requireArg()))
+            return
 
         case "validateIntegration":
             CAS.validateIntegration()
-            result(nil)
 
         case "showConsentFlow":
             let flow = ConsentFlow()
-            if let geography: Int = call.argument("debugGeography"), geography > 0, let geo = ConsentFlow.DebugGeography(rawValue: geography) {
+            if let geography: Int = call.argument("debugGeography"), geography > 0,
+                let geo = ConsentFlow.DebugGeography(rawValue: geography)
+            {
                 flow.debugGeography = geo
                 flow.forceTesting = true
             }
@@ -107,27 +112,29 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
 
         case "createAdInstance":
             createAdInstance(call: call)
-            result(nil)
 
         case "isAdLoaded":
             result(instanceManager.findAd(call.requireArg())?.isAdLoaded() == true)
+            return
+
         case "loadAd":
             instanceManager.findAd(call.requireArg())?.loadAd()
-            result(nil)
 
         case "isAutoloadEnabled":
             result(instanceManager.findAd(call.requireArg())?.isAutoloadEnabled == true)
+            return
+
         case "setAutoloadEnabled":
             instanceManager.findAd(call.requireAdId())?.isAutoloadEnabled =
                 call.requireArg(defaultKey)
-            result(nil)
 
         case "isAutoshowEnabled":
             result(instanceManager.findAd(call.requireArg())?.isAutoshowEnabled == true)
+            return
+
         case "setAutoshowEnabled":
             instanceManager.findAd(call.requireAdId())?.isAutoshowEnabled =
                 call.requireArg(defaultKey)
-            result(nil)
 
         case "showScreenAd":
             let adId: Int = call.requireArg()
@@ -136,91 +143,100 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
             } else {
                 instanceManager.onAdFailedToShow(adId: adId, error: AdError.notReady)
             }
-            result(nil)
 
         case "getAdInterval":
             result(instanceManager.findAd(call.requireArg())?.interval ?? 0)
+            return
+
         case "setAdInterval":
             instanceManager.findAd(call.requireAdId())?.interval =
                 call.requireArg(defaultKey)
-            result(nil)
 
         case "restartInterstitialAdInterval":
             CAS.settings.restartInterstitialInterval()
-            result(nil)
+
+        case "getSSVerificationData":
+            if let ad = instanceManager.findAd(call.requireArg()) as? FlutterScreenAd {
+                result(ad.serverSideVerificationData)
+                return
+            }
+
+        case "setSSVerificationData":
+            if let ad = instanceManager.findAd(call.requireAdId()) as? FlutterScreenAd {
+                ad.serverSideVerificationData = call.argument(defaultKey)
+            }
 
         case "getContentInfo":
             result(instanceManager.findAd(call.requireArg())?.contentInfo)
+            return
 
         case "disposeAd":
             instanceManager.disposeAd(call.requireArg())
-            result(nil)
 
         case "getTaggedAudience":
             result(CAS.settings.taggedAudience.rawValue)
+            return
+
         case "setTaggedAudience":
             let status: Int = call.requireArg()
             if let statusEnum = Audience(rawValue: status) {
                 CAS.settings.taggedAudience = statusEnum
             }
-            result(nil)
 
         case "getUserConsent":
             result(CAS.settings.userConsent.rawValue)
+            return
+
         case "setUserConsent":
             let status: Int = call.requireArg()
             if let statusEnum = ConsentStatus(rawValue: status) {
                 CAS.settings.userConsent = statusEnum
             }
-            result(nil)
 
         case "getCPPAStatus":
             result(CAS.settings.userCCPAStatus.rawValue)
+            return
+
         case "setCPPAStatus":
             let status: Int = call.requireArg()
             if let statusEnum = CCPAStatus(rawValue: status) {
                 CAS.settings.userCCPAStatus = statusEnum
             }
-            result(nil)
 
         case "setUserId":
             CAS.targetingOptions.userID = call.arguments()
-            result(nil)
 
         case "setGender":
             let gender: Int = call.requireArg()
             if let genderEnum = Gender(rawValue: gender) {
                 CAS.targetingOptions.gender = genderEnum
             }
-            result(nil)
 
         case "setAge":
             CAS.targetingOptions.age = call.requireArg()
-            result(nil)
 
         case "setLocation":
             CAS.targetingOptions.setLocation(
                 latitude: call.requireArg("lat"),
                 longitude: call.requireArg("lon")
             )
-            result(nil)
 
         case "setLocationCollectionEnabled":
             CAS.targetingOptions.locationCollectionEnabled = call.requireArg()
-            result(nil)
 
         case "setKeywords":
             let keywords: [String]? = call.arguments()
             CAS.targetingOptions.keywords = keywords
-            result(nil)
 
         case "setContentUrl":
             CAS.targetingOptions.contentUrl = call.arguments()
-            result(nil)
 
         default:
             result(FlutterMethodNotImplemented)
+            return
         }
+        // Fallback to nil result
+        result(nil)
     }
 
     private func initializeSDK(call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -232,7 +248,8 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
 
         casId = newCasId
 
-        if let it: Int = call.argument("audience"), it > 0, let audience = CASAudience(rawValue: it) {
+        if let it: Int = call.argument("audience"), it > 0, let audience = CASAudience(rawValue: it)
+        {
             CAS.settings.taggedAudience = audience
         }
 
@@ -241,9 +258,12 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
         if call.argument("showConsentFlow") == false {
             builder.withConsentFlow(CASConsentFlow(isEnabled: false))
         } else if let it: Int = call.argument("debugGeography"), it >= 0,
-                  let geography = ConsentFlow.DebugGeography(rawValue: it) {
-            builder.withConsentFlow(CASConsentFlow()
-                .withDebugGeography(geography))
+            let geography = ConsentFlow.DebugGeography(rawValue: it)
+        {
+            builder.withConsentFlow(
+                CASConsentFlow()
+                    .withDebugGeography(geography)
+            )
         }
 
         if call.argument("forceTestAds") == true {
@@ -288,8 +308,8 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
         let flutterAd: FlutterAd
         switch format {
         case AdFormat.banner.value,
-             AdFormat.mediumRectangle.value,
-             AdFormat.inlineBanner.value:
+            AdFormat.mediumRectangle.value,
+            AdFormat.inlineBanner.value:
             let view = CASBannerView(casID: targetCasId, size: call.requireArg("size"))
             // to prevent autoload by default
             view.isAutoloadEnabled = false
@@ -327,17 +347,28 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
                 factory = CASMobileAdsPlugin.nativeAdFactories?[it]
             }
 
-            flutterAd = FlutterNativeAd(adId: adId, manager: manager, call: call, casID: targetCasId, viewFactory: factory)
+            flutterAd = FlutterNativeAd(
+                adId: adId,
+                manager: manager,
+                call: call,
+                casID: targetCasId,
+                viewFactory: factory
+            )
 
         default:
-            NSException(name: .invalidArgumentException,
-                        reason: "Failed to create ad instance for invalid format: \(format)",
-                        userInfo: nil).raise()
+            NSException(
+                name: .invalidArgumentException,
+                reason: "Failed to create ad instance for invalid format: \(format)",
+                userInfo: nil
+            ).raise()
             return
         }
 
         manager.trackAd(flutterAd)
 
+        if let placement: String = call.argument("placement") {
+            flutterAd.placement = placement
+        }
         if autoload {
             flutterAd.isAutoloadEnabled = true
         } else if call.argument("shouldLoad") == true {

@@ -46,7 +46,7 @@ class TargetingOptions {
 
   /// The user's current location.
   ///
-  /// Location data is not used to CAS; however, it may be used by 3rd party ad networks.
+  /// Location data is not used by CAS; however, it may be used by 3rd party ad networks.
   /// Do not use Location just for advertising.
   /// Your app should have a valid use case for it as well.
   Future<void> setLocation({

@@ -112,7 +112,7 @@ class ManagerBuilder {
   /// )
   /// ```
   /// By default, the consent flow will be shown to users who are protected by laws.
-  /// You can prevent us from showing the consent dialog to the user ussing followed lines:
+  /// You can prevent us from showing the consent dialog to the user using the following lines:
   /// ```
   /// .withConsentFlow(ConsentFlow.create().disableFlow())
   /// ```

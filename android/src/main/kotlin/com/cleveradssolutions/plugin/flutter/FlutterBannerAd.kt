@@ -32,7 +32,9 @@ internal class FlutterBannerAd(
 
     override var isAutoshowEnabled: Boolean
         get() = false
-        set(value) {}
+        set(value) {
+            throw NotImplementedError()
+        }
 
     override var interval: Int
         get() = adView.refreshInterval
@@ -40,14 +42,16 @@ internal class FlutterBannerAd(
             adView.refreshInterval = value
         }
 
+    override var placement: String?
+        get() = adView.placement
+        set(value) {
+            adView.placement = value
+        }
+
     override fun isLoaded(): Boolean = adView.isLoaded
 
     override fun load() {
         adView.load()
-    }
-
-    override fun showScreen(activity: Activity?) {
-        // ignore
     }
 
     override fun getPlatformView(width: Int, height: Int): PlatformView {

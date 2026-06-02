@@ -49,19 +49,23 @@ internal class FlutterNativeAd(
         set(value) {}
     override var isAutoshowEnabled: Boolean
         get() = false
-        set(value) {}
+        set(value) {
+            throw NotImplementedError()
+        }
     override var interval: Int
         get() = 0
         set(value) {}
+
+    override var placement: String?
+        get() = loader.placement
+        set(value) {
+            loader.placement = value
+        }
 
     override fun isLoaded(): Boolean = adContent?.isExpired == false
 
     override fun load() {
         loader.load()
-    }
-
-    override fun showScreen(activity: Activity?) {
-        // ignore
     }
 
     override fun getPlatformView(width: Int, height: Int): PlatformView? =

@@ -1,8 +1,10 @@
 import CleverAdsSolutions
 import Flutter
 
-class FlutterBannerAd: NSObject, FlutterAd, FlutterPlatformView, CASImpressionDelegate, CASBannerDelegate {
-    
+class FlutterBannerAd: NSObject, FlutterAd, FlutterPlatformView, CASImpressionDelegate,
+    CASBannerDelegate
+{
+
     let adId: Int
     let manager: AdInstanceManager
     let bannerView: CASBannerView
@@ -15,13 +17,20 @@ class FlutterBannerAd: NSObject, FlutterAd, FlutterPlatformView, CASImpressionDe
         bannerView.delegate = self
         bannerView.impressionDelegate = self
     }
-    
+
     func view() -> UIView {
         bannerView
     }
 
     var contentInfo: AdContentInfo? {
         bannerView.contentInfo
+    }
+    
+    var placement: String? {
+        get { bannerView.placement }
+        set {
+            bannerView.placement = newValue
+        }
     }
 
     var isAutoloadEnabled: Bool {

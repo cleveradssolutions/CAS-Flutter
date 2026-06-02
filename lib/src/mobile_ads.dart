@@ -24,7 +24,7 @@ class CASMobileAds {
   ///
   /// **Note:** This [Future] may take an unexpectedly long time to complete,
   /// as it will only resolve once the SDK has either successfully initialized
-  /// or failed with a error.
+  /// or failed with an error.
   ///
   /// If an error occurs, the SDK will attempt automatic reinitialization internally.
   /// However, this [Future] will not be updated with subsequent [InitializationStatus].

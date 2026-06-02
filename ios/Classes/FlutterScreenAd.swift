@@ -15,7 +15,7 @@ class FlutterScreenAd: NSObject, FlutterAd, CASImpressionDelegate, CASScreenCont
     }
 
     var contentInfo: AdContentInfo? {
-        screenAd.contentInfo
+        return screenAd.contentInfo
     }
 
     var isAutoloadEnabled: Bool {
@@ -56,8 +56,29 @@ class FlutterScreenAd: NSObject, FlutterAd, CASImpressionDelegate, CASScreenCont
         }
     }
 
+    var placement: String? {
+        get { screenAd.placement }
+        set {
+            screenAd.placement = newValue
+        }
+    }
+
+    var serverSideVerificationData: String? {
+        get {
+            if let rewarded = screenAd as? CASRewarded {
+                return rewarded.serverSideVerificationData
+            }
+            return nil
+        }
+        set {
+            if let rewarded = screenAd as? CASRewarded {
+                rewarded.serverSideVerificationData = newValue
+            }
+        }
+    }
+
     func isAdLoaded() -> Bool {
-        screenAd.isAdLoaded
+        return screenAd.isAdLoaded
     }
 
     func loadAd() {
