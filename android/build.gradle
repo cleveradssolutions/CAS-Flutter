@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '4.7.3'
+version = '4.7.4'
 
 buildscript {
     ext {
@@ -98,6 +98,11 @@ rootProject.allprojects {
                 includeGroup("sspnet.tech.madex.networks")
             }
         }
+        maven {
+            name = "DisplayIOAdsRepo"
+            url = uri("https://maven.display.io/")
+            content { includeGroup("com.brandio.ads") }
+        }
     }
 }
 
@@ -129,6 +134,6 @@ android {
     }
 
     dependencies {
-        api 'com.cleveradssolutions:cas-sdk:4.7.3'
+        api 'com.cleveradssolutions:cas-sdk:4.7.4'
     }
 }
