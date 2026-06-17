@@ -1,3 +1,9 @@
+## 4.7.4
+- Updated the [Android SDK to 4.7.4](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS SDK to 4.7.4](https://github.com/cleveradssolutions/CAS-iOS/releases).
+### Update Adapters
+- Added new adapter for Bidease (closed beta).
+- Added new adapter for Moloco (closed beta).
+
 ## 4.7.3
 - Updated CAS [Android](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS](https://github.com/cleveradssolutions/CAS-iOS/releases) dependencies to 4.7.3
 - Added `placement` parameter for labeling the display location of all ad formats. Read more in the updated documentation.
