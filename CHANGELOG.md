@@ -1,3 +1,10 @@
+## 4.8.0
+- Updated the [Android SDK to 4.8.0](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS SDK to 4.8.0](https://github.com/cleveradssolutions/CAS-iOS/releases).
+- [Android] This release requires **a minimum Android API level of 24**.
+- [iOS] This release requires **a minimum Xcode version of 26.2**.
+- [iOS] Added new adapter for Monetrix (closed beta).
+- Removed Madex adapter from mediation.
+
 ## 4.7.4
 - Updated the [Android SDK to 4.7.4](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS SDK to 4.7.4](https://github.com/cleveradssolutions/CAS-iOS/releases).
 ### Update Adapters
