@@ -1,5 +1,6 @@
 import 'targeting_options.dart';
 import 'consent_flow.dart';
+import 'purchase_info.dart';
 import 'internal_bridge.dart';
 
 /// Represents the CAS.AI SDK.
@@ -108,6 +109,23 @@ class CASMobileAds {
   /// to the console, which can be useful during development and troubleshooting.
   static Future<void> setDebugLoggingEnabled(bool enabled) {
     return casInternalBridge.setDebugLoggingEnabled(enabled);
+  }
+
+  /// Reports an in-app purchase to CAS.AI.
+  ///
+  /// Along with the ad revenue tracking of the SDK, reporting purchases gives
+  /// a complete picture of a user total value in one place.
+  /// The total reported revenue is calculated as:
+  /// `quantity * price * currency_rate`
+  ///
+  /// Call this method as soon as you have confirmed a completed transaction.
+  /// See [CASPurchaseInfo] for the data to report and for an example based on
+  /// the [in_app_purchase](https://pub.dev/packages/in_app_purchase) plugin.
+  ///
+  /// Reported purchases can also be forwarded automatically to Tenjin
+  /// Analytics. Contact your account manager to enable it for your account.
+  static Future<void> reportPurchase(CASPurchaseInfo purchase) {
+    return casInternalBridge.reportPurchase(purchase);
   }
 
   /// Defines the time interval, in seconds, starting from the moment of the initial app installation,

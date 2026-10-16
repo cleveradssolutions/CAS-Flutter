@@ -257,6 +257,35 @@ class _MyAppState extends State<MyApp> {
     _rewardedAd.dispose();
   }
 
+  // Reports a demo in-app purchase to check the integration.
+  //
+  // A real integration takes the product price and currency from the store
+  // product and the validation data from the completed transaction.
+  // See `CASPurchaseInfo` for an example with the `in_app_purchase` plugin.
+  void _reportPurchase() {
+    final purchase = CASPurchaseInfo(
+      productId: 'com.cleveradssolutions.plugin.flutter.example.no_ads',
+      price: 4.99,
+      currency: 'USD',
+    );
+
+    if (Platform.isAndroid) {
+      purchase.setGoogleValidation(
+        originalJson: '{"productId":"no_ads","purchaseToken":"demo_token"}',
+        signature: 'demo_signature',
+      );
+    } else {
+      purchase.setAppleValidation(
+        transactionId: '2000000000000001',
+        jwsRepresentation: 'demo_jws_representation',
+      );
+    }
+
+    CASMobileAds.reportPurchase(purchase).then((_) {
+      print('$purchase reported');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -341,6 +370,10 @@ class _MyAppState extends State<MyApp> {
                       );
                     },
                     child: const Text('Native Ad factory'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _reportPurchase,
+                    child: const Text('Report Purchase'),
                   ),
                 ],
               )),

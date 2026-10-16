@@ -4,6 +4,7 @@ export 'src/ad_error.dart';
 export 'src/ad_size.dart';
 export 'src/consent_flow.dart';
 export 'src/targeting_options.dart';
+export 'src/purchase_info.dart';
 export 'src/cas.dart';
 export 'src/ads_settings.dart';
 export 'src/manager_builder.dart';

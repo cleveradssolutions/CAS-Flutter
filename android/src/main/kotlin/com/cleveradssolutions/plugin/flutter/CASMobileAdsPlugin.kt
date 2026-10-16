@@ -4,6 +4,7 @@ import android.location.Location
 import android.util.Log
 import androidx.annotation.Keep
 import com.cleveradssolutions.sdk.AdFormat
+import com.cleveradssolutions.sdk.PurchaseInfo
 import com.cleveradssolutions.sdk.nativead.CASNativeView
 import com.cleveradssolutions.sdk.screen.CASAppOpen
 import com.cleveradssolutions.sdk.screen.CASInterstitial
@@ -120,6 +121,11 @@ class CASMobileAdsPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCal
 
             "setTrialAdFreeInterval" -> {
                 CAS.settings.trialAdFreeInterval = call.requireArg()
+                null
+            }
+
+            "reportPurchase" -> {
+                CAS.reportPurchase(call.createPurchaseInfo())
                 null
             }
 
@@ -437,6 +443,58 @@ class CASMobileAdsPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCal
             result = null
         }
     }
+}
+
+private fun MethodCall.createPurchaseInfo(): PurchaseInfo {
+    val purchase = PurchaseInfo(
+        productId = requireArg<String>("productId"),
+        price = requireArg<Double>("price"),
+        currency = requireArg<String>("currency"),
+        quantity = argument<Int>("quantity") ?: 1
+    )
+
+    when (val provider = argument<String>("provider")) {
+        null, PurchaseInfo.PROVIDER_GOOGLE_BILLING -> {
+            val originalJson = argument<String>("originalJson")
+            val signature = argument<String>("signature")
+            if (argument<Boolean>("isSubscription") == true) {
+                purchase.setSubsValidation(
+                    originalJson,
+                    signature,
+                    argument<String>("purchaseToken"),
+                    argument<Number>("purchaseTime")?.toLong() ?: 0L
+                )
+            } else {
+                purchase.setValidation(originalJson, signature)
+            }
+        }
+
+        PurchaseInfo.PROVIDER_AMAZON_APPSTORE -> {
+            val receiptId = argument<String>("receiptId")
+            val receipt = argument<String>("originalJson")
+            if (receiptId != null) {
+                purchase.setAmazonValidation(receiptId, argument<String>("userId"))
+            } else if (receipt != null) {
+                purchase.setAmazonValidation(receipt)
+            } else {
+                purchase.provider = PurchaseInfo.PROVIDER_AMAZON_APPSTORE
+            }
+        }
+
+        PurchaseInfo.PROVIDER_XSOLLA -> {
+            purchase.setXsollaValidation(
+                requireArg<String>("orderId"),
+                argument<String>("userId")
+            )
+        }
+
+        else -> Log.d(
+            "CAS.AI.Flutter",
+            "Report purchase: $provider validation data is not supported on Android"
+        )
+    }
+
+    return purchase
 }
 
 private inline fun <reified T> MethodCall.requireArg(key: String) = argument<T>(key)

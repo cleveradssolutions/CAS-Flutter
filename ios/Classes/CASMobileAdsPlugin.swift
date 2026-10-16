@@ -76,6 +76,9 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
         case "setTrialAdFreeInterval":
             CAS.settings.trialAdFreeInterval = call.requireArg()
 
+        case "reportPurchase":
+            CAS.reportPurchase(call.createPurchaseInfo())
+
         case "getVendorConsent":
             result(CAS.settings.getVendorConsent(vendorId: call.requireArg()))
             return
@@ -378,6 +381,81 @@ public class CASMobileAdsPlugin: NSObject, FlutterPlugin {
 }
 
 extension FlutterMethodCall {
+    func createPurchaseInfo() -> PurchaseInfo {
+        let price: Double = requireArg("price")
+        let purchase = PurchaseInfo(
+            productID: requireArg("productId"),
+            price: NSDecimalNumber(value: price),
+            currency: argument("currency"),
+            quantity: argument("quantity") ?? 1
+        )
+
+        let provider: String = argument("provider") ?? PurchaseInfo.providerAppleAppStore
+        switch provider {
+        case PurchaseInfo.providerAppleAppStore:
+            addAppleValidation(to: purchase)
+
+        case PurchaseInfo.providerXsolla:
+            purchase.setXsollaValidation(
+                orderID: requireArg("orderId"),
+                userID: argument("userId")
+            )
+
+        default:
+            NSLog(
+                "CAS.AI Report purchase: %@ validation data is not supported on iOS",
+                provider
+            )
+        }
+
+        return purchase
+    }
+
+    private func addAppleValidation(to purchase: PurchaseInfo) {
+        let transactionID: String? = argument("transactionId")
+        let jwsRepresentation: String? = argument("jwsRepresentation")
+
+        if let jwsRepresentation {
+            let id = transactionID.flatMap { UInt64($0) } ?? 0
+            if id == 0 {
+                NSLog("CAS.AI Report purchase: transactionId is not a StoreKit 2 Transaction.id")
+            }
+            purchase.setValidation(transactionID: id, jwsRepresentation: jwsRepresentation)
+        } else if let receipt: String = argument("receiptBase64") {
+            purchase.setValidation(
+                transactionID: transactionID,
+                receiptData: Data(base64Encoded: receipt)
+            )
+        }
+
+        guard argument("isSubscription") == true else { return }
+
+        let originalID: String? = argument("originalTransactionId")
+        let jsonRepresentation: String? = argument("jsonRepresentation")
+
+        if let transactionID = transactionID.flatMap({ UInt64($0) }),
+            let originalID = originalID.flatMap({ UInt64($0) }),
+            let jwsRepresentation,
+            let jsonRepresentation
+        {
+            let originalPurchaseDate: Int = argument("originalPurchaseDate") ?? 0
+            purchase.setSubsValidation(
+                transactionID: transactionID,
+                originalID: originalID,
+                originalPurchaseDate: originalPurchaseDate > 0
+                    ? Date(timeIntervalSince1970: Double(originalPurchaseDate) / 1000)
+                    : nil,
+                jwsRepresentation: jwsRepresentation,
+                jsonRepresentation: Data(jsonRepresentation.utf8)
+            )
+        } else if #available(iOS 16.0, *) {
+            // Read the subscription data from the current StoreKit entitlement.
+            purchase.setSubsValidationFromStoreKit()
+        } else {
+            NSLog("CAS.AI Report purchase: subscription validation requires iOS 16.0 or higher")
+        }
+    }
+
     func arguments<T>() -> T? {
         arguments as? T
     }

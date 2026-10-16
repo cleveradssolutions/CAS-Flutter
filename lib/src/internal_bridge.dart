@@ -19,6 +19,7 @@ import 'ad_instances.dart';
 import 'ad_error.dart';
 import 'ad_size.dart';
 import 'consent_flow.dart';
+import 'purchase_info.dart';
 
 InternalBridge casInternalBridge = InternalBridge._('clever_ads_solutions')
   .._init();
@@ -116,6 +117,30 @@ class InternalBridge {
 
   Future<void> setTrialAdFreeInterval(int interval) {
     return channel.invokeMethod('setTrialAdFreeInterval', interval);
+  }
+
+  Future<void> reportPurchase(CASPurchaseInfo purchase) {
+    return channel.invokeMethod<void>('reportPurchase', <String, Object?>{
+      'productId': purchase.productId,
+      'price': purchase.price,
+      'currency': purchase.currency,
+      'quantity': purchase.quantity,
+      'provider': purchase.provider?.value,
+      'isSubscription': purchase.isSubscription,
+      'originalJson': purchase.originalJson,
+      'signature': purchase.signature,
+      'purchaseToken': purchase.purchaseToken,
+      'purchaseTime': purchase.purchaseTime,
+      'transactionId': purchase.transactionId,
+      'originalTransactionId': purchase.originalTransactionId,
+      'originalPurchaseDate': purchase.originalPurchaseDate,
+      'jwsRepresentation': purchase.jwsRepresentation,
+      'jsonRepresentation': purchase.jsonRepresentation,
+      'receiptBase64': purchase.receiptBase64,
+      'receiptId': purchase.receiptId,
+      'orderId': purchase.orderId,
+      'userId': purchase.userId,
+    });
   }
 
   Future<ConsentStatus> getVendorConsent(int vendorId) async {

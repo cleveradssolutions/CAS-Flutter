@@ -20,7 +20,7 @@ CAS.AI Mobile Ads plugin for Flutter.
   s.static_framework = true
 
   s.dependency 'Flutter'
-  s.dependency 'CleverAdsSolutions-Base', '~> 4.8.0'
+  s.dependency 'CleverAdsSolutions-Base', '~> 4.8.3-beta1'
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'armv7 arm64 x86_64' }
 end

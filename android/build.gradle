@@ -116,6 +116,6 @@ android {
     }
 
     dependencies {
-        api 'com.cleveradssolutions:cas-sdk:4.8.0'
+        api 'com.cleveradssolutions:cas-sdk:4.8.3-beta1'
     }
 }
