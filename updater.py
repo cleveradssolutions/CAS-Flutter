@@ -1,7 +1,7 @@
 import os
 
 _PLUGIN_VERSION = "4.8.0"
-_CAS_VERSION = "4.8.0"
+_CAS_VERSION = "4.8.3-beta1"
 
 # Plugin publishing flow (from the project root):
 # python3 updater.py
@@ -55,6 +55,17 @@ def update_cas_sdk_version_ios():
     )
 
 
+def update_cas_sdk_version_ios_spm():
+    # Keep the platform in Package.swift in sync by hand: CAS iOS raised its own
+    # Swift package to iOS 15.0 with 4.8.1, so a bump past 4.8.0 needs the
+    # platforms entry raised as well or Swift Package Manager refuses to resolve.
+    update_version_in_file(
+        os.path.join('ios', 'clever_ads_solutions', 'Package.swift'),
+        '            .upToNextMinor(from: "',
+        _CAS_VERSION + '")'
+    )
+
+
 def update_cas_sdk_version_ios_example():
     update_version_in_file(
         os.path.join('example', 'ios', 'Podfile'),
@@ -78,7 +89,7 @@ def update_flutter_plugin_version_dart():
         _PLUGIN_VERSION + '"'
     )
     update_version_in_file(
-        os.path.join('ios', 'Classes', 'CASMobileAdsPlugin.swift'),
+        os.path.join('ios', 'clever_ads_solutions', 'Sources', 'clever_ads_solutions', 'CASMobileAdsPlugin.swift'),
         'private let pluginVersion = "',
         _PLUGIN_VERSION + '"'
     )
@@ -104,6 +115,7 @@ if __name__ == "__main__":
     update_cas_sdk_version_android()
     update_cas_sdk_version_android_example()
     update_cas_sdk_version_ios()
+    update_cas_sdk_version_ios_spm()
     update_cas_sdk_version_ios_example()
     update_flutter_plugin_version()
     update_flutter_plugin_version_dart()
