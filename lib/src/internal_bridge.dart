@@ -125,7 +125,7 @@ class InternalBridge {
       'price': purchase.price,
       'currency': purchase.currency,
       'quantity': purchase.quantity,
-      'provider': purchase.provider?.value,
+      'provider': purchase.provider,
       'isSubscription': purchase.isSubscription,
       'originalJson': purchase.originalJson,
       'signature': purchase.signature,

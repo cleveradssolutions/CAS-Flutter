@@ -1,23 +1,8 @@
-/// The in-app purchase provider that processed a purchase.
-enum IAPProvider {
-  /// Google Play Billing.
-  googlePlayBilling('google'),
-
-  /// Apple App Store In-App Purchase.
-  appleAppStore('apple'),
-
-  /// Amazon Appstore In-App Purchasing.
-  amazonAppstore('amazon'),
-
-  /// Xsolla payment provider.
-  xsolla('xsolla');
-
-  /// Value for native SDK.
-  final String value;
-
-  /// Constructor
-  const IAPProvider(this.value);
-}
+// The IAP provider names for the native SDK.
+const String _providerGoogleBilling = 'google';
+const String _providerAppleAppStore = 'apple';
+const String _providerAmazonAppstore = 'amazon';
+const String _providerXsolla = 'xsolla';
 
 /// Information about an in-app purchase.
 ///
@@ -117,7 +102,7 @@ class CASPurchaseInfo {
   /// Number of items being purchased.
   final int quantity;
 
-  IAPProvider? _provider;
+  String? _provider;
   bool _isSubscription = false;
   String? _originalJson;
   String? _signature;
@@ -133,12 +118,12 @@ class CASPurchaseInfo {
   String? _orderId;
   String? _userId;
 
-  /// The provider that processed the purchase, defined by the applied
-  /// validation data.
+  /// The IAP provider that processed the purchase, defined by the applied
+  /// validation data: `google`, `apple`, `amazon` or `xsolla`.
   ///
   /// `null` until one of the validation methods is called, in which case
   /// the store of the current platform is used.
-  IAPProvider? get provider => _provider;
+  String? get provider => _provider;
 
   /// Indicates that the purchased product is a subscription.
   bool get isSubscription => _isSubscription;
@@ -196,7 +181,7 @@ class CASPurchaseInfo {
     String? originalJson,
     String? signature,
   }) {
-    _provider = IAPProvider.googlePlayBilling;
+    _provider = _providerGoogleBilling;
     _originalJson = originalJson;
     _signature = signature;
     return this;
@@ -217,7 +202,7 @@ class CASPurchaseInfo {
     String? purchaseToken,
     int purchaseTime = 0,
   }) {
-    _provider = IAPProvider.googlePlayBilling;
+    _provider = _providerGoogleBilling;
     _isSubscription = true;
     _purchaseToken = purchaseToken;
     _purchaseTime = purchaseTime;
@@ -243,7 +228,7 @@ class CASPurchaseInfo {
     String? jwsRepresentation,
     String? receiptBase64,
   }) {
-    _provider = IAPProvider.appleAppStore;
+    _provider = _providerAppleAppStore;
     _transactionId = transactionId;
     _jwsRepresentation = jwsRepresentation;
     _receiptBase64 = receiptBase64;
@@ -269,7 +254,7 @@ class CASPurchaseInfo {
     int originalPurchaseDate = 0,
     String? jsonRepresentation,
   }) {
-    _provider = IAPProvider.appleAppStore;
+    _provider = _providerAppleAppStore;
     _isSubscription = true;
     _originalTransactionId = originalTransactionId;
     _originalPurchaseDate = originalPurchaseDate;
@@ -291,7 +276,7 @@ class CASPurchaseInfo {
     required String receiptId,
     String? userId,
   }) {
-    _provider = IAPProvider.amazonAppstore;
+    _provider = _providerAmazonAppstore;
     _receiptId = receiptId;
     _userId = userId;
     return this;
@@ -304,7 +289,7 @@ class CASPurchaseInfo {
   ///
   /// - [receipt] - JSON string of the Amazon IAP receipt.
   CASPurchaseInfo setAmazonValidationFromReceipt(String receipt) {
-    _provider = IAPProvider.amazonAppstore;
+    _provider = _providerAmazonAppstore;
     _originalJson = receipt;
     return this;
   }
@@ -318,7 +303,7 @@ class CASPurchaseInfo {
     required String orderId,
     String? userId,
   }) {
-    _provider = IAPProvider.xsolla;
+    _provider = _providerXsolla;
     _orderId = orderId;
     _userId = userId;
     return this;
