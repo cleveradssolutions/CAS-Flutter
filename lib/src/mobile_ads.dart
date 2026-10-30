@@ -119,12 +119,12 @@ class CASMobileAds {
   /// `quantity * price * currency_rate`
   ///
   /// Call this method as soon as you have confirmed a completed transaction.
-  /// See [CASPurchaseInfo] for the data to report and for an example based on
+  /// See [PurchaseInfo] for the data to report and for an example based on
   /// the [in_app_purchase](https://pub.dev/packages/in_app_purchase) plugin.
   ///
   /// Reported purchases can also be forwarded automatically to Tenjin
   /// Analytics. Contact your account manager to enable it for your account.
-  static Future<void> reportPurchase(CASPurchaseInfo purchase) {
+  static Future<void> reportPurchase(PurchaseInfo purchase) {
     return casInternalBridge.reportPurchase(purchase);
   }
 

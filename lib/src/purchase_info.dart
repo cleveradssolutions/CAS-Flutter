@@ -20,7 +20,7 @@ const String _providerXsolla = 'xsolla';
 /// plugin, where `details` is a completed `PurchaseDetails` and `product`
 /// is the `ProductDetails` it was bought from:
 /// ```dart
-/// final purchase = CASPurchaseInfo(
+/// final purchase = PurchaseInfo(
 ///   productId: details.productID,
 ///   price: product.rawPrice,
 ///   currency: product.currencyCode,
@@ -68,7 +68,7 @@ const String _providerXsolla = 'xsolla';
 /// from your own product catalog, for example
 /// `product.productType == ProductType.subs` on Android or
 /// `sk2Product.type == SK2ProductType.autoRenewable` on iOS.
-class CASPurchaseInfo {
+class PurchaseInfo {
   /// Information about an in-app purchase.
   ///
   /// - [productId] - Product identifier from the IAP provider.
@@ -79,7 +79,7 @@ class CASPurchaseInfo {
   /// - [quantity] - Number of items being purchased. Google Play Billing does
   /// not expose the purchased quantity through the `in_app_purchase` plugin,
   /// on StoreKit 1 it is `skPaymentTransaction.payment.quantity`.
-  CASPurchaseInfo({
+  PurchaseInfo({
     required this.productId,
     required this.price,
     required this.currency,
@@ -118,58 +118,8 @@ class CASPurchaseInfo {
   String? _orderId;
   String? _userId;
 
-  /// The IAP provider that processed the purchase, defined by the applied
-  /// validation data: `google`, `apple`, `amazon` or `xsolla`.
-  ///
-  /// `null` until one of the validation methods is called, in which case
-  /// the store of the current platform is used.
-  String? get provider => _provider;
-
-  /// Indicates that the purchased product is a subscription.
-  bool get isSubscription => _isSubscription;
-
-  /// Original purchase JSON returned by Google Play, or the Amazon IAP receipt.
-  String? get originalJson => _originalJson;
-
-  /// Google Play signature of the purchase data.
-  String? get signature => _signature;
-
-  /// Google Play subscription purchase token.
-  String? get purchaseToken => _purchaseToken;
-
-  /// Subscription purchase time in milliseconds since Unix epoch.
-  int get purchaseTime => _purchaseTime;
-
-  /// Transaction identifier from StoreKit.
-  String? get transactionId => _transactionId;
-
-  /// Original transaction identifier from StoreKit for subscription validation.
-  String? get originalTransactionId => _originalTransactionId;
-
-  /// Original purchase date in milliseconds since Unix epoch
-  /// for subscription analytics.
-  int get originalPurchaseDate => _originalPurchaseDate;
-
-  /// Cryptographically signed by Apple JWS representation of the transaction.
-  String? get jwsRepresentation => _jwsRepresentation;
-
-  /// JSON representation of the StoreKit transaction.
-  String? get jsonRepresentation => _jsonRepresentation;
-
-  /// Base64 encoded binary StoreKit legacy app receipt.
-  String? get receiptBase64 => _receiptBase64;
-
-  /// Amazon receipt identifier.
-  String? get receiptId => _receiptId;
-
-  /// Xsolla order identifier.
-  String? get orderId => _orderId;
-
-  /// Original IAP user identifier.
-  String? get userId => _userId;
-
   /// Adds Google Play purchase data required to validate the purchase,
-  /// and marks this [CASPurchaseInfo] as coming from Google Play Billing.
+  /// and marks this [PurchaseInfo] as coming from Google Play Billing.
   ///
   /// Validation data is optional, but it is recommended when available.
   ///
@@ -177,7 +127,7 @@ class CASPurchaseInfo {
   /// `PurchaseWrapper.originalJson`.
   /// - [signature] - Signature returned by Google Play,
   /// `PurchaseWrapper.signature`.
-  CASPurchaseInfo setGoogleValidation({
+  PurchaseInfo setGoogleValidation({
     String? originalJson,
     String? signature,
   }) {
@@ -198,7 +148,7 @@ class CASPurchaseInfo {
   /// - [purchaseTime] - Subscription purchase time in milliseconds since
   /// Unix epoch, `PurchaseWrapper.purchaseTime`. Leave `0` to read the time
   /// from the original JSON.
-  CASPurchaseInfo setGoogleSubscription({
+  PurchaseInfo setGoogleSubscription({
     String? purchaseToken,
     int purchaseTime = 0,
   }) {
@@ -210,7 +160,7 @@ class CASPurchaseInfo {
   }
 
   /// Adds App Store purchase data required to validate the purchase,
-  /// and marks this [CASPurchaseInfo] as coming from the Apple App Store.
+  /// and marks this [PurchaseInfo] as coming from the Apple App Store.
   ///
   /// Validation data is optional, but it is recommended when available.
   ///
@@ -223,7 +173,7 @@ class CASPurchaseInfo {
   /// by Apple, `VerificationResult.jwsRepresentation`.
   /// - [receiptBase64] - Base64 encoded binary app receipt from
   /// `Bundle.main.appStoreReceiptURL`.
-  CASPurchaseInfo setAppleValidation({
+  PurchaseInfo setAppleValidation({
     String? transactionId,
     String? jwsRepresentation,
     String? receiptBase64,
@@ -249,7 +199,7 @@ class CASPurchaseInfo {
   /// Unix epoch, `Transaction.originalPurchaseDate`.
   /// - [jsonRepresentation] - JSON representation of the transaction,
   /// `Transaction.jsonRepresentation`.
-  CASPurchaseInfo setAppleSubscription({
+  PurchaseInfo setAppleSubscription({
     String? originalTransactionId,
     int originalPurchaseDate = 0,
     String? jsonRepresentation,
@@ -263,7 +213,7 @@ class CASPurchaseInfo {
   }
 
   /// Adds the required receipt ID and user ID data to validate an Amazon
-  /// Appstore purchase, and marks this [CASPurchaseInfo] as coming from
+  /// Appstore purchase, and marks this [PurchaseInfo] as coming from
   /// the Amazon Appstore.
   ///
   /// The publisher is responsible for supplying the purchase price, currency
@@ -272,7 +222,7 @@ class CASPurchaseInfo {
   ///
   /// - [receiptId] - Amazon receipt identifier from the Amazon IAP receipt.
   /// - [userId] - Amazon user identifier.
-  CASPurchaseInfo setAmazonValidation({
+  PurchaseInfo setAmazonValidation({
     required String receiptId,
     String? userId,
   }) {
@@ -283,23 +233,23 @@ class CASPurchaseInfo {
   }
 
   /// Adds the Amazon IAP receipt required to validate the purchase, and marks
-  /// this [CASPurchaseInfo] as coming from the Amazon Appstore.
+  /// this [PurchaseInfo] as coming from the Amazon Appstore.
   ///
   /// The receipt ID and the user ID are read from the receipt.
   ///
   /// - [receipt] - JSON string of the Amazon IAP receipt.
-  CASPurchaseInfo setAmazonValidationFromReceipt(String receipt) {
+  PurchaseInfo setAmazonValidationFromReceipt(String receipt) {
     _provider = _providerAmazonAppstore;
     _originalJson = receipt;
     return this;
   }
 
   /// Adds the required order ID data to validate an Xsolla purchase,
-  /// and marks this [CASPurchaseInfo] as coming from Xsolla.
+  /// and marks this [PurchaseInfo] as coming from Xsolla.
   ///
   /// - [orderId] - Xsolla order identifier.
   /// - [userId] - Xsolla user identifier.
-  CASPurchaseInfo setXsollaValidation({
+  PurchaseInfo setXsollaValidation({
     required String orderId,
     String? userId,
   }) {
@@ -311,4 +261,27 @@ class CASPurchaseInfo {
 
   @override
   String toString() => 'Purchased $productId for $price $currency';
+
+  /// Internal arguments map
+  Map<String, Object?> toInvokeArguments() => <String, Object?>{
+        'productId': productId,
+        'price': price,
+        'currency': currency,
+        'quantity': quantity,
+        'provider': _provider,
+        'isSubscription': _isSubscription,
+        'originalJson': _originalJson,
+        'signature': _signature,
+        'purchaseToken': _purchaseToken,
+        'purchaseTime': _purchaseTime,
+        'transactionId': _transactionId,
+        'originalTransactionId': _originalTransactionId,
+        'originalPurchaseDate': _originalPurchaseDate,
+        'jwsRepresentation': _jwsRepresentation,
+        'jsonRepresentation': _jsonRepresentation,
+        'receiptBase64': _receiptBase64,
+        'receiptId': _receiptId,
+        'orderId': _orderId,
+        'userId': _userId,
+      };
 }

@@ -1,5 +1,5 @@
 group = 'com.cleveradssolutions.plugin.flutter'
-version = '4.8.0'
+version = '4.8.3'
 
 buildscript {
     ext {
@@ -85,6 +85,16 @@ rootProject.allprojects {
             url = uri("https://maven.display.io/")
             content { includeGroup("com.brandio.ads") }
         }
+        maven {
+            name = "BidMachineAdsRepo"
+            url = uri("https://artifactory.bidmachine.io/bidmachine")
+            content {
+                includeGroup("io.bidmachine")
+                includeGroup("io.bidmachine.libs")
+                includeGroup("io.bidmachine.media3")
+                includeGroup("com.explorestack")
+            }
+        }
     }
 }
 
@@ -92,14 +102,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     if (project.android.hasProperty('namespace')) {
         namespace 'com.cleveradssolutions.plugin.flutter'
     }
 
     defaultConfig {
-        minSdk 23
+        minSdk 24
     }
 
     compileOptions {
@@ -116,6 +126,6 @@ android {
     }
 
     dependencies {
-        api 'com.cleveradssolutions:cas-sdk:4.8.3-beta1'
+        api 'com.cleveradssolutions:cas-sdk:4.8.3'
     }
 }

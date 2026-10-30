@@ -1,3 +1,14 @@
+## 4.8.3
+- Updated the [Android SDK to 4.8.3](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS SDK to 4.8.3](https://github.com/cleveradssolutions/CAS-iOS/releases).
+- Added a new `CASMoblieAds.reportPurchase(PurchaseInfo)` function for collecting in-app purchase information with automatic reporting to Tenjin.
+- Added new adapter for BlueSea
+- Added Moloco adapter to Optimal Ads Solutions.
+- Added Bidease and BlueSea adapters to VPN Compliant Ads Solutions.
+- Removed Maticoo adapter from Optimal Ads Solutions.
+- [iOS] **Raised the minimum supported iOS version to 15.0, as required by Xcode 27.** The minimum supported Xcode version remains 26.2.
+- [iOS] Added Swift Package Manager integration. Please check the updated iOS integration guide for details
+- [Android] Added alternative adapter for Google Ads Next SDK `cas.adapters.googleAdsNext = true` (closed beta)
+
 ## 4.8.0
 - Updated the [Android SDK to 4.8.0](https://github.com/cleveradssolutions/CAS-Android/releases) and [iOS SDK to 4.8.0](https://github.com/cleveradssolutions/CAS-iOS/releases).
 - [Android] This release requires **a minimum Android API level of 24**.

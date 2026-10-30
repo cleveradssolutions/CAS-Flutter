@@ -15,7 +15,7 @@ let package = Package(
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
         .package(
             url: "https://github.com/cleveradssolutions/CAS-iOS.git",
-            .upToNextMinor(from: "4.8.3-beta1")
+            .upToNextMinor(from: "4.8.3")
         ),
     ],
     targets: [

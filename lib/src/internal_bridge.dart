@@ -119,28 +119,9 @@ class InternalBridge {
     return channel.invokeMethod('setTrialAdFreeInterval', interval);
   }
 
-  Future<void> reportPurchase(CASPurchaseInfo purchase) {
-    return channel.invokeMethod<void>('reportPurchase', <String, Object?>{
-      'productId': purchase.productId,
-      'price': purchase.price,
-      'currency': purchase.currency,
-      'quantity': purchase.quantity,
-      'provider': purchase.provider,
-      'isSubscription': purchase.isSubscription,
-      'originalJson': purchase.originalJson,
-      'signature': purchase.signature,
-      'purchaseToken': purchase.purchaseToken,
-      'purchaseTime': purchase.purchaseTime,
-      'transactionId': purchase.transactionId,
-      'originalTransactionId': purchase.originalTransactionId,
-      'originalPurchaseDate': purchase.originalPurchaseDate,
-      'jwsRepresentation': purchase.jwsRepresentation,
-      'jsonRepresentation': purchase.jsonRepresentation,
-      'receiptBase64': purchase.receiptBase64,
-      'receiptId': purchase.receiptId,
-      'orderId': purchase.orderId,
-      'userId': purchase.userId,
-    });
+  Future<void> reportPurchase(PurchaseInfo purchase) {
+    return channel.invokeMethod<void>(
+        'reportPurchase', purchase.toInvokeArguments());
   }
 
   Future<ConsentStatus> getVendorConsent(int vendorId) async {

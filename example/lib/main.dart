@@ -261,9 +261,9 @@ class _MyAppState extends State<MyApp> {
   //
   // A real integration takes the product price and currency from the store
   // product and the validation data from the completed transaction.
-  // See `CASPurchaseInfo` for an example with the `in_app_purchase` plugin.
+  // See `PurchaseInfo` for an example with the `in_app_purchase` plugin.
   void _reportPurchase() {
-    final purchase = CASPurchaseInfo(
+    final purchase = PurchaseInfo(
       productId: 'com.cleveradssolutions.plugin.flutter.example.no_ads',
       price: 4.99,
       currency: 'USD',
