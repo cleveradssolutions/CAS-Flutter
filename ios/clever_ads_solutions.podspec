@@ -13,9 +13,8 @@ CAS.AI Mobile Ads plugin for Flutter.
   s.authors          = 'Clever Ads Solutions LTD'
   s.license          = { :file => '../LICENSE' }
   s.source           = { :path => '.' }
-  s.source_files     = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
-  s.ios.deployment_target = '13.0'
+  s.source_files     = 'clever_ads_solutions/Sources/clever_ads_solutions/**/*.swift'
+  s.ios.deployment_target = '15.0'
   s.swift_version    = '5.0'
   s.static_framework = true
 
